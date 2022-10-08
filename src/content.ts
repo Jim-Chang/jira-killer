@@ -1,1 +1,1 @@
-console.log('content.ts');
+import './content_script/index';
