@@ -1,12 +1,14 @@
-import {getJiraJqEle, getUrlSelectedIssueId, insertAfterIssueDesc} from "./utils";
+import {getBacklogList, getJiraJqEle, getUrlSelectedIssueId, insertAfterIssueDesc} from "./utils";
 import {ISSUE_DETAIL_VIEW_ID, LOG_PREFIX} from "./define";
 import {QuickTicketComponent} from "./quick-ticket-component";
+import {JiraBacklogListComponent} from "./jira-backlog-list-component";
 
 export class ViewStatusHandler {
   private openIssueDetailView = false;
   private lastOpenIssueKey: string | null = null;
   private observer: MutationObserver;
   private qtComponent: QuickTicketComponent | null = null;
+  private backlogListComponent: JiraBacklogListComponent | null = null;
 
   constructor() {
     this.observer = new MutationObserver((mutations) => {
@@ -18,8 +20,22 @@ export class ViewStatusHandler {
     });
   }
 
-  handle(): void {
+  private handle(): void {
     this.handleIssueDetailViewChange();
+    this.handleBacklogListViewChange();
+  }
+
+  private handleBacklogListViewChange(): void {
+    const ele = getBacklogList();
+    if (ele.length > 0) {
+      if (!this.backlogListComponent) {
+        this.backlogListComponent = new JiraBacklogListComponent(ele);
+        console.log(LOG_PREFIX, 'create JiraBacklogListComponent', ele);
+      }
+      if (this.backlogListComponent.sprintBacklogs.length === 0) {
+        this.backlogListComponent.initSprintBacklogs();
+      }
+    }
   }
 
   private handleIssueDetailViewChange(): void {

@@ -1,5 +1,7 @@
 export const LOG_PREFIX = '[Jira Killer]';
 
+export const BACKLOG_LIST_ID = 'ghx-backlog';
+
 export const DATA_TEST_ID = 'data-test-id';
 export const ISSUE_DETAIL_VIEW_ID = 'issue.views.issue-details.issue-layout.issue-layout';
 export const ISSUE_SUMMARY_H1_ID = 'issue.views.issue-base.foundation.summary.heading';
@@ -38,4 +40,19 @@ export type JiraIssue = {
   epicKey: string | null;
   teamId: string | null;
   sprintId: number | null;
+  issueLinks?: JiraIssueLink[];
+}
+
+export type JiraIssueLink = {
+  type: {
+    name: string;
+  },
+  outwardIssue: {
+    key: string;
+    fields: {
+      issuetype: {
+        name: string;
+      }
+    }
+  },
 }

@@ -1,6 +1,5 @@
 import axios, {AxiosInstance} from "axios";
 import {IssueType, JIRA_FIELD, JiraIssue, JiraIssueType, LOG_PREFIX} from "./define";
-import {from} from "rxjs";
 
 function getJiraDomain(): string {
   return 'hardcoretech';
@@ -108,10 +107,48 @@ export class JiraService {
     console.log(LOG_PREFIX, 'block issue');
     const data = buildBlockIssueData(fromKey, toKey);
     try {
-      const ret = await this.client.post('/rest/api/2/issueLink', data);
-      console.log(LOG_PREFIX, 'block ret', ret);
+      await this.client.post('/rest/api/2/issueLink', data);
       return true;
     } catch (e) {
+      return false;
+    }
+  }
+
+  async getIssuesBySprint(sprintId: string): Promise<JiraIssue[] | null> {
+    try {
+      const ret = await this.client.get(`/rest/agile/1.0/sprint/${sprintId}/issue`);
+      const issues = ret.data.issues.map((issue: any) => {
+        return {
+          id: issue.id,
+          key: issue.key,
+          summary: issue.fields.summary,
+          issueType: issue.fields.issuetype.name,
+          projKey: issue.fields.project.key,
+          epicKey: issue.fields[JIRA_FIELD.EPIC] ?? null,
+          teamId: issue.fields[JIRA_FIELD.TEAM]?.id ?? null,
+          sprintId: issue.fields[JIRA_FIELD.SPRINT]?.length > 0 ? issue.fields[JIRA_FIELD.SPRINT][0].id : null,
+          issueLinks: issue.fields.issuelinks,
+        }
+      });
+      return issues;
+
+    } catch (e) {
+      console.error(e);
+      return null;
+    }
+  }
+
+  async rankIssueAfter(issueKeys: string[], afterIssueKey: string): Promise<boolean> {
+    try {
+      const data = {
+        'rankAfterIssue': afterIssueKey,
+        'rankCustomFieldId': 10009,
+        'issues': issueKeys,
+      };
+      await this.client.put('/rest/agile/1.0/issue/rank', data);
+      return true;
+    } catch (e) {
+      console.error('rankIssueAfter', 'afterIssueKey', afterIssueKey, 'issueKeys', issueKeys);
       return false;
     }
   }
