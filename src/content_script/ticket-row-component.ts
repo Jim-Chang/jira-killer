@@ -8,7 +8,7 @@ import {CustomIssueType, IssueType, JiraIssueType, LOG_PREFIX} from "./define";
 const PREFIX_MAP: {[key: string]: string} = {
   [CustomIssueType.FETask]: 'RD<FE> - ',
   [CustomIssueType.BETask]: 'RD<BE> - ',
-  [JiraIssueType.Task]: 'RD - ',
+  [JiraIssueType.Task]: 'RD<INT> - ',
   [JiraIssueType.Test]: 'QA - ',
 };
 
@@ -17,6 +17,7 @@ export class TicketRowComponent {
   jqEle: JQuery;
 
   private parentSummary: string;
+  private isSaving = false;
 
   constructor(uid: number, parentSummary: string) {
     this.initView();
@@ -29,7 +30,7 @@ export class TicketRowComponent {
 
   private initView(): void {
     this.jqEle = $(`
-      <div data-uid="${this.uid}">
+      <div>
         <select name="type">
           <option disabled selected value>Select Ticket Type</option>
           <option value="${CustomIssueType.FETask}">Frontend Task</option>
@@ -38,8 +39,10 @@ export class TicketRowComponent {
           <option value="${JiraIssueType.Test}">QA Test</option>
         </select>
         <input name="summary" type="text">
-        <input name="story_point" type="number">
+        <input name="story_point" type="number" style="width: 40px;">
         <button>Save</button>
+        <span data-name="issue-key"></span>
+        <span data-name="status" style="margin-left: 2px;"></span>
       </div>
     `);
   }
@@ -64,15 +67,24 @@ export class TicketRowComponent {
   }
 
   private async onClickSaveBtn(): Promise<void> {
+    if (this.isSaving) {
+      return;
+    }
+
     if (!this.isCanSave()) {
       console.log(LOG_PREFIX, 'Please Check Input Data');
       return;
     }
 
+    this.isSaving = true;
+    this.status = 'saving';
+
     // get selected issue id
     const selectedIssueId = getUrlSelectedIssueId();
     if (!selectedIssueId) {
       console.error(LOG_PREFIX, 'can not get selected issue id from url');
+      this.isSaving = false;
+      this.status = 'fail';
       return;
     }
 
@@ -80,25 +92,33 @@ export class TicketRowComponent {
     const selectedIssue = await jiraService.getIssue(selectedIssueId);
     if (!selectedIssue) {
       console.error(LOG_PREFIX, 'can not get selected issue data');
+      this.isSaving = false;
+      this.status = 'fail';
       return;
     }
     console.log(LOG_PREFIX, 'selected issue', selectedIssue);
 
     // creat new issue
-    const issueId = await jiraService.createIssue(selectedIssue, this.summary, this.type, this.point);
-    if (!issueId) {
+    const issueKey = await jiraService.createIssue(selectedIssue, this.summary, this.type, this.point);
+    if (!issueKey) {
       console.error(LOG_PREFIX, 'created issue fail')
+      this.isSaving = false;
+      this.status = 'fail';
       return ;
     }
-    console.log(LOG_PREFIX, 'created issue id', issueId);
+    console.log(LOG_PREFIX, 'created issue id', issueKey);
+    this.issueKey = issueKey;
 
     // block selected issue by new issue
-    const blockRet = await jiraService.blockIssue(issueId, selectedIssue.key);
-    if (blockRet) {
-      console.log(LOG_PREFIX, 'block issue success');
-    } else {
+    this.status = 'blocking';
+    const blockRet = await jiraService.blockIssue(issueKey, selectedIssue.key);
+    if (!blockRet) {
       console.error(LOG_PREFIX, 'block issue fail');
+      this.status = 'fail';
     }
+
+    this.isSaving = false;
+    this.status = 'v';
   }
 
   private get typeSelect(): JQuery {
@@ -139,5 +159,13 @@ export class TicketRowComponent {
 
   private set point(p: number) {
     this.pointInput.val(p);
+  }
+
+  private set issueKey(k: string) {
+    this.jqEle.find('span[data-name="issue-key"]').html(k);
+  }
+
+  private set status(s: string) {
+    this.jqEle.find('span[data-name="status"]').html(s);
   }
 }
