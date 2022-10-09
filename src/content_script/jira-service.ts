@@ -1,26 +1,6 @@
 import axios, {AxiosInstance} from "axios";
 import {IssueType, JIRA_FIELD, JiraIssue, JiraIssueType, LOG_PREFIX} from "./define";
-
-function getJiraDomain(): string {
-  return 'hardcoretech';
-}
-
-function getJiraEmail(): string {
-  return 'jim.chang@hardcoretech.co';
-}
-
-function getJiraApiToken(): string {
-  return 'rX15poCv5WGAzQ1fGj8Y4942';
-}
-
-function getJiraAuthHeader(): {[key: string]: string} {
-  const email = getJiraEmail();
-  const apiToken = getJiraApiToken();
-  const auth = window.btoa(`${email}:${apiToken}`);
-  return {
-    'Authorization': `Basic ${auth}`
-  };
-}
+import {loadConfig} from "./utils";
 
 function buildCreateIssueData(projKey: string, summary: string, issueType: IssueType, storyPoint: number, epicKey: string | null, sprintId: number | null, teamId: string | null): any {
   const data: any = {
@@ -64,6 +44,24 @@ function buildBlockIssueData(fromKey: string, toKey: string): any {
 }
 
 export class JiraService {
+  private config: {jiraDomain: string, email: string, apiToken: string};
+  private _authHeader: {[key: string]: string};
+
+  constructor() {
+    loadConfig(['jiraDomain', 'email', 'apiToken']).then((config) => {
+      this.config = config;
+    });
+  }
+
+  private get authHeader(): {[key: string]: string} {
+    if (!this._authHeader) {
+      const auth = window.btoa(`${this.config.email}:${this.config.apiToken}`);
+      this._authHeader = {
+        'Authorization': `Basic ${auth}`
+      };
+    }
+    return this._authHeader;
+  }
 
   async getFields(): Promise<void> {
     const ret = await this.client.get('/rest/api/2/field');
@@ -154,11 +152,9 @@ export class JiraService {
   }
 
   private get client(): AxiosInstance {
-    const domain = getJiraDomain();
-    const headers = getJiraAuthHeader();
     return axios.create({
-      baseURL: `https://${domain}.atlassian.net`,
-      headers: headers,
+      baseURL: `https://${this.config.jiraDomain}.atlassian.net`,
+      headers: this.authHeader,
     });
   }
 }

@@ -23,4 +23,12 @@ export function insertAfterIssueDesc(ele: string | JQuery): void {
   getJiraJqEle('div', ISSUE_DESC_DIV_ID).parent().after(ele);
 }
 
+export function loadConfig(keys: string[]): Promise<any> {
+  return new Promise<any>((resolve) => {
+    chrome.storage.sync.get(keys, (items) => {
+      resolve(items);
+    });
+  });
+}
+
 

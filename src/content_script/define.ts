@@ -1,3 +1,5 @@
+import {loadConfig} from "./utils";
+
 export const LOG_PREFIX = '[Jira Killer]';
 
 export const BACKLOG_LIST_ID = 'ghx-backlog';
@@ -8,12 +10,40 @@ export const ISSUE_SUMMARY_H1_ID = 'issue.views.issue-base.foundation.summary.he
 export const ISSUE_DESC_DIV_ID = 'issue.views.field.rich-text.description';
 
 
-export const JIRA_FIELD = {
-  EPIC: 'customfield_10006',
-  TEAM: 'customfield_10401',
-  SPRINT: 'customfield_10004',
-  STORY_POINT: 'customfield_10002',
-};
+class JiraField {
+  private config: {
+    teamFieldId: string;
+    sprintFieldId: string;
+    epicFieldId: string;
+    storyPointFieldId: string;
+  };
+
+  private preifx = 'customfield_';
+
+  constructor() {
+    loadConfig(['teamFieldId', 'sprintFieldId', 'epicFieldId', 'storyPointFieldId']).then((config) => {
+      this.config = config;
+    });
+  }
+
+  get TEAM(): string {
+    return `${this.preifx}${this.config.teamFieldId}`;
+  }
+
+  get SPRINT(): string {
+    return `${this.preifx}${this.config.sprintFieldId}`;
+  }
+
+  get EPIC(): string {
+    return `${this.preifx}${this.config.epicFieldId}`;
+  }
+
+  get STORY_POINT(): string {
+    return `${this.preifx}${this.config.storyPointFieldId}`;
+  }
+}
+
+export const JIRA_FIELD = new JiraField();
 
 export enum JiraIssueType {
   Epic = 'Epic',
