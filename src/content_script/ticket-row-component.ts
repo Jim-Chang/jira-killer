@@ -1,17 +1,15 @@
 import * as $ from "jquery";
+import {jiraService} from "./jira-service";
+import {getUrlSelectedIssueId} from "./utils";
+import {CustomIssueType, IssueType, JiraIssueType, LOG_PREFIX} from "./define";
 
-enum TicketType {
-  FETask,
-  BETask,
-  Task,
-  QATask,
-}
+
 
 const PREFIX_MAP: {[key: string]: string} = {
-  [TicketType.FETask]: 'RD<FE> - ',
-  [TicketType.BETask]: 'RD<BE> - ',
-  [TicketType.Task]: 'RD - ',
-  [TicketType.QATask]: 'QA - ',
+  [CustomIssueType.FETask]: 'RD<FE> - ',
+  [CustomIssueType.BETask]: 'RD<BE> - ',
+  [JiraIssueType.Task]: 'RD - ',
+  [JiraIssueType.Test]: 'QA - ',
 };
 
 export class TicketRowComponent {
@@ -34,10 +32,10 @@ export class TicketRowComponent {
       <div data-uid="${this.uid}">
         <select name="type">
           <option disabled selected value>Select Ticket Type</option>
-          <option value="0">Frontend Task</option>
-          <option value="1">Backend Task</option>
-          <option value="2">Task</option>
-          <option value="3">QA Task</option>
+          <option value="${CustomIssueType.FETask}">Frontend Task</option>
+          <option value="${CustomIssueType.BETask}">Backend Task</option>
+          <option value="${JiraIssueType.Task}">Task</option>
+          <option value="${JiraIssueType.Test}">QA Test</option>
         </select>
         <input name="summary" type="text">
         <input name="story_point" type="number">
@@ -57,12 +55,50 @@ export class TicketRowComponent {
     this.summary = `${prefix}${this.parentSummary}`;
   }
 
+  private isCanSave(): boolean {
+    return !!this.summary && !!this.type && !!this.point;
+  }
+
   private onPointChange(): void {
     this.point = this.point < 0 ? 0 : this.point;
   }
 
-  private onClickSaveBtn(): void {
-    console.log('on click save');
+  private async onClickSaveBtn(): Promise<void> {
+    if (!this.isCanSave()) {
+      console.log(LOG_PREFIX, 'Please Check Input Data');
+      return;
+    }
+
+    // get selected issue id
+    const selectedIssueId = getUrlSelectedIssueId();
+    if (!selectedIssueId) {
+      console.error(LOG_PREFIX, 'can not get selected issue id from url');
+      return;
+    }
+
+    // get selected issue data
+    const selectedIssue = await jiraService.getIssue(selectedIssueId);
+    if (!selectedIssue) {
+      console.error(LOG_PREFIX, 'can not get selected issue data');
+      return;
+    }
+    console.log(LOG_PREFIX, 'selected issue', selectedIssue);
+
+    // creat new issue
+    const issueId = await jiraService.createIssue(selectedIssue, this.summary, this.type, this.point);
+    if (!issueId) {
+      console.error(LOG_PREFIX, 'created issue fail')
+      return ;
+    }
+    console.log(LOG_PREFIX, 'created issue id', issueId);
+
+    // block selected issue by new issue
+    const blockRet = await jiraService.blockIssue(issueId, selectedIssue.key);
+    if (blockRet) {
+      console.log(LOG_PREFIX, 'block issue success');
+    } else {
+      console.error(LOG_PREFIX, 'block issue fail');
+    }
   }
 
   private get typeSelect(): JQuery {
@@ -81,11 +117,11 @@ export class TicketRowComponent {
     return this.jqEle.find('button');
   }
 
-  private get type(): TicketType {
-    return this.typeSelect.val() as TicketType;
+  private get type(): IssueType {
+    return this.typeSelect.val() as IssueType;
   }
 
-  private set type(t: TicketType) {
+  private set type(t: IssueType) {
     this.typeSelect.val(t);
   }
 
@@ -98,7 +134,7 @@ export class TicketRowComponent {
   }
 
   private get point(): number {
-    return this.pointInput.val() as number;
+    return parseInt(this.pointInput.val() as string);
   }
 
   private set point(p: number) {

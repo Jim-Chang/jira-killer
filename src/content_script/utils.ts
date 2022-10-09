@@ -9,7 +9,7 @@ export function getIssueSummary(): string {
   return getJiraJqEle('h1', ISSUE_SUMMARY_H1_ID).html();
 }
 
-export function getSelectedIssueId(): string | null {
+export function getUrlSelectedIssueId(): string | null {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   return urlParams.get('selectedIssue');
