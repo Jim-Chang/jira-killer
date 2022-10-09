@@ -3,23 +3,21 @@ import * as $ from "jquery";
 import {jiraService} from "./jira-service";
 import {IssueSortService} from "./issue-sort-service";
 
-export class JiraSprintBacklogComponent {
-  jqEle: JQuery;
+export class JiraSprintSortButtonComponent {
   private btnJqEle: JQuery;
 
   private sprintId: string;
   private isSorting = false;
 
-  constructor(jqEle: JQuery) {
-    this.jqEle = jqEle
-    this.sprintId = this.jqEle.attr('data-sprint-id') as string;
-    this.insertSortButton();
+  constructor(springListJqEle: JQuery) {
+    this.sprintId = springListJqEle.attr('data-sprint-id') as string;
+    this.insertSortButton(springListJqEle);
   }
 
-  private insertSortButton(): void {
+  private insertSortButton(jqEle: JQuery): void {
     const btnEle = $('<button>排好啦</button>');
     btnEle.on('click', () => this.onClickSortButton());
-    this.jqEle.prepend(btnEle);
+    jqEle.before(btnEle);
     this.btnJqEle = btnEle;
   }
 

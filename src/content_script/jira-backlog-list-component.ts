@@ -1,17 +1,17 @@
-import {JiraSprintBacklogComponent} from "./jira-sprint-backlog-component";
+import {JiraSprintSortButtonComponent} from "./jira-sprint-sort-button-component";
 
 export class JiraBacklogListComponent {
   jqEle: JQuery;
-  sprintBacklogs: JiraSprintBacklogComponent[] = [];
+  sprintBacklogs: JiraSprintSortButtonComponent[] = [];
 
   constructor(jqEle: JQuery) {
     this.jqEle = jqEle
   }
 
   initSprintBacklogs(): void {
-    const spEles = this.jqEle.find('div.js-sprint-header[data-sprint-id]')
+    const spEles = this.jqEle.find('div.ghx-sprint-planned[data-sprint-id]')
     spEles.each((i) => {
-      this.sprintBacklogs.push(new JiraSprintBacklogComponent(spEles.eq(i)));
+      this.sprintBacklogs.push(new JiraSprintSortButtonComponent(spEles.eq(i)));
     })
   }
 }
