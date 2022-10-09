@@ -63,6 +63,10 @@ export class JiraService {
     return this._authHeader;
   }
 
+  getIssueUrl(issueKey: string): string {
+    return `https://${this.config.jiraDomain}.atlassian.net/browse/${issueKey}`;
+  }
+
   async getFields(): Promise<void> {
     const ret = await this.client.get('/rest/api/2/field');
     console.log('fields', ret);

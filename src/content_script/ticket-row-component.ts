@@ -41,7 +41,7 @@ export class TicketRowComponent {
         <input name="summary" type="text">
         <input name="story_point" type="number" style="width: 40px;">
         <button>Save</button>
-        <span data-name="issue-key"></span>
+        <a data-name="issue-key" target="_blank"></a>
         <span data-name="status" style="margin-left: 2px;"></span>
       </div>
     `);
@@ -110,7 +110,6 @@ export class TicketRowComponent {
     this.issueKey = issueKey;
 
     // block selected issue by new issue
-    this.status = 'blocking';
     const blockRet = await jiraService.blockIssue(issueKey, selectedIssue.key);
     if (!blockRet) {
       console.error(LOG_PREFIX, 'block issue fail');
@@ -162,7 +161,7 @@ export class TicketRowComponent {
   }
 
   private set issueKey(k: string) {
-    this.jqEle.find('span[data-name="issue-key"]').html(k);
+    this.jqEle.find('a[data-name="issue-key"]').html(k).attr('href', jiraService.getIssueUrl(k));
   }
 
   private set status(s: string) {
