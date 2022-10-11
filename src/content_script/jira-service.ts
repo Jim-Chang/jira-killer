@@ -123,9 +123,9 @@ export class JiraService {
     }
   }
 
-  async getIssuesBySprint(sprintId: string): Promise<JiraIssue[] | null> {
+  async getIssuesBySprint(sprintId: string, startAt = 0, maxResults = this.MAX_RESULTS): Promise<JiraIssue[] | null> {
     try {
-      const ret = await this.client.get(`/rest/agile/1.0/sprint/${sprintId}/issue`);
+      const ret = await this.client.get(`/rest/agile/1.0/sprint/${sprintId}/issue`, { params: {startAt, maxResults}});
       const issues = ret.data.issues.map((issue: any) => {
         return {
           id: issue.id,

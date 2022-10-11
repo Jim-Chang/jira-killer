@@ -1,6 +1,6 @@
-import {LOG_PREFIX} from "./define";
+import {JiraIssue, JiraIssueType, LOG_PREFIX} from "./define";
 import * as $ from "jquery";
-import {jiraService} from "./jira-service";
+import {JiraService, jiraService} from "./jira-service";
 import {IssueSortService} from "./issue-sort-service";
 
 export class JiraSprintSortButtonComponent {
@@ -29,8 +29,19 @@ export class JiraSprintSortButtonComponent {
     this.isSorting = true;
     this.btnJqEle.html('正在排');
 
-    const issues = await jiraService.getIssuesBySprint(this.sprintId);
-    if (issues) {
+    let issues: JiraIssue[] = [];
+    let startAt = 0;
+    while(true) {
+      const _issues = await jiraService.getIssuesBySprint(this.sprintId, startAt);
+      if (_issues && _issues.length > 0) {
+        issues = [...issues, ..._issues];
+        startAt += jiraService.MAX_RESULTS;
+      } else {
+        break;
+      }
+    }
+
+    if (issues.length > 0) {
       const sortSvc = new IssueSortService(issues);
       const ret = await sortSvc.doSort();
       if (ret) {
