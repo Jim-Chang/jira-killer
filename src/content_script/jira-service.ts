@@ -2,19 +2,19 @@ import axios, {AxiosInstance} from "axios";
 import {IssueType, JIRA_FIELD, JiraIssue, JiraIssueType, LOG_PREFIX} from "./define";
 import {loadConfig} from "./utils";
 
-function buildCreateIssueData(projKey: string, summary: string, issueType: IssueType, storyPoint: number, epicKey: string | null, sprintId: number | null, teamId: string | null): any {
+function buildCreateIssueData(projKey: string, summary: string, issueType: IssueType, storyPoint: number | null, epicKey: string | null, sprintId: number | null, teamId: string | null): any {
   const data: any = {
       'fields': {
          'project':
          {
             'key': projKey
          },
+         'assignee': null,
          'summary': summary,
          'description': '',
          'issuetype': {
             'name': issueType
-         },
-        [JIRA_FIELD.STORY_POINT]: storyPoint,
+         }
       }
     }
     if (epicKey) {
@@ -25,6 +25,9 @@ function buildCreateIssueData(projKey: string, summary: string, issueType: Issue
     }
     if(teamId) {
       data.fields[JIRA_FIELD.TEAM] = teamId;
+    }
+    if(storyPoint) {
+      data.fields[JIRA_FIELD.STORY_POINT] = storyPoint;
     }
     return data;
 }
@@ -44,6 +47,7 @@ function buildBlockIssueData(fromKey: string, toKey: string): any {
 }
 
 export class JiraService {
+  MAX_RESULTS = 100;
   private config: {jiraDomain: string, email: string, apiToken: string};
   private _authHeader: {[key: string]: string};
 
@@ -77,6 +81,9 @@ export class JiraService {
       const ret = await this.client.get(`/rest/api/2/issue/${key}`);
       console.log(LOG_PREFIX, 'get issue', ret);
 
+      let sprints = ret.data.fields[JIRA_FIELD.SPRINT] ?? [];
+      sprints = sprints.filter((s: any) => s.state !== 'closed');
+
       return {
         id: ret.data.id,
         key: ret.data.key,
@@ -85,14 +92,14 @@ export class JiraService {
         projKey: ret.data.fields.project.key,
         epicKey: ret.data.fields[JIRA_FIELD.EPIC] ?? null,
         teamId: ret.data.fields[JIRA_FIELD.TEAM]?.id ?? null,
-        sprintId: ret.data.fields[JIRA_FIELD.SPRINT]?.length > 0 ? ret.data.fields[JIRA_FIELD.SPRINT][0].id : null,
+        sprintId: sprints.length > 0 ? sprints[0].id : null,
       }
     } catch (e) {
       return null;
     }
   }
 
-  async createIssue(fieldSource: JiraIssue, summary: string, issueType: IssueType, storyPoint: number): Promise<string | null> {
+  async createIssue(fieldSource: JiraIssue, summary: string, issueType: IssueType, storyPoint: number | null): Promise<string | null> {
     console.log(LOG_PREFIX, 'create issue');
     const data = buildCreateIssueData(fieldSource.projKey, summary, issueType, storyPoint, fieldSource.epicKey, fieldSource.sprintId, fieldSource.teamId);
 

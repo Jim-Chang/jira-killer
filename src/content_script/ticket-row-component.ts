@@ -59,11 +59,13 @@ export class TicketRowComponent {
   }
 
   private isCanSave(): boolean {
-    return !!this.summary && !!this.type && !!this.point;
+    return !!this.summary && !!this.type;
   }
 
   private onPointChange(): void {
-    this.point = this.point < 0 ? 0 : this.point;
+    if (this.point !== null) {
+      this.point = this.point < 0 ? 0 : this.point;
+    }
   }
 
   private async onClickSaveBtn(): Promise<void> {
@@ -152,12 +154,17 @@ export class TicketRowComponent {
     this.summaryInput.val(s);
   }
 
-  private get point(): number {
-    return parseInt(this.pointInput.val() as string);
+  private get point(): number | null {
+    const _point = this.pointInput.val();
+    return _point === undefined || _point === '' ? null : parseInt(_point as string);
   }
 
-  private set point(p: number) {
-    this.pointInput.val(p);
+  private set point(p: number | null) {
+    if (p) {
+      this.pointInput.val(p);
+    } else {
+      this.pointInput.val('');
+    }
   }
 
   private set issueKey(k: string) {
