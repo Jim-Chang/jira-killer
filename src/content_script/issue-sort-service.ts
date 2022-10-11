@@ -10,7 +10,7 @@ export class IssueSortService {
   }
 
   async doSort(): Promise<boolean> {
-    const shouldSortTypes: string[] = [JiraIssueType.Task, JiraIssueType.Bug, CustomIssueType.BETask, CustomIssueType.FETask];
+    const shouldSortTypes: string[] = [JiraIssueType.Task, JiraIssueType.Bug, JiraIssueType.Test, CustomIssueType.BETask, CustomIssueType.FETask];
 
     this.issues.forEach((issue) => {
       if (shouldSortTypes.includes(issue.issueType) && (issue.issueLinks?.length ?? 0) > 0) {
