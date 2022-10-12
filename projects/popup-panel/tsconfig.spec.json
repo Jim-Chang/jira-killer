@@ -1,0 +1,19 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/spec",
+    "types": [
+      "jasmine",
+      "chrome"
+    ]
+  },
+  "files": [
+    "src/test.ts",
+    "projects/popup-panel/src/polyfills.ts"
+  ],
+  "include": [
+    "projects/popup-panel/src/**/*.spec.ts",
+    "projects/popup-panel/src/**/*.d.ts"
+  ]
+}

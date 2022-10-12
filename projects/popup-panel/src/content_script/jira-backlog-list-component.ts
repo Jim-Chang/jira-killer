@@ -9,7 +9,7 @@ export class JiraBacklogListComponent {
   }
 
   initSprintBacklogs(): void {
-    const spEles = this.jqEle.find('div.ghx-sprint-planned[data-sprint-id]')
+    const spEles = this.jqEle.find('div.ghx-backlog-container[data-sprint-id]')
     spEles.each((i) => {
       this.sprintBacklogs.push(new JiraSprintSortButtonComponent(spEles.eq(i)));
     })
