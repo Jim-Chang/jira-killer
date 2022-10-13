@@ -1,6 +1,7 @@
 const {
     join
 } = require('path');
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
     mode: 'development',
@@ -20,7 +21,13 @@ module.exports = {
             use: 'ts-loader'
         }],
     },
-    plugins: [],
+    plugins: [
+      new CopyPlugin({
+        patterns: [
+          { from: join(__dirname, 'manifest.json'), to: join(__dirname, '../../dist'), force: true },
+        ],
+      }),
+    ],
     resolve: {
         extensions: ['.ts', '.js']
     }
