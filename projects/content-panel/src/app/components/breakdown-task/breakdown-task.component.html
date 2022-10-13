@@ -1,5 +1,5 @@
 <div>
-  <breakdown-task-input *ngFor="let i of [].constructor(taskRowCount)" [parentSummary]="selectedIssueSummary"></breakdown-task-input>
+  <breakdown-task-input *ngFor="let i of [].constructor(taskRowCount)" [parentSummary]="selectedIssue!.summary" [parentIssueKey]="selectedIssue!.key"></breakdown-task-input>
 </div>
 <div>
   <button (click)="onClickAddTaskBtn()">Add Task</button>

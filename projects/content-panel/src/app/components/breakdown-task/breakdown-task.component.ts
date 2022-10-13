@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {getUrlSelectedIssueId} from "../../lib/utils";
 import {JiraService} from "../../services/jira.service";
+import {JiraIssue} from "../../lib/define";
 
 @Component({
   selector: 'breakdown-task',
@@ -9,14 +10,14 @@ import {JiraService} from "../../services/jira.service";
 })
 export class BreakdownTaskComponent implements OnInit {
   taskRowCount = 0;
-  selectedIssueSummary = '';
+  selectedIssue: JiraIssue;
 
   constructor(private jiraService: JiraService) { }
 
   ngOnInit(): void {
     const issueId = getUrlSelectedIssueId();
     if (issueId) {
-      this.jiraService.getIssue(issueId).subscribe((issue) => this.selectedIssueSummary = issue.summary);
+      this.jiraService.getIssue(issueId).subscribe((issue) => this.selectedIssue = issue);
     }
   }
 

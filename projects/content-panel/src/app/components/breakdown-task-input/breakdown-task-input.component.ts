@@ -1,5 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {CustomIssueType, JiraIssueType} from "../../lib/define";
+import {JiraService} from "../../services/jira.service";
+import {switchMap} from "rxjs";
 
 
 const PREFIX_MAP: {[key: string]: string} = {
@@ -15,7 +17,8 @@ const PREFIX_MAP: {[key: string]: string} = {
   styleUrls: ['./breakdown-task-input.component.sass']
 })
 export class BreakdownTaskInputComponent implements OnInit {
-  @Input() parentSummary = '';
+  @Input() parentIssueKey: string;
+  @Input() parentSummary: string;
 
   JiraIssueType = JiraIssueType;
   CustomIssueType = CustomIssueType;
@@ -24,17 +27,30 @@ export class BreakdownTaskInputComponent implements OnInit {
   summary = '';
   storyPoint: number | null = null;
 
+  issueKey: string;
+
   private isSaving = false;
   private created = false;
 
-  constructor() { }
+  get saveBtnText(): string {
+    return this.isSaving ? 'Saving' : 'Save';
+  }
+
+  get issueUrl(): string {
+    if (this.issueKey) {
+      return this.jiraService.getIssueUrl(this.issueKey);
+    }
+    return ''
+  }
+
+  constructor(private jiraService: JiraService) { }
 
   ngOnInit(): void {
     this.summary = this.parentSummary;
   }
 
   canSave(): boolean {
-    return !!this.summary && !!this.issueType && (!this.isSaving || !this.created);
+    return !!this.summary && !!this.issueType && !this.isSaving && !this.created;
   }
 
   onChangeStoryPoint(): void {
@@ -51,6 +67,17 @@ export class BreakdownTaskInputComponent implements OnInit {
   onClickSaveBtn(): void {
     console.log(this.issueType, this.summary, this.storyPoint);
     this.isSaving = true;
+
+    this.jiraService.getIssue(this.parentIssueKey).pipe(
+      switchMap((issue) => this.jiraService.createIssue(issue, this.summary, this.issueType, this.storyPoint)),
+      switchMap((key) => {
+        this.issueKey = key;
+        return this.jiraService.blockIssue(this.issueKey, this.parentIssueKey);
+      })
+    ).subscribe(() => {
+      this.isSaving = false;
+      this.created = true;
+    });
   }
 
 

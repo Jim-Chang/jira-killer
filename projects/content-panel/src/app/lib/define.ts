@@ -32,6 +32,8 @@ export enum CustomIssueType {
   BETask = 'RD Backend',
 }
 
+export type IssueType = JiraIssueType | CustomIssueType;
+
 export type JiraIssue = {
   id: string;
   key: string;

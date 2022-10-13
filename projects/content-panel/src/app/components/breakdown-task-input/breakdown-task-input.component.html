@@ -8,7 +8,7 @@
   </select>
   <input [(ngModel)]="summary"  name="summary" type="text">
   <input [(ngModel)]="storyPoint" (change)="onChangeStoryPoint()" name="story_point" type="number" style="width: 40px;">
-  <button (click)="onClickSaveBtn()" [disabled]="!canSave()">Save</button>
-  <a data-name="issue-key" target="_blank"></a>
+  <button (click)="onClickSaveBtn()" [disabled]="!canSave()">{{saveBtnText}}</button>
+  <a *ngIf="issueKey" data-name="issue-key" target="_blank" [href]="issueUrl">{{issueKey}}</a>
   <span data-name="status" style="margin-left: 2px;"></span>
 </div>
