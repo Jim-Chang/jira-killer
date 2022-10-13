@@ -7,4 +7,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'content-panel';
+
+  ngOnInit(): void {
+    console.log('init app component');
+  }
 }
