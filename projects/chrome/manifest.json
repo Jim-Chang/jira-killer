@@ -31,5 +31,8 @@
       ],
       "matches": ["https://*.atlassian.net/*"]
     }
-  ]
+  ],
+  "externally_connectable": {
+    "matches": ["https://*.atlassian.net/*"]
+  }
 }
