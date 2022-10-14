@@ -1,0 +1,38 @@
+{
+  "name": "Jira Killer",
+  "version": "1.0",
+  "description": "Let Jira be cool",
+  "manifest_version": 3,
+  "permissions": [
+      "storage",
+      "activeTab",
+      "webNavigation"
+  ],
+  "action": {
+      "default_popup": "popup-panel/index.html"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.atlassian.net/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "content-panel/main.js",
+        "content-panel/polyfills.js",
+        "content-panel/runtime.js",
+        "content-panel/vendor.js"
+      ],
+      "matches": ["https://*.atlassian.net/*"]
+    }
+  ],
+  "externally_connectable": {
+    "matches": ["https://*.atlassian.net/*"]
+  }
+}

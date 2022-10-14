@@ -3,36 +3,32 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "jira-killer": {
+    "popup-panel": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
           "style": "sass"
         }
       },
-      "root": "",
-      "sourceRoot": "src",
+      "root": "projects/popup-panel",
+      "sourceRoot": "projects/popup-panel/src",
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-builders/custom-webpack:browser",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "customWebpackConfig": {
-              "path": "./custom-webpack.config.ts"
-            },
-            "outputPath": "dist/jira-killer",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.app.json",
+            "outputPath": "dist/popup-panel",
+            "index": "projects/popup-panel/src/index.html",
+            "main": "projects/popup-panel/src/main.ts",
+            "polyfills": "projects/popup-panel/src/polyfills.ts",
+            "tsConfig": "projects/popup-panel/tsconfig.app.json",
             "inlineStyleLanguage": "sass",
             "assets": [
-              "src/favicon.ico",
-              "src/assets",
-              "src/manifest.json"
+              "projects/popup-panel/src/favicon.ico",
+              "projects/popup-panel/src/assets"
             ],
             "styles": [
-              "src/styles.sass"
+              "projects/popup-panel/src/styles.sass"
             ],
             "scripts": []
           },
@@ -42,7 +38,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumError": "10mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -52,8 +48,8 @@
               ],
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "replace": "projects/popup-panel/src/environments/environment.ts",
+                  "with": "projects/popup-panel/src/environments/environment.prod.ts"
                 }
               ],
               "outputHashing": "none"
@@ -73,10 +69,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "jira-killer:build:production"
+              "browserTarget": "popup-panel:build:production"
             },
             "development": {
-              "browserTarget": "jira-killer:build:development"
+              "browserTarget": "popup-panel:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -84,23 +80,123 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "jira-killer:build"
+            "browserTarget": "popup-panel:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
+            "main": "projects/popup-panel/src/test.ts",
+            "polyfills": "projects/popup-panel/src/polyfills.ts",
+            "tsConfig": "projects/popup-panel/tsconfig.spec.json",
+            "karmaConfig": "projects/popup-panel/karma.conf.js",
             "inlineStyleLanguage": "sass",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "projects/popup-panel/src/favicon.ico",
+              "projects/popup-panel/src/assets"
             ],
             "styles": [
-              "src/styles.sass"
+              "projects/popup-panel/src/styles.sass"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    },
+    "content-panel": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "sass"
+        }
+      },
+      "root": "projects/content-panel",
+      "sourceRoot": "projects/content-panel/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/content-panel",
+            "index": "projects/content-panel/src/index.html",
+            "main": "projects/content-panel/src/main.ts",
+            "polyfills": "projects/content-panel/src/polyfills.ts",
+            "tsConfig": "projects/content-panel/tsconfig.app.json",
+            "inlineStyleLanguage": "sass",
+            "assets": [
+              "projects/content-panel/src/favicon.ico",
+              "projects/content-panel/src/assets"
+            ],
+            "styles": [
+              "projects/content-panel/src/styles.sass"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "10mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "projects/content-panel/src/environments/environment.ts",
+                  "with": "projects/content-panel/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "none"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "content-panel:build:production"
+            },
+            "development": {
+              "browserTarget": "content-panel:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "content-panel:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/content-panel/src/test.ts",
+            "polyfills": "projects/content-panel/src/polyfills.ts",
+            "tsConfig": "projects/content-panel/tsconfig.spec.json",
+            "karmaConfig": "projects/content-panel/karma.conf.js",
+            "inlineStyleLanguage": "sass",
+            "assets": [
+              "projects/content-panel/src/favicon.ico",
+              "projects/content-panel/src/assets"
+            ],
+            "styles": [
+              "projects/content-panel/src/styles.sass"
             ],
             "scripts": []
           }
