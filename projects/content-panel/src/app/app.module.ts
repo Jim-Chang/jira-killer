@@ -8,12 +8,14 @@ import { BreakdownTaskInputComponent } from './components/breakdown-task-input/b
 import {FormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import {setExtensionId} from "./lib/define";
+import { SortBacklogIssueComponent } from './components/sort-backlog-issue/sort-backlog-issue.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     BreakdownTaskComponent,
-    BreakdownTaskInputComponent
+    BreakdownTaskInputComponent,
+    SortBacklogIssueComponent
   ],
   imports: [
     BrowserModule,

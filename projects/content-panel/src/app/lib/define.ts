@@ -59,3 +59,15 @@ export type JiraIssueLink = {
     }
   },
 }
+
+export type JiraSprint = {
+  id: number;
+  self: string;
+  state: string;
+  name: string;
+  goal: string;
+  startDate?: string;
+  endDate?: string;
+  completeDate?: string;
+  originBoardId?: number;
+}

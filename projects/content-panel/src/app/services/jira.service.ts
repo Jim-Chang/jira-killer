@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {ConfigService} from "./config.service";
 import {map, Observable, ReplaySubject, switchMap} from "rxjs";
-import {IssueType, JiraIssue} from "../lib/define";
+import {IssueType, JiraIssue, JiraSprint} from "../lib/define";
 import {JiraFieldService} from "./jira-field.service";
 
 type Config = {jiraDomain: string, email: string, apiToken: string};
@@ -39,6 +39,14 @@ export class JiraService {
     return `https://${this.config.jiraDomain}.atlassian.net`;
   }
 
+  getAllSprint(boardId: number, withClosed = false, maxResults = this.MAX_RESULTS): Observable<JiraSprint[]> {
+    const state = withClosed ? 'active,future,close' : 'active,future';
+    return this.ready.pipe(
+      switchMap(() => this.http.get<any>(`${this.baseURL}/rest/agile/1.0/board/${boardId}/sprint`, {headers: this.headers, params: {state, maxResults}})),
+      map((ret) => ret.values),
+    );
+  }
+
   getIssueUrl(issueKey: string): string {
     return `https://${this.config.jiraDomain}.atlassian.net/browse/${issueKey}`;
   }
@@ -71,17 +79,24 @@ export class JiraService {
   createIssue(fieldSource: JiraIssue, summary: string, issueType: IssueType, storyPoint: number | null): Observable<string> {
     console.log('create issue');
     const data = this.buildCreateIssueData(fieldSource.projKey, summary, issueType, storyPoint, fieldSource.epicKey, fieldSource.sprintId, fieldSource.teamId);
-    return this.http.post<any>(`${this.baseURL}/rest/api/2/issue/`, data, {headers: this.headers}).pipe(map((ret) => ret.key));
+    return this.ready.pipe(
+      switchMap(() => this.http.post<any>(`${this.baseURL}/rest/api/2/issue/`, data, {headers: this.headers}).pipe(map((ret) => ret.key)))
+    );
   }
 
   blockIssue(fromKey: string, toKey: string): Observable<boolean> {
     console.log('block issue');
     const data = this.buildBlockIssueData(fromKey, toKey);
-    return this.http.post<any>(`${this.baseURL}/rest/api/2/issueLink`, data, {headers: this.headers}).pipe(map(() => true));
+    return this.ready.pipe(
+      switchMap(() => this.http.post<any>(`${this.baseURL}/rest/api/2/issueLink`, data, {headers: this.headers}).pipe(map(() => true)))
+    );
   }
 
-  getIssuesBySprint(sprintId: string, startAt = 0, maxResults = this.MAX_RESULTS): Observable<JiraIssue[]> {
-    return this.http.get<any>(`${this.baseURL}/rest/agile/1.0/sprint/${sprintId}/issue`, {headers: this.headers, params: {startAt, maxResults}}).pipe(map((ret => {
+  getIssuesBySprint(sprintId: number, startAt = 0, maxResults = this.MAX_RESULTS): Observable<JiraIssue[]> {
+    console.log('getIssuesBySprint');
+    return this.ready.pipe(
+      switchMap(() => this.http.get<any>(`${this.baseURL}/rest/agile/1.0/sprint/${sprintId}/issue`, {headers: this.headers, params: {startAt, maxResults}})),
+      map((ret => {
       return ret.issues.map((issue: any) => {
         return {
           id: issue.id,
@@ -94,8 +109,20 @@ export class JiraService {
           sprintId: issue.fields[this.fieldService.sprintField]?.length > 0 ? issue.fields[this.fieldService.sprintField][0].id : null,
           issueLinks: issue.fields.issuelinks,
         }
-      });
-    })))
+      })}))
+    );
+  }
+
+  rankIssueAfter(issueKeys: string[], afterIssueKey: string): Observable<boolean> {
+    const data = {
+      'rankAfterIssue': afterIssueKey,
+      'rankCustomFieldId': 10009,
+      'issues': issueKeys,
+    };
+    return this.ready.pipe(
+      switchMap(() => this.http.put<any>(`${this.baseURL}/rest/agile/1.0/issue/rank`, data, {headers: this.headers})),
+      map(() => true),
+    );
   }
 
 
