@@ -2,27 +2,43 @@ import { Component, OnInit } from '@angular/core';
 import {getUrlSelectedIssueId} from "../../lib/utils";
 import {JiraService} from "../../services/jira.service";
 import {JiraIssue} from "../../lib/define";
+import {UrlWatchService} from "../../services/url-watch-service";
+import {Subject, takeUntil} from "rxjs";
 
 @Component({
   selector: 'breakdown-task',
   templateUrl: './breakdown-task.component.html',
   styleUrls: ['./breakdown-task.component.sass']
 })
-export class BreakdownTaskComponent implements OnInit {
+export class BreakdownTaskComponent {
   taskRowCount = 0;
   selectedIssue: JiraIssue;
 
-  constructor(private jiraService: JiraService) { }
+  private destroy$ = new Subject<void>();
 
-  ngOnInit(): void {
-    const issueId = getUrlSelectedIssueId();
-    if (issueId) {
-      this.jiraService.getIssue(issueId).subscribe((issue) => this.selectedIssue = issue);
-    }
+  constructor(private jiraService: JiraService, private urlWatchService: UrlWatchService) {
+    this.urlWatchService.urlChange$.pipe(
+      takeUntil(this.destroy$),
+    )
+    .subscribe(() => {
+      this.reset();
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
   }
 
   onClickAddTaskBtn(): void {
     this.taskRowCount ++;
+  }
+
+  private reset(): void {
+    this.taskRowCount = 0;
+    const issueId = getUrlSelectedIssueId();
+    if (issueId) {
+      this.jiraService.getIssue(issueId).subscribe((issue) => this.selectedIssue = issue);
+    }
   }
 
 }
