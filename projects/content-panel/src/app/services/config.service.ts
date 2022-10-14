@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import {Injectable, NgZone} from "@angular/core";
 import {Observable} from "rxjs";
 import {getExtensionId} from "../lib/define";
 
@@ -8,6 +8,9 @@ import {getExtensionId} from "../lib/define";
 })
 export class ConfigService {
 
+  constructor(private zone: NgZone) {
+  }
+
   loadByKeys<T>(keys: string[]): Observable<T> {
     return new Observable<any>((subscriber) => {
       const EXTENSION_ID = getExtensionId();
@@ -15,8 +18,10 @@ export class ConfigService {
 
       chrome.runtime.sendMessage(EXTENSION_ID, { chromeApi: 'storage.sync.get', data: {keys} }, (items) => {
         console.log('get response', items);
-        subscriber.next(items);
-        subscriber.complete();
+        this.zone.run(() => {
+          subscriber.next(items);
+          subscriber.complete();
+        });
       });
 
     })
