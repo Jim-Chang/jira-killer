@@ -18,6 +18,7 @@ export class AppComponent {
   storyPointFieldId: string;
 
   isSaving = false;
+  msg = '';
 
   constructor(private zone: NgZone, private configService: ConfigService) {}
 
@@ -38,6 +39,7 @@ export class AppComponent {
   }
 
   onClickSaveBtn(): void {
+    this.msg = '';
     const config = {
       jiraDomain: this.jiraDomain,
       email: this.email,
@@ -48,6 +50,9 @@ export class AppComponent {
       storyPointFieldId: this.storyPointFieldId,
     };
     this.isSaving = true;
-    this.configService.save(config).subscribe(() => (this.isSaving = false));
+    this.configService.save(config).subscribe(() => {
+      this.isSaving = false;
+      this.msg = 'OK!';
+    });
   }
 }

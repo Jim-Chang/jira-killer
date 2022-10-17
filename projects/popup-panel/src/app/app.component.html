@@ -5,11 +5,12 @@
   <h3>Auth</h3>
   <span>Email: </span><input [(ngModel)]="email" type="text">
   <span>Api Token: </span><input [(ngModel)]="apiToken" type="password">
+  <a href="https://id.atlassian.com/manage-profile/security/api-tokens" target="_blank">Get Token</a>
   <hr>
   <h3>Field ID</h3>
   <span>Team</span><input [(ngModel)]="teamFieldId" type="text">
   <span>Sprint</span><input [(ngModel)]="sprintFieldId" type="text">
   <span>EPIC</span><input [(ngModel)]="epicFieldId" type="text">
   <span>StoryPoint</span><input [(ngModel)]="storyPointFieldId" type="text">
-  <button (click)="onClickSaveBtn()" [disabled]="isSaving">{{saveBtnText}}</button>
+  <button (click)="onClickSaveBtn()" [disabled]="isSaving">{{saveBtnText}}</button><span> {{msg}}</span>
 </div>
