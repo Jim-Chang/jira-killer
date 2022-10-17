@@ -1,7 +1,7 @@
 import { AppComponent } from './app.component';
+import { BacklogComponent } from './components/backlog/backlog.component';
 import { BreakdownTaskInputComponent } from './components/breakdown-task-input/breakdown-task-input.component';
 import { BreakdownTaskComponent } from './components/breakdown-task/breakdown-task.component';
-import { SortBacklogIssueComponent } from './components/sort-backlog-issue/sort-backlog-issue.component';
 import { StoryBoardComponent } from './components/story-board/story-board.component';
 import { setExtensionId } from './lib/define';
 import { HttpClientModule } from '@angular/common/http';
@@ -15,7 +15,7 @@ import { BrowserModule } from '@angular/platform-browser';
     AppComponent,
     BreakdownTaskComponent,
     BreakdownTaskInputComponent,
-    SortBacklogIssueComponent,
+    BacklogComponent,
     StoryBoardComponent,
   ],
   imports: [BrowserModule, FormsModule, HttpClientModule],

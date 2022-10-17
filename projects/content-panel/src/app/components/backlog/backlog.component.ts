@@ -20,11 +20,11 @@ import {
 } from 'rxjs';
 
 @Component({
-  selector: 'sort-backlog-issue',
-  templateUrl: './sort-backlog-issue.component.html',
-  styleUrls: ['./sort-backlog-issue.component.sass'],
+  selector: 'backlog',
+  templateUrl: './backlog.component.html',
+  styleUrls: ['./backlog.component.sass'],
 })
-export class SortBacklogIssueComponent {
+export class BacklogComponent {
   sprints$ = new Subject<JiraSprint[]>();
   sortBtnText = 'Sort';
   isSorting = false;
