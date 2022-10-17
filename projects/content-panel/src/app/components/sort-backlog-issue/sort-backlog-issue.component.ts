@@ -14,7 +14,7 @@ import {UrlWatchService} from "../../services/url-watch-service";
 export class SortBacklogIssueComponent {
 
   sprints$ = new Subject<JiraSprint[]>();
-  sortBtntext = 'Sort';
+  sortBtnText = 'Sort';
   isSorting = false;
 
   sprintId = 0;
@@ -41,21 +41,13 @@ export class SortBacklogIssueComponent {
 
   onClickSortBtn(): void {
     this.isSorting = true;
-    this.sortBtntext = 'Sorting';
-    let allIssues: JiraIssue[] = [];
+    this.sortBtnText = 'Sorting';
 
     this.jiraService.getIssuesBySprint(this.sprintId).pipe(
-      expand((issues) => {
-        if (issues.length > 0) {
-          allIssues = [...allIssues, ...issues];
-          return this.jiraService.getIssuesBySprint(this.sprintId, allIssues.length);
-        }
-        return EMPTY;
-      }),
-      switchMap(() => this.issueSortService.doSort(allIssues)),
+      switchMap((issues) => this.issueSortService.doSort(issues)),
     ).subscribe((ret) => {
       this.isSorting = false;
-      this.sortBtntext = ret ? 'Finish' : 'Fail';
+      this.sortBtnText = ret ? 'Finish' : 'Fail';
     });
 
   }
@@ -67,7 +59,7 @@ export class SortBacklogIssueComponent {
     };
 
     const boardId = getUrlBoardId();
-    console.log('board id', boardId);
+
     if (boardId) {
       if (boardId !== this.lastBoardId) {
         _clearSpOpt();

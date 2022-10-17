@@ -10,14 +10,6 @@ export function getExtensionId(): string {
 
 export const LOG_PREFIX = '[Jira Killer]';
 
-export const BACKLOG_LIST_ID = 'ghx-backlog';
-
-export const DATA_TEST_ID = 'data-test-id';
-export const ISSUE_DETAIL_VIEW_ID = 'issue.views.issue-details.issue-layout.issue-layout';
-export const ISSUE_SUMMARY_H1_ID = 'issue.views.issue-base.foundation.summary.heading';
-export const ISSUE_DESC_DIV_ID = 'issue.views.field.rich-text.description';
-
-
 
 export enum JiraIssueType {
   Epic = 'Epic',
@@ -34,6 +26,28 @@ export enum CustomIssueType {
 
 export type IssueType = JiraIssueType | CustomIssueType;
 
+export enum IssueLinkType {
+  Blocks = 'Blocks',
+}
+
+export const ISSUE_PREFIX_MAP: {[key: string]: string} = {
+  [CustomIssueType.FETask]: 'RD<FE> - ',
+  [CustomIssueType.BETask]: 'RD<BE> - ',
+  [JiraIssueType.Task]: 'RD<INT> - ',
+  [JiraIssueType.Test]: 'QA - ',
+};
+
+export enum IssueStatus  {
+  Open = 'Open',
+  ToBeHandled = 'To be Handled',
+  InProgress = 'In Progress',
+  InReview = 'In Review',
+  Resolved = 'Resolved',
+  ReadyForVerification = 'Ready for Verification',
+  Done = 'Done',
+  Closed = 'Closed',
+}
+
 export type JiraIssue = {
   id: string;
   key: string;
@@ -43,21 +57,29 @@ export type JiraIssue = {
   epicKey: string | null;
   teamId: string | null;
   sprintId: number | null;
+  status: IssueStatus;
   issueLinks?: JiraIssueLink[];
+}
+
+export type LinkedIssue = {
+  key: string;
+  fields: {
+    summary: string;
+    issuetype: {
+      name: IssueType;
+    },
+    status: {
+      name: IssueStatus;
+    }
+  }
 }
 
 export type JiraIssueLink = {
   type: {
-    name: string;
+    name: IssueLinkType;
   },
-  outwardIssue: {
-    key: string;
-    fields: {
-      issuetype: {
-        name: string;
-      }
-    }
-  },
+  outwardIssue?: LinkedIssue,
+  inwardIssue?: LinkedIssue,
 }
 
 export type JiraSprint = {

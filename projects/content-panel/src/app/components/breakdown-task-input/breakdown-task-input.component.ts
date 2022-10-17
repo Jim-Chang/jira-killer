@@ -1,15 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {CustomIssueType, JiraIssueType} from "../../lib/define";
+import {CustomIssueType, ISSUE_PREFIX_MAP, JiraIssueType} from "../../lib/define";
 import {JiraService} from "../../services/jira.service";
 import {switchMap} from "rxjs";
-
-
-const PREFIX_MAP: {[key: string]: string} = {
-  [CustomIssueType.FETask]: 'RD<FE> - ',
-  [CustomIssueType.BETask]: 'RD<BE> - ',
-  [JiraIssueType.Task]: 'RD<INT> - ',
-  [JiraIssueType.Test]: 'QA - ',
-};
 
 @Component({
   selector: 'breakdown-task-input',
@@ -60,7 +52,7 @@ export class BreakdownTaskInputComponent implements OnInit {
   }
 
   onChangeIssueType(): void {
-    const prefix = PREFIX_MAP[this.issueType];
+    const prefix = ISSUE_PREFIX_MAP[this.issueType];
     this.summary = `${prefix}${this.parentSummary}`;
   }
 

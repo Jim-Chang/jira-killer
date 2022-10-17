@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {ConfigService} from "./config.service";
-import {map, Observable, ReplaySubject, switchMap} from "rxjs";
+import {EMPTY, expand, map, Observable, ReplaySubject, switchMap} from "rxjs";
 import {IssueType, JiraIssue, JiraSprint} from "../lib/define";
 import {JiraFieldService} from "./jira-field.service";
 
@@ -69,6 +69,7 @@ export class JiraService {
           epicKey: ret.fields[this.fieldService.epicField] ?? null,
           teamId: ret.fields[this.fieldService.teamField]?.id ?? null,
           sprintId: sprints.length > 0 ? sprints[0].id : null,
+          status: ret.fields.status.name,
         };
         console.log('clean issue', issue);
         return issue;
@@ -92,10 +93,27 @@ export class JiraService {
     );
   }
 
-  getIssuesBySprint(sprintId: number, startAt = 0, maxResults = this.MAX_RESULTS): Observable<JiraIssue[]> {
+  getIssuesBySprint(sprintId: number, issueTypes: IssueType[] = []): Observable<JiraIssue[]> {
     console.log('getIssuesBySprint');
+    const params: any = {startAt: 0, maxResults: this.MAX_RESULTS};
+
+    if (issueTypes.length > 0) {
+      params.jql = `issuetype in (${issueTypes.join(',')})`;
+    }
+
+    const url = `${this.baseURL}/rest/agile/1.0/sprint/${sprintId}/issue`;
+    let allIssues: JiraIssue[] = [];
+
     return this.ready.pipe(
-      switchMap(() => this.http.get<any>(`${this.baseURL}/rest/agile/1.0/sprint/${sprintId}/issue`, {headers: this.headers, params: {startAt, maxResults}})),
+      switchMap(() => this.http.get<any>(url, {headers: this.headers, params})),
+      expand((issues) => {
+        if (issues.length > 0) {
+          allIssues = [...allIssues, ...issues];
+          params.startAt = allIssues.length;
+          return this.http.get<any>(url, {headers: this.headers, params});
+        }
+        return EMPTY;
+      }),
       map((ret => {
       return ret.issues.map((issue: any) => {
         return {
@@ -108,6 +126,7 @@ export class JiraService {
           teamId: issue.fields[this.fieldService.teamField]?.id ?? null,
           sprintId: issue.fields[this.fieldService.sprintField]?.length > 0 ? issue.fields[this.fieldService.sprintField][0].id : null,
           issueLinks: issue.fields.issuelinks,
+          status: issue.fields.status.name,
         }
       })}))
     );

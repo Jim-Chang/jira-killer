@@ -19,7 +19,7 @@ export class JiraIssueSortService {
       if (shouldSortTypes.includes(issue.issueType) && (issue.issueLinks?.length ?? 0) > 0) {
         // only looks first block issue
         const blockIssueLink = issue.issueLinks!.find((link) => link.type.name === 'Blocks' && link.outwardIssue?.fields.issuetype.name === 'Story');
-        if (blockIssueLink) {
+        if (blockIssueLink && blockIssueLink.outwardIssue) {
           const blockIssueKey = blockIssueLink.outwardIssue.key;
           if (!(blockIssueKey in storyTasksKeyMap)) {
             storyTasksKeyMap[blockIssueKey] = [];
