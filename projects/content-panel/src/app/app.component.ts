@@ -7,8 +7,17 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'content-panel';
+  isShowPanel = false;
+
+  get switchBtnText(): string {
+    return this.isShowPanel ? '▲' : '▼';
+  }
 
   ngOnInit(): void {
     console.log('init app component');
+  }
+
+  onClickSwitchBtn(): void {
+    this.isShowPanel = !this.isShowPanel;
   }
 }
