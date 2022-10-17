@@ -1,18 +1,30 @@
+import { JiraIssue, JiraSprint } from '../../lib/define';
+import { getUrlBoardId } from '../../lib/utils';
+import { JiraIssueSortService } from '../../services/jira-issue-sort.service';
+import { JiraService } from '../../services/jira.service';
+import { UrlWatchService } from '../../services/url-watch-service';
 import { Component, OnInit } from '@angular/core';
-import {JiraService} from "../../services/jira.service";
-import {EMPTY, expand, filter, map, Observable, of, repeat, Subject, switchMap, take, takeUntil, takeWhile} from "rxjs";
-import {JiraIssue, JiraSprint} from "../../lib/define";
-import {getUrlBoardId} from "../../lib/utils";
-import {JiraIssueSortService} from "../../services/jira-issue-sort.service";
-import {UrlWatchService} from "../../services/url-watch-service";
+import {
+  EMPTY,
+  expand,
+  filter,
+  map,
+  Observable,
+  of,
+  repeat,
+  Subject,
+  switchMap,
+  take,
+  takeUntil,
+  takeWhile,
+} from 'rxjs';
 
 @Component({
   selector: 'sort-backlog-issue',
   templateUrl: './sort-backlog-issue.component.html',
-  styleUrls: ['./sort-backlog-issue.component.sass']
+  styleUrls: ['./sort-backlog-issue.component.sass'],
 })
 export class SortBacklogIssueComponent {
-
   sprints$ = new Subject<JiraSprint[]>();
   sortBtnText = 'Sort';
   isSorting = false;
@@ -26,11 +38,12 @@ export class SortBacklogIssueComponent {
     return !this.isSorting && !!this.sprintId;
   }
 
-  constructor(private jiraService: JiraService, private issueSortService: JiraIssueSortService, private urlWatchService: UrlWatchService) {
-    this.urlWatchService.urlChange$.pipe(
-      takeUntil(this.destroy$),
-    )
-    .subscribe(() => {
+  constructor(
+    private jiraService: JiraService,
+    private issueSortService: JiraIssueSortService,
+    private urlWatchService: UrlWatchService,
+  ) {
+    this.urlWatchService.urlChange$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.reset();
     });
   }
@@ -43,19 +56,19 @@ export class SortBacklogIssueComponent {
     this.isSorting = true;
     this.sortBtnText = 'Sorting';
 
-    this.jiraService.getIssuesBySprint(this.sprintId).pipe(
-      switchMap((issues) => this.issueSortService.doSort(issues)),
-    ).subscribe((ret) => {
-      this.isSorting = false;
-      this.sortBtnText = ret ? 'Finish' : 'Fail';
-    });
-
+    this.jiraService
+      .getIssuesBySprint(this.sprintId)
+      .pipe(switchMap((issues) => this.issueSortService.doSort(issues)))
+      .subscribe((ret) => {
+        this.isSorting = false;
+        this.sortBtnText = ret ? 'Finish' : 'Fail';
+      });
   }
 
   private reset(): void {
     const _clearSpOpt = () => {
       this.sprints$.next([]);
-      this.sprintId = 0
+      this.sprintId = 0;
     };
 
     const boardId = getUrlBoardId();
@@ -73,5 +86,4 @@ export class SortBacklogIssueComponent {
     }
     this.lastBoardId = boardId;
   }
-
 }

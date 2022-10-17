@@ -10,7 +10,6 @@ export function getExtensionId(): string {
 
 export const LOG_PREFIX = '[Jira Killer]';
 
-
 export enum JiraIssueType {
   Epic = 'Epic',
   Story = 'Story',
@@ -30,14 +29,14 @@ export enum IssueLinkType {
   Blocks = 'Blocks',
 }
 
-export const ISSUE_PREFIX_MAP: {[key: string]: string} = {
+export const ISSUE_PREFIX_MAP: { [key: string]: string } = {
   [CustomIssueType.FETask]: 'RD<FE> - ',
   [CustomIssueType.BETask]: 'RD<BE> - ',
   [JiraIssueType.Task]: 'RD<INT> - ',
   [JiraIssueType.Test]: 'QA - ',
 };
 
-export enum IssueStatus  {
+export enum IssueStatus {
   Open = 'Open',
   ToBeHandled = 'To be Handled',
   InProgress = 'In Progress',
@@ -59,7 +58,7 @@ export type JiraIssue = {
   sprintId: number | null;
   status: IssueStatus;
   issueLinks?: JiraIssueLink[];
-}
+};
 
 export type LinkedIssue = {
   key: string;
@@ -67,20 +66,20 @@ export type LinkedIssue = {
     summary: string;
     issuetype: {
       name: IssueType;
-    },
+    };
     status: {
       name: IssueStatus;
-    }
-  }
-}
+    };
+  };
+};
 
 export type JiraIssueLink = {
   type: {
     name: IssueLinkType;
-  },
-  outwardIssue?: LinkedIssue,
-  inwardIssue?: LinkedIssue,
-}
+  };
+  outwardIssue?: LinkedIssue;
+  inwardIssue?: LinkedIssue;
+};
 
 export type JiraSprint = {
   id: number;
@@ -92,4 +91,4 @@ export type JiraSprint = {
   endDate?: string;
   completeDate?: string;
   originBoardId?: number;
-}
+};

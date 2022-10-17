@@ -1,6 +1,5 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { BreakdownTaskComponent } from './breakdown-task.component';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 describe('CreateBreackdownTaskComponent', () => {
   let component: BreakdownTaskComponent;
@@ -8,9 +7,8 @@ describe('CreateBreackdownTaskComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BreakdownTaskComponent ]
-    })
-    .compileComponents();
+      declarations: [BreakdownTaskComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(BreakdownTaskComponent);
     component = fixture.componentInstance;

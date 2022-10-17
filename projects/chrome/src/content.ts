@@ -1,4 +1,4 @@
-import * as $ from "jquery";
+import * as $ from 'jquery';
 
 $(`<jira-killer-id id="jiraKillerId" data="${chrome.runtime.id}"></jira-killer-id>`).appendTo(document.body);
 
@@ -8,5 +8,5 @@ const vendor = chrome.runtime.getURL('content-panel/vendor.js');
 const main = chrome.runtime.getURL('content-panel/main.js');
 
 let ngSrcHtml = '';
-[runtime, polyfills, vendor, main].forEach((url) => ngSrcHtml += `<script src="${url}" type="module"></script>`);
+[runtime, polyfills, vendor, main].forEach((url) => (ngSrcHtml += `<script src="${url}" type="module"></script>`));
 $(ngSrcHtml).appendTo(document.head);

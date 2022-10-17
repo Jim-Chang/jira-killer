@@ -1,5 +1,5 @@
-import {Injectable} from "@angular/core";
-import {ConfigService} from "./config.service";
+import { ConfigService } from './config.service';
+import { Injectable } from '@angular/core';
 
 type Config = {
   teamFieldId: string;
@@ -19,7 +19,7 @@ export class JiraFieldService {
   private preifx = 'customfield_';
 
   constructor(private configService: ConfigService) {
-    this.configService.loadByKeys<Config>(this.CONFIG_KEYS).subscribe((cfg) => this.config = cfg);
+    this.configService.loadByKeys<Config>(this.CONFIG_KEYS).subscribe((cfg) => (this.config = cfg));
   }
 
   get teamField(): string {
@@ -37,6 +37,4 @@ export class JiraFieldService {
   get storyPointField(): string {
     return `${this.preifx}${this.config.storyPointFieldId}`;
   }
-
-
 }

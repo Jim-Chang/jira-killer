@@ -1,10 +1,10 @@
-import {Component, NgZone} from '@angular/core';
-import {Config, ConfigService} from "../service/config-service";
+import { Config, ConfigService } from '../service/config-service';
+import { Component, NgZone } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.sass']
+  styleUrls: ['./app.component.sass'],
 })
 export class AppComponent {
   jiraDomain: string;
@@ -19,8 +19,7 @@ export class AppComponent {
 
   isSaving = false;
 
-  constructor(private zone: NgZone, private configService: ConfigService) {
-  }
+  constructor(private zone: NgZone, private configService: ConfigService) {}
 
   ngOnInit(): void {
     this.configService.load().subscribe((config) => {
@@ -49,6 +48,6 @@ export class AppComponent {
       storyPointFieldId: this.storyPointFieldId,
     };
     this.isSaving = true;
-    this.configService.save(config).subscribe(() => this.isSaving = false);
+    this.configService.save(config).subscribe(() => (this.isSaving = false));
   }
 }

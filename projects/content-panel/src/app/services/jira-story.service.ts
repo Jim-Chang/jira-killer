@@ -1,5 +1,3 @@
-import {Injectable} from "@angular/core";
-import {JiraService} from "./jira.service";
 import {
   ISSUE_PREFIX_MAP,
   IssueLinkType,
@@ -7,21 +5,23 @@ import {
   JiraIssue,
   JiraIssueLink,
   JiraIssueType,
-  LinkedIssue
-} from "../lib/define";
-import {map, Observable} from "rxjs";
+  LinkedIssue,
+} from '../lib/define';
+import { JiraService } from './jira.service';
+import { Injectable } from '@angular/core';
+import { map, Observable } from 'rxjs';
 
 type TransitData = {
   [IssueStatus.ToBeHandled]: JiraIssue[];
   [IssueStatus.InProgress]: JiraIssue[];
   [IssueStatus.InReview]: JiraIssue[];
   [IssueStatus.Resolved]: JiraIssue[];
-}
+};
 
 type ChangeSpec = {
-  notInStatusList: IssueStatus[],
-  inStatusList: IssueStatus[],
-}
+  notInStatusList: IssueStatus[];
+  inStatusList: IssueStatus[];
+};
 
 const CHANGE_SPEC_MAP = {
   [IssueStatus.ToBeHandled]: {
@@ -40,15 +40,13 @@ const CHANGE_SPEC_MAP = {
     notInStatusList: [IssueStatus.Open, IssueStatus.ToBeHandled, IssueStatus.InProgress, IssueStatus.InReview],
     inStatusList: [IssueStatus.Resolved],
   },
-}
+};
 
 @Injectable({
   providedIn: 'root',
 })
 export class JiraStoryService {
-
-  constructor(private jiraService: JiraService) {
-  }
+  constructor(private jiraService: JiraService) {}
 
   doTransitStoryStatus$(sprintId: number): Observable<TransitData> {
     return this.jiraService.getIssuesBySprint(sprintId, [JiraIssueType.Story]).pipe(
@@ -61,7 +59,7 @@ export class JiraStoryService {
       //   return combineLatest(reqs$);
       // }),
       // map((ret) => console.log('transit api result', ret))
-    )
+    );
   }
 
   private transitIssueToNewStatus(issues: JiraIssue[]): TransitData {
@@ -82,7 +80,7 @@ export class JiraStoryService {
       } else if (newStatus === IssueStatus.Resolved) {
         data[IssueStatus.Resolved].push(issue);
       }
-    })
+    });
     return data;
   }
 
@@ -91,12 +89,12 @@ export class JiraStoryService {
       return null;
     }
 
-    const _subTaskFilter = (link: JiraIssueLink) => link.type.name === IssueLinkType.Blocks && !!link.inwardIssue && this.isSubTaskSummary(link.inwardIssue.fields.summary);
-    const _getStatusList = (links: JiraIssueLink[]) => (
-      links
-        .filter(_subTaskFilter)
-        .map((l) => this.getStatus(l.inwardIssue!))
-    );
+    const _subTaskFilter = (link: JiraIssueLink) =>
+      link.type.name === IssueLinkType.Blocks &&
+      !!link.inwardIssue &&
+      this.isSubTaskSummary(link.inwardIssue.fields.summary);
+    const _getStatusList = (links: JiraIssueLink[]) =>
+      links.filter(_subTaskFilter).map((l) => this.getStatus(l.inwardIssue!));
 
     // open => to be handled
     if (issue.status === IssueStatus.Open) {
@@ -130,7 +128,9 @@ export class JiraStoryService {
   }
 
   private isSubTaskSummary(summary: string): boolean {
-    return Object.values(ISSUE_PREFIX_MAP).map((k) => summary.startsWith(k)).some((ret) => ret);
+    return Object.values(ISSUE_PREFIX_MAP)
+      .map((k) => summary.startsWith(k))
+      .some((ret) => ret);
   }
 
   private isMeetChangeSpec(statusList: IssueStatus[], spec: ChangeSpec): boolean {
@@ -142,5 +142,4 @@ export class JiraStoryService {
   private getStatus(linkedIssue: LinkedIssue): IssueStatus {
     return linkedIssue.fields.status.name;
   }
-
 }

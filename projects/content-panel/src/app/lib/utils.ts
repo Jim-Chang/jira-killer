@@ -9,7 +9,7 @@ export function getUrlSelectedIssueId(): string | null {
 
   // case 2: browse issue
   // https://xxxx.atlassian.net/browse/xxx-1234
-  const browseIssueReg =  /\/browse\/[a-zA-Z]*-[0-9]*/;
+  const browseIssueReg = /\/browse\/[a-zA-Z]*-[0-9]*/;
   const match = window.location.href.match(browseIssueReg);
   if (match) {
     // ['', 'browse', 'TEST-256']
@@ -20,7 +20,7 @@ export function getUrlSelectedIssueId(): string | null {
 }
 
 export function getUrlBoardId(): number | null {
-  const reg =  /\/boards\/[0-9]*/;
+  const reg = /\/boards\/[0-9]*/;
   // https://xxx.atlassian.net/jira/software/c/projects/xxx/boards/91/backlog?issueLimit=100
   const match = window.location.href.match(reg);
   if (match) {

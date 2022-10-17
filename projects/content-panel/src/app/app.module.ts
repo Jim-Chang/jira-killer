@@ -1,15 +1,14 @@
-import {Injector, NgModule} from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-
 import { AppComponent } from './app.component';
-import {createCustomElement} from "@angular/elements";
-import { BreakdownTaskComponent } from './components/breakdown-task/breakdown-task.component';
 import { BreakdownTaskInputComponent } from './components/breakdown-task-input/breakdown-task-input.component';
-import {FormsModule} from "@angular/forms";
-import {HttpClientModule} from "@angular/common/http";
-import {setExtensionId} from "./lib/define";
+import { BreakdownTaskComponent } from './components/breakdown-task/breakdown-task.component';
 import { SortBacklogIssueComponent } from './components/sort-backlog-issue/sort-backlog-issue.component';
 import { StoryBoardComponent } from './components/story-board/story-board.component';
+import { setExtensionId } from './lib/define';
+import { HttpClientModule } from '@angular/common/http';
+import { Injector, NgModule } from '@angular/core';
+import { createCustomElement } from '@angular/elements';
+import { FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
 
 @NgModule({
   declarations: [
@@ -17,22 +16,16 @@ import { StoryBoardComponent } from './components/story-board/story-board.compon
     BreakdownTaskComponent,
     BreakdownTaskInputComponent,
     SortBacklogIssueComponent,
-    StoryBoardComponent
+    StoryBoardComponent,
   ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpClientModule,
-  ],
+  imports: [BrowserModule, FormsModule, HttpClientModule],
   providers: [],
-  entryComponents: [
-    AppComponent,
-  ],
+  entryComponents: [AppComponent],
 })
 export class AppModule {
   private JIRA_KILLER = 'jira-killer';
 
-  constructor(private injector: Injector) { }
+  constructor(private injector: Injector) {}
 
   ngDoBootstrap(): void {
     const idEle = document.getElementById('jiraKillerId');

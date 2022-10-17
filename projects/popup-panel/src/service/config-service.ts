@@ -1,5 +1,5 @@
-import {Observable} from "rxjs";
-import {Injectable, NgZone} from "@angular/core";
+import { Injectable, NgZone } from '@angular/core';
+import { Observable } from 'rxjs';
 
 export type Config = {
   jiraDomain: string;
@@ -9,7 +9,7 @@ export type Config = {
   sprintFieldId: string;
   epicFieldId: string;
   storyPointFieldId: string;
-}
+};
 
 export const CONFIG_KEYS = [
   'jiraDomain',
@@ -22,12 +22,10 @@ export const CONFIG_KEYS = [
 ];
 
 @Injectable({
- providedIn: 'root',
+  providedIn: 'root',
 })
 export class ConfigService {
-
-  constructor(private zone: NgZone) {
-  }
+  constructor(private zone: NgZone) {}
 
   save(config: Config): Observable<void> {
     return new Observable<void>((subscriber) => {
@@ -35,8 +33,8 @@ export class ConfigService {
         this.zone.run(() => {
           subscriber.next();
           subscriber.complete();
-        })
-      })
+        });
+      });
     });
   }
 
@@ -47,7 +45,7 @@ export class ConfigService {
           subscriber.next(items as Config);
           subscriber.complete();
         });
-      })
+      });
     });
   }
 }
