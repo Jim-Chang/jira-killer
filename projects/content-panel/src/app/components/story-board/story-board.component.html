@@ -1,0 +1,5 @@
+<div>
+  <p>Transit Story Status: {{sprint?.name}}</p>
+  <p [innerHTML]="needTransitResult"></p>
+  <button [disabled]="!sprint" (click)="onClickTransitStoryStatusBtn()">Find transition</button>
+</div>

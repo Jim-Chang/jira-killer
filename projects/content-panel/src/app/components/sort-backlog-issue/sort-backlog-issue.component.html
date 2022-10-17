@@ -2,4 +2,4 @@
     <option disabled selected value>Select Sprint</option>
     <option *ngFor="let sp of sprints$ | async" [value]="sp.id">[{{sp.state}}] {{sp.name}}</option>
 </select>
-<button (click)="onClickSortBtn()" [disabled]="!enableSortBtn">{{sortBtntext}}</button>
+<button (click)="onClickSortBtn()" [disabled]="!enableSortBtn">{{sortBtnText}}</button>

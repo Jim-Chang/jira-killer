@@ -9,13 +9,15 @@ import {FormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import {setExtensionId} from "./lib/define";
 import { SortBacklogIssueComponent } from './components/sort-backlog-issue/sort-backlog-issue.component';
+import { StoryBoardComponent } from './components/story-board/story-board.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     BreakdownTaskComponent,
     BreakdownTaskInputComponent,
-    SortBacklogIssueComponent
+    SortBacklogIssueComponent,
+    StoryBoardComponent
   ],
   imports: [
     BrowserModule,
