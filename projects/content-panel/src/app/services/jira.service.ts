@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {ConfigService} from "./config.service";
 import {EMPTY, expand, map, Observable, ReplaySubject, switchMap} from "rxjs";
-import {IssueType, JiraIssue, JiraSprint} from "../lib/define";
+import {IssueStatus, IssueType, JiraIssue, JiraSprint} from "../lib/define";
 import {JiraFieldService} from "./jira-field.service";
 
 type Config = {jiraDomain: string, email: string, apiToken: string};
@@ -77,22 +77,6 @@ export class JiraService {
     );
   }
 
-  createIssue(fieldSource: JiraIssue, summary: string, issueType: IssueType, storyPoint: number | null): Observable<string> {
-    console.log('create issue');
-    const data = this.buildCreateIssueData(fieldSource.projKey, summary, issueType, storyPoint, fieldSource.epicKey, fieldSource.sprintId, fieldSource.teamId);
-    return this.ready.pipe(
-      switchMap(() => this.http.post<any>(`${this.baseURL}/rest/api/2/issue/`, data, {headers: this.headers}).pipe(map((ret) => ret.key)))
-    );
-  }
-
-  blockIssue(fromKey: string, toKey: string): Observable<boolean> {
-    console.log('block issue');
-    const data = this.buildBlockIssueData(fromKey, toKey);
-    return this.ready.pipe(
-      switchMap(() => this.http.post<any>(`${this.baseURL}/rest/api/2/issueLink`, data, {headers: this.headers}).pipe(map(() => true)))
-    );
-  }
-
   getIssuesBySprint(sprintId: number, issueTypes: IssueType[] = []): Observable<JiraIssue[]> {
     console.log('getIssuesBySprint');
     const params: any = {startAt: 0, maxResults: this.MAX_RESULTS};
@@ -129,6 +113,37 @@ export class JiraService {
           status: issue.fields.status.name,
         }
       })}))
+    );
+  }
+
+  createIssue(fieldSource: JiraIssue, summary: string, issueType: IssueType, storyPoint: number | null): Observable<string> {
+    console.log('create issue');
+    const data = this.buildCreateIssueData(fieldSource.projKey, summary, issueType, storyPoint, fieldSource.epicKey, fieldSource.sprintId, fieldSource.teamId);
+    return this.ready.pipe(
+      switchMap(() => this.http.post<any>(`${this.baseURL}/rest/api/2/issue/`, data, {headers: this.headers})),
+      map((ret) => ret.key),
+    );
+  }
+
+  blockIssue(fromKey: string, toKey: string): Observable<boolean> {
+    console.log('block issue');
+    const data = this.buildBlockIssueData(fromKey, toKey);
+    return this.ready.pipe(
+      switchMap(() => this.http.post<any>(`${this.baseURL}/rest/api/2/issueLink`, data, {headers: this.headers})),
+      map(() => true),
+    );
+  }
+
+  transitIssue(key: string, status: IssueStatus): Observable<void> {
+    console.log('transit issue');
+    const data = {
+      transition: {
+        name: status
+      }
+    };
+    return this.ready.pipe(
+      switchMap(() => this.http.post<any>(`${this.baseURL}/rest/api/2/issue/${key}/transitions`, data, {headers: this.headers})),
+      map((ret) => console.log(ret)),
     );
   }
 
