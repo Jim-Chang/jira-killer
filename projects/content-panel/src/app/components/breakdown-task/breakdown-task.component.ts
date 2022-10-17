@@ -12,7 +12,7 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class BreakdownTaskComponent {
   taskRowCount = 0;
-  selectedIssue: JiraIssue;
+  selectedIssue: JiraIssue | null = null;
 
   private destroy$ = new Subject<void>();
 
@@ -35,6 +35,8 @@ export class BreakdownTaskComponent {
     const issueId = getUrlSelectedIssueId();
     if (issueId) {
       this.jiraService.getIssue(issueId).subscribe((issue) => (this.selectedIssue = issue));
+    } else {
+      this.selectedIssue = null;
     }
   }
 }
