@@ -48,7 +48,9 @@ export class JiraService {
           params: { state, maxResults },
         }),
       ),
-      map((ret) => ret.values),
+      map((ret) =>
+        (ret.values as JiraSprint[]).filter((sp) => (!!sp.originBoardId ? sp.originBoardId === boardId : true)),
+      ),
     );
   }
 
