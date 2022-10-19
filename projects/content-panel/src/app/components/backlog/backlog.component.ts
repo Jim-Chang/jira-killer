@@ -1,5 +1,6 @@
 import { JiraIssue, JiraSprint } from '../../lib/define';
 import { getUrlBoardId } from '../../lib/utils';
+import { ConfigService } from '../../services/config.service';
 import { JiraIssueSortService } from '../../services/jira-issue-sort.service';
 import { JiraService } from '../../services/jira.service';
 import { UrlWatchService } from '../../services/url-watch-service';
@@ -30,6 +31,7 @@ export class BacklogComponent {
   isSorting = false;
 
   sprintId = 0;
+  wantBrowseIssueKey = '';
 
   private lastBoardId: number | null = null;
   private destroy$ = new Subject<void>();
@@ -42,6 +44,7 @@ export class BacklogComponent {
     private jiraService: JiraService,
     private issueSortService: JiraIssueSortService,
     private urlWatchService: UrlWatchService,
+    private configService: ConfigService,
   ) {
     this.urlWatchService.urlChange$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.reset();
@@ -65,6 +68,22 @@ export class BacklogComponent {
       });
   }
 
+  onClickBrowseIssueBtn(): void {
+    this.configService.loadByKeys<{ jiraDomain: string }>(['jiraDomain']).subscribe((cfg) => {
+      if (!cfg.jiraDomain) {
+        console.error('Please set jira domain first');
+        return;
+      }
+      const key = this.cleanIssueKey(this.wantBrowseIssueKey);
+      if (!key) {
+        console.error('Not key format');
+        return;
+      }
+      const url = `https://${cfg.jiraDomain}.atlassian.net/browse/${key}`;
+      window.open(url, '_blank')?.focus();
+    });
+  }
+
   private reset(): void {
     const _clearSpOpt = () => {
       this.sprints$.next([]);
@@ -85,5 +104,20 @@ export class BacklogComponent {
       _clearSpOpt();
     }
     this.lastBoardId = boardId;
+  }
+
+  private cleanIssueKey(key: string): string | null {
+    let ret: string | null = null;
+
+    if (key.match(/[a-zA-Z]+[0-9]+/)) {
+      // fts1234
+      const prefix = key.match(/[a-zA-Z]+/)![0];
+      const code = key.replace(prefix, '');
+      ret = `${prefix}-${code}`.toUpperCase();
+    } else if (key.match(/[a-zA-Z]+-[0-9]+/)) {
+      // fts-1234
+      ret = key.toUpperCase();
+    }
+    return ret;
   }
 }

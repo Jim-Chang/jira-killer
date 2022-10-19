@@ -1,5 +1,10 @@
-<select name="type" [(ngModel)]="sprintId">
-    <option disabled selected value>Select Sprint</option>
-    <option *ngFor="let sp of sprints$ | async" [value]="sp.id">[{{sp.state}}] {{sp.name}}</option>
-</select>
-<button (click)="onClickSortBtn()" [disabled]="!enableSortBtn">{{sortBtnText}}</button>
+<div>
+  <select name="type" [(ngModel)]="sprintId">
+      <option disabled selected value>Select Sprint</option>
+      <option *ngFor="let sp of sprints$ | async" [value]="sp.id">[{{sp.state}}] {{sp.name}}</option>
+  </select>
+  <button (click)="onClickSortBtn()" [disabled]="!enableSortBtn">{{sortBtnText}}</button>
+</div>
+<div>
+  <input [(ngModel)]="wantBrowseIssueKey" (keyup.enter)="onClickBrowseIssueBtn()"><button (click)="onClickBrowseIssueBtn()">Browse Issue</button>
+</div>
