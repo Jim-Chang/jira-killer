@@ -9,6 +9,7 @@ export type Config = {
   sprintFieldId: string;
   epicFieldId: string;
   storyPointFieldId: string;
+  pokerGameId: string;
 };
 
 export const CONFIG_KEYS = [
@@ -19,6 +20,7 @@ export const CONFIG_KEYS = [
   'sprintFieldId',
   'epicFieldId',
   'storyPointFieldId',
+  'pokerGameId',
 ];
 
 @Injectable({

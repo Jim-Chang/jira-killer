@@ -1,9 +1,16 @@
-<div class="container" [ngClass]="{show: isShowPanel}">
+<div class="top-container" [ngClass]="{top_0: isShowTopPanel}">
   <story-board></story-board>
   <hr>
   <backlog></backlog>
   <hr>
   <breakdown-task></breakdown-task>
   <hr>
-  <button (click)="onClickSwitchBtn()">{{switchBtnText}}</button>
+  <button (click)="onClickTopSwitchBtn()">{{switchTopBtnText}}</button>
+</div>
+
+<div class="left-container" [ngClass]="{left_0: isShowLeftPanel}">
+  <poker></poker>
+  <div>
+    <button (click)="onClickLeftSwitchBtn()">{{switchLeftBtnText}}</button>
+  </div>
 </div>

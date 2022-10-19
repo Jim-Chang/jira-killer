@@ -7,17 +7,26 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'content-panel';
-  isShowPanel = false;
+  isShowTopPanel = false;
+  isShowLeftPanel = false;
 
-  get switchBtnText(): string {
-    return this.isShowPanel ? '▲' : '▼';
+  get switchTopBtnText(): string {
+    return this.isShowTopPanel ? '▲' : '▼';
+  }
+
+  get switchLeftBtnText(): string {
+    return this.isShowLeftPanel ? '◀' : '▶';
   }
 
   ngOnInit(): void {
     console.log('init app component');
   }
 
-  onClickSwitchBtn(): void {
-    this.isShowPanel = !this.isShowPanel;
+  onClickTopSwitchBtn(): void {
+    this.isShowTopPanel = !this.isShowTopPanel;
+  }
+
+  onClickLeftSwitchBtn(): void {
+    this.isShowLeftPanel = !this.isShowLeftPanel;
   }
 }

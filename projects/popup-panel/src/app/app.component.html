@@ -12,5 +12,10 @@
   <span>Sprint</span><input [(ngModel)]="sprintFieldId" type="text">
   <span>EPIC</span><input [(ngModel)]="epicFieldId" type="text">
   <span>StoryPoint</span><input [(ngModel)]="storyPointFieldId" type="text">
+  <hr>
+  <h3>Poker Game</h3>
+  <span>PokerGameID</span><input [(ngModel)]="pokerGameId" type="text">
+  <a href="https://planningpokeronline.com/" _target="_blank">Create Game</a>
+  <hr>
   <button (click)="onClickSaveBtn()" [disabled]="isSaving">{{saveBtnText}}</button><span> {{msg}}</span>
 </div>

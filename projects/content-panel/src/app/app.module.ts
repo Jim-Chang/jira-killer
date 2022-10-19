@@ -2,6 +2,7 @@ import { AppComponent } from './app.component';
 import { BacklogComponent } from './components/backlog/backlog.component';
 import { BreakdownTaskInputComponent } from './components/breakdown-task-input/breakdown-task-input.component';
 import { BreakdownTaskComponent } from './components/breakdown-task/breakdown-task.component';
+import { PokerComponent } from './components/poker/poker.component';
 import { StoryBoardComponent } from './components/story-board/story-board.component';
 import { setExtensionId } from './lib/define';
 import { HttpClientModule } from '@angular/common/http';
@@ -17,6 +18,7 @@ import { BrowserModule } from '@angular/platform-browser';
     BreakdownTaskInputComponent,
     BacklogComponent,
     StoryBoardComponent,
+    PokerComponent,
   ],
   imports: [BrowserModule, FormsModule, HttpClientModule],
   providers: [],

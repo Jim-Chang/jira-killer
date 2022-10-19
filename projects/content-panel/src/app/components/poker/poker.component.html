@@ -1,0 +1,4 @@
+<div>
+  <p class="url" (click)="onClickUrl()">{{url}} <span *ngIf="isCopied">Copied!</span></p>
+</div>
+<iframe width="600px" height="800px" [src]="safeUrl" *ngIf="safeUrl"></iframe>

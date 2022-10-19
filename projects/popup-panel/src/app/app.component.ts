@@ -17,6 +17,8 @@ export class AppComponent {
   epicFieldId: string;
   storyPointFieldId: string;
 
+  pokerGameId: string;
+
   isSaving = false;
   msg = '';
 
@@ -31,6 +33,7 @@ export class AppComponent {
       this.sprintFieldId = config.sprintFieldId;
       this.epicFieldId = config.epicFieldId;
       this.storyPointFieldId = config.storyPointFieldId;
+      this.pokerGameId = config.pokerGameId;
     });
   }
 
@@ -48,6 +51,7 @@ export class AppComponent {
       sprintFieldId: this.sprintFieldId,
       epicFieldId: this.epicFieldId,
       storyPointFieldId: this.storyPointFieldId,
+      pokerGameId: this.pokerGameId,
     };
     this.isSaving = true;
     this.configService.save(config).subscribe(() => {
