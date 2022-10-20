@@ -1,5 +1,5 @@
 import { JiraIssue, JiraSprint } from '../../lib/define';
-import { getUrlBoardId } from '../../lib/utils';
+import { getUrlBoardId, getUrlProjectKey } from '../../lib/utils';
 import { ConfigService } from '../../services/config.service';
 import { JiraIssueSortService } from '../../services/jira-issue-sort.service';
 import { JiraService } from '../../services/jira.service';
@@ -31,6 +31,7 @@ export class BacklogComponent {
   isSorting = false;
 
   sprintId = 0;
+  projectKey: string | null = null;
   wantBrowseIssueKey = '';
 
   private lastBoardId: number | null = null;
@@ -104,6 +105,8 @@ export class BacklogComponent {
       _clearSpOpt();
     }
     this.lastBoardId = boardId;
+
+    this.projectKey = getUrlProjectKey();
   }
 
   private cleanIssueKey(key: string): string | null {
@@ -117,6 +120,8 @@ export class BacklogComponent {
     } else if (key.match(/[a-zA-Z]+-[0-9]+/)) {
       // fts-1234
       ret = key.toUpperCase();
+    } else if (this.projectKey && key.match(/^[0-9]+/)) {
+      ret = `${this.projectKey}-${key}`;
     }
     return ret;
   }
