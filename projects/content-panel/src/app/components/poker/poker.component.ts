@@ -8,7 +8,8 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrls: ['./poker.component.sass'],
 })
 export class PokerComponent {
-  private baseUrl = 'https://planningpokeronline.com/';
+  // private baseUrl = 'https://planningpokeronline.com/';
+  private baseUrl = 'https://www.scrumpoker-online.org/en/room/';
   url = '';
   safeUrl: SafeResourceUrl;
 
