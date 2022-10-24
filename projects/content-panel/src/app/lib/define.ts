@@ -32,7 +32,7 @@ export enum IssueLinkType {
 export const ISSUE_PREFIX_MAP: { [key: string]: string } = {
   [CustomIssueType.FETask]: 'RD<FE> - ',
   [CustomIssueType.BETask]: 'RD<BE> - ',
-  [JiraIssueType.Task]: 'RD<INT> - ',
+  [JiraIssueType.Task]: 'RD - ',
   [JiraIssueType.Test]: 'QA - ',
 };
 
