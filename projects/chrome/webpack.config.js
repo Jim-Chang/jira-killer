@@ -23,7 +23,11 @@ module.exports = {
   },
   plugins: [
     new CopyPlugin({
-      patterns: [{ from: join(__dirname, 'manifest.json'), to: join(__dirname, '../../dist'), force: true }],
+      patterns: [
+        { from: join(__dirname, 'manifest.json'), to: join(__dirname, '../../dist'), force: true },
+        { from: join(__dirname, 'icon.png'), to: join(__dirname, '../../dist'), force: true },
+        { from: join(__dirname, 'src/style.css'), to: join(__dirname, '../../dist'), force: true },
+      ],
     }),
   ],
   resolve: {
