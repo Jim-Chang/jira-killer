@@ -93,35 +93,47 @@ export class JiraStoryService {
       link.type.name === IssueLinkType.Blocks &&
       !!link.inwardIssue &&
       this.isSubTaskSummary(link.inwardIssue.fields.summary);
+
     const _getStatusList = (links: JiraIssueLink[]) =>
       links.filter(_subTaskFilter).map((l) => this.getStatus(l.inwardIssue!));
 
-    // open => to be handled
+    const _findTargetStatus = (checkStatusList: IssueStatus[], links: JiraIssueLink[]) => {
+      const targetStatus = checkStatusList.filter((status) => {
+        // @ts-ignore
+        const spec = CHANGE_SPEC_MAP[status];
+        const statusList = _getStatusList(links);
+        return this.isMeetChangeSpec(statusList, spec);
+      });
+      return targetStatus.length > 0 ? targetStatus[0] : null;
+    };
+
+    // open => to be handled / in progress / in review / resolved
     if (issue.status === IssueStatus.Open) {
-      const spec = CHANGE_SPEC_MAP[IssueStatus.ToBeHandled];
-      const statusList = _getStatusList(issue.issueLinks);
-      return this.isMeetChangeSpec(statusList, spec) ? IssueStatus.ToBeHandled : null;
+      const checkStatusList = [
+        IssueStatus.ToBeHandled,
+        IssueStatus.InProgress,
+        IssueStatus.InReview,
+        IssueStatus.Resolved,
+      ];
+      return _findTargetStatus(checkStatusList, issue.issueLinks!);
     }
 
-    // to be handled => in progress
+    // to be handled => in progress / in review / resolved
     if (issue.status === IssueStatus.ToBeHandled) {
-      const spec = CHANGE_SPEC_MAP[IssueStatus.InProgress];
-      const statusList = _getStatusList(issue.issueLinks);
-      return this.isMeetChangeSpec(statusList, spec) ? IssueStatus.InProgress : null;
+      const checkStatusList = [IssueStatus.InProgress, IssueStatus.InReview, IssueStatus.Resolved];
+      return _findTargetStatus(checkStatusList, issue.issueLinks!);
     }
 
-    // in progress => in review
+    // in progress => in review / resolved
     if (issue.status === IssueStatus.InProgress) {
-      const spec = CHANGE_SPEC_MAP[IssueStatus.InReview];
-      const statusList = _getStatusList(issue.issueLinks);
-      return this.isMeetChangeSpec(statusList, spec) ? IssueStatus.InReview : null;
+      const checkStatusList = [IssueStatus.InReview, IssueStatus.Resolved];
+      return _findTargetStatus(checkStatusList, issue.issueLinks!);
     }
 
     // in review => resolved
     if (issue.status === IssueStatus.InReview) {
-      const spec = CHANGE_SPEC_MAP[IssueStatus.Resolved];
-      const statusList = _getStatusList(issue.issueLinks);
-      return this.isMeetChangeSpec(statusList, spec) ? IssueStatus.Resolved : null;
+      const checkStatusList = [IssueStatus.Resolved];
+      return _findTargetStatus(checkStatusList, issue.issueLinks!);
     }
 
     return null;
