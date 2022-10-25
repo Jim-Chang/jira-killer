@@ -11,21 +11,61 @@ import { JiraService } from './jira.service';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 
-type TransitData = {
-  [IssueStatus.ToBeHandled]: JiraIssue[];
-  [IssueStatus.InProgress]: JiraIssue[];
-  [IssueStatus.InReview]: JiraIssue[];
-  [IssueStatus.Resolved]: JiraIssue[];
-};
+type StoryNowStatus =
+  | IssueStatus.Open
+  | IssueStatus.ToBeHandled
+  | IssueStatus.InProgress
+  | IssueStatus.InReview
+  | IssueStatus.Resolved
+  | IssueStatus.ReadyForVerification;
 
-type ChangeSpec = {
+type StoryNextStatus =
+  | IssueStatus.ToBeHandled
+  | IssueStatus.InProgress
+  | IssueStatus.InReview
+  | IssueStatus.Resolved
+  | IssueStatus.ReadyForVerification
+  | IssueStatus.Closed;
+
+type TransitData = { [s in StoryNextStatus]: JiraIssue[] };
+
+type SubtaskStatusSpec = {
   notInStatusList: IssueStatus[];
   inStatusList: IssueStatus[];
 };
 
-const CHANGE_SPEC_MAP = {
+// Story task in status should check which status it will transit to.
+const CHECK_NEXT_STATUS_MAP: { [s in StoryNowStatus]: StoryNextStatus[] } = {
+  [IssueStatus.Open]: [
+    IssueStatus.ToBeHandled,
+    IssueStatus.InProgress,
+    IssueStatus.InReview,
+    IssueStatus.Resolved,
+    IssueStatus.ReadyForVerification,
+    IssueStatus.Closed,
+  ],
+  [IssueStatus.ToBeHandled]: [
+    IssueStatus.InProgress,
+    IssueStatus.InReview,
+    IssueStatus.Resolved,
+    IssueStatus.ReadyForVerification,
+    IssueStatus.Closed,
+  ],
+  [IssueStatus.InProgress]: [
+    IssueStatus.InReview,
+    IssueStatus.Resolved,
+    IssueStatus.ReadyForVerification,
+    IssueStatus.Closed,
+  ],
+  [IssueStatus.InReview]: [IssueStatus.Resolved, IssueStatus.ReadyForVerification, IssueStatus.Closed],
+  [IssueStatus.Resolved]: [IssueStatus.ReadyForVerification, IssueStatus.Closed],
+  [IssueStatus.ReadyForVerification]: [IssueStatus.Closed],
+};
+
+// If story task want to transit to new status spec -> sub-task should not in status and in status
+const SUBTASK_STATUS_SPEC_MAP: { [s in StoryNextStatus]: SubtaskStatusSpec } = {
   [IssueStatus.ToBeHandled]: {
-    notInStatusList: [] as IssueStatus[],
+    notInStatusList: [],
     inStatusList: [IssueStatus.ToBeHandled],
   },
   [IssueStatus.InProgress]: {
@@ -39,6 +79,27 @@ const CHANGE_SPEC_MAP = {
   [IssueStatus.Resolved]: {
     notInStatusList: [IssueStatus.Open, IssueStatus.ToBeHandled, IssueStatus.InProgress, IssueStatus.InReview],
     inStatusList: [IssueStatus.Resolved],
+  },
+  [IssueStatus.ReadyForVerification]: {
+    notInStatusList: [
+      IssueStatus.Open,
+      IssueStatus.ToBeHandled,
+      IssueStatus.InProgress,
+      IssueStatus.InReview,
+      IssueStatus.Resolved,
+    ],
+    inStatusList: [IssueStatus.ReadyForVerification],
+  },
+  [IssueStatus.Closed]: {
+    notInStatusList: [
+      IssueStatus.Open,
+      IssueStatus.ToBeHandled,
+      IssueStatus.InProgress,
+      IssueStatus.InReview,
+      IssueStatus.Resolved,
+      IssueStatus.ReadyForVerification,
+    ],
+    inStatusList: [IssueStatus.Closed],
   },
 };
 
@@ -68,17 +129,14 @@ export class JiraStoryService {
       [IssueStatus.InProgress]: [],
       [IssueStatus.InReview]: [],
       [IssueStatus.Resolved]: [],
+      [IssueStatus.ReadyForVerification]: [],
+      [IssueStatus.Closed]: [],
     };
     issues.forEach((issue) => {
       const newStatus = this.needChangeToStatus(issue);
-      if (newStatus === IssueStatus.ToBeHandled) {
-        data[IssueStatus.ToBeHandled].push(issue);
-      } else if (newStatus === IssueStatus.InProgress) {
-        data[IssueStatus.InProgress].push(issue);
-      } else if (newStatus === IssueStatus.InReview) {
-        data[IssueStatus.InReview].push(issue);
-      } else if (newStatus === IssueStatus.Resolved) {
-        data[IssueStatus.Resolved].push(issue);
+      if (!!newStatus) {
+        // @ts-ignore
+        data[newStatus].push(issue);
       }
     });
     return data;
@@ -88,70 +146,44 @@ export class JiraStoryService {
     if (!issue.issueLinks) {
       return null;
     }
-
-    const _subTaskFilter = (link: JiraIssueLink) =>
-      link.type.name === IssueLinkType.Blocks &&
-      !!link.inwardIssue &&
-      this.isSubTaskSummary(link.inwardIssue.fields.summary);
-
-    const _getStatusList = (links: JiraIssueLink[]) =>
-      links.filter(_subTaskFilter).map((l) => this.getStatus(l.inwardIssue!));
-
-    const _findTargetStatus = (checkStatusList: IssueStatus[], links: JiraIssueLink[]) => {
-      const targetStatus = checkStatusList.filter((status) => {
-        // @ts-ignore
-        const spec = CHANGE_SPEC_MAP[status];
-        const statusList = _getStatusList(links);
-        return this.isMeetChangeSpec(statusList, spec);
-      });
-      return targetStatus.length > 0 ? targetStatus[0] : null;
-    };
-
-    // open => to be handled / in progress / in review / resolved
-    if (issue.status === IssueStatus.Open) {
-      const checkStatusList = [
-        IssueStatus.ToBeHandled,
-        IssueStatus.InProgress,
-        IssueStatus.InReview,
-        IssueStatus.Resolved,
-      ];
-      return _findTargetStatus(checkStatusList, issue.issueLinks!);
+    if (!Object.keys(CHECK_NEXT_STATUS_MAP).includes(issue.status)) {
+      return null;
     }
-
-    // to be handled => in progress / in review / resolved
-    if (issue.status === IssueStatus.ToBeHandled) {
-      const checkStatusList = [IssueStatus.InProgress, IssueStatus.InReview, IssueStatus.Resolved];
-      return _findTargetStatus(checkStatusList, issue.issueLinks!);
-    }
-
-    // in progress => in review / resolved
-    if (issue.status === IssueStatus.InProgress) {
-      const checkStatusList = [IssueStatus.InReview, IssueStatus.Resolved];
-      return _findTargetStatus(checkStatusList, issue.issueLinks!);
-    }
-
-    // in review => resolved
-    if (issue.status === IssueStatus.InReview) {
-      const checkStatusList = [IssueStatus.Resolved];
-      return _findTargetStatus(checkStatusList, issue.issueLinks!);
-    }
-
-    return null;
+    // @ts-ignore
+    const checkStatusList = CHECK_NEXT_STATUS_MAP[issue.status];
+    return findTargetStatus(checkStatusList, issue.issueLinks!);
   }
+}
 
-  private isSubTaskSummary(summary: string): boolean {
-    return Object.values(ISSUE_PREFIX_MAP)
-      .map((k) => summary.startsWith(k))
-      .some((ret) => ret);
-  }
+function getStatusList(links: JiraIssueLink[]): IssueStatus[] {
+  const _subTaskFilter = (link: JiraIssueLink) =>
+    link.type.name === IssueLinkType.Blocks && !!link.inwardIssue && isSubTaskSummary(link.inwardIssue.fields.summary);
 
-  private isMeetChangeSpec(statusList: IssueStatus[], spec: ChangeSpec): boolean {
-    const hasShouldNotInStatus = statusList.filter((s) => spec.notInStatusList.includes(s)).length > 0;
-    const hasShouldInStatus = statusList.filter((s) => spec.inStatusList.includes(s)).length > 0;
-    return !hasShouldNotInStatus && hasShouldInStatus;
-  }
+  return links.filter(_subTaskFilter).map((l) => getIssueStatus(l.inwardIssue!));
+}
 
-  private getStatus(linkedIssue: LinkedIssue): IssueStatus {
-    return linkedIssue.fields.status.name;
-  }
+function findTargetStatus(checkStatusList: IssueStatus[], links: JiraIssueLink[]): IssueStatus | null {
+  const targetStatus = checkStatusList.filter((status) => {
+    // @ts-ignore
+    const spec = SUBTASK_STATUS_SPEC_MAP[status];
+    const statusList = getStatusList(links);
+    return isMeetSubTaskStatusSpec(statusList, spec);
+  });
+  return targetStatus.length > 0 ? targetStatus[0] : null;
+}
+
+function isSubTaskSummary(summary: string): boolean {
+  return Object.values(ISSUE_PREFIX_MAP)
+    .map((k) => summary.startsWith(k))
+    .some((ret) => ret);
+}
+
+function isMeetSubTaskStatusSpec(statusList: IssueStatus[], spec: SubtaskStatusSpec): boolean {
+  const hasShouldNotInStatus = statusList.filter((s) => spec.notInStatusList.includes(s)).length > 0;
+  const hasShouldInStatus = statusList.filter((s) => spec.inStatusList.includes(s)).length > 0;
+  return !hasShouldNotInStatus && hasShouldInStatus;
+}
+
+function getIssueStatus(linkedIssue: LinkedIssue): IssueStatus {
+  return linkedIssue.fields.status.name;
 }
