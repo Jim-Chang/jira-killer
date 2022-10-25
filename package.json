@@ -4,7 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build:chrome": "webpack --config projects/chrome/webpack.config.js",
+    "build:content": "ng run content-panel:build:production",
+    "build:popup": "ng run popup-panel:build:production",
+    "build": "npm run clean && npm-run-all --parallel build:*",
     "watch:chrome": "webpack --config projects/chrome/webpack.config.js -w",
     "watch:content": "ng run content-panel:build:development --watch",
     "watch:popup": "ng run popup-panel:build:development --watch",
