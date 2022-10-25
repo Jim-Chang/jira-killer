@@ -1,29 +1,35 @@
 /** https://github.com/jbronssin/jira-black **/
-html {
+html:not([jira-not-in-black]) {
   filter: invert(86%) hue-rotate(180deg) brightness(105%) contrast(105%);
   background: white;
 }
 body {
   background: white;
 }
-#ak-side-navigation [data-navheader*="true"] span:empty,
-.atlaskit-portal [data-placement="bottom-end"] span:empty,
-[aria-label*="profile"] span:empty,
-[data-testid*="profile"] span:empty,
-[data-test-id*="profile"] span:empty,
-span[role="img"],
-img,
-svg,
-iframe,
-.emoji-common-emoji-sprite,
-.pdfViewer,
-.media-viewer-popup,
-.page,
-.media-card-inline-player,
-#tempo-nav,
-.tempo-app-container {
+html:not([jira-not-in-black]) #ak-side-navigation [data-navheader*="true"] span:empty,
+html:not([jira-not-in-black]) .atlaskit-portal [data-placement="bottom-end"] span:empty,
+html:not([jira-not-in-black]) [aria-label*="profile"] span:empty,
+html:not([jira-not-in-black]) [data-testid*="profile"] span:empty,
+html:not([jira-not-in-black]) [data-test-id*="profile"] span:empty,
+html:not([jira-not-in-black]) span[role="img"],
+html:not([jira-not-in-black]) img,
+html:not([jira-not-in-black]) svg,
+html:not([jira-not-in-black]) iframe,
+html:not([jira-not-in-black]) .emoji-common-emoji-sprite,
+html:not([jira-not-in-black]) .pdfViewer,
+html:not([jira-not-in-black]) .media-viewer-popup,
+html:not([jira-not-in-black]) .page,
+html:not([jira-not-in-black]) .media-card-inline-player,
+html:not([jira-not-in-black]) #tempo-nav,
+html:not([jira-not-in-black]) .tempo-app-container {
   filter: invert(100%) hue-rotate(180deg) brightness(105%) contrast(105%);
   border-color: transparent;
+}
+html:not([jira-not-in-black]) .media-viewer-popup img,
+html:not([jira-not-in-black]) .media-viewer-popup span[role="img"],
+html:not([jira-not-in-black]) .media-viewer-popup svg,
+html:not([jira-not-in-black]) .media-viewer-popup iframe {
+  filter: none;
 }
 #gh {
   padding: 0 40px;
@@ -35,6 +41,6 @@ iframe,
   background: white;
 }
 
-.css-1ko5j7w, .css-1z0rgo9  {
+html:not([jira-not-in-black]) .css-1ko5j7w, .css-1z0rgo9  {
  filter: invert(86%) hue-rotate(180deg) brightness(105%) contrast(105%);
 }

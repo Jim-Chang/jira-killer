@@ -1,4 +1,4 @@
-import { Config, ConfigService } from '../service/config-service';
+import { ConfigService } from '../service/config-service';
 import { Component, NgZone } from '@angular/core';
 
 @Component({
@@ -18,6 +18,7 @@ export class AppComponent {
   storyPointFieldId: string;
 
   pokerGameId: string;
+  jiraInBlack: boolean;
 
   isSaving = false;
   msg = '';
@@ -34,6 +35,7 @@ export class AppComponent {
       this.epicFieldId = config.epicFieldId;
       this.storyPointFieldId = config.storyPointFieldId;
       this.pokerGameId = config.pokerGameId;
+      this.jiraInBlack = config.jiraInBlack;
     });
   }
 
@@ -52,6 +54,7 @@ export class AppComponent {
       epicFieldId: this.epicFieldId,
       storyPointFieldId: this.storyPointFieldId,
       pokerGameId: this.pokerGameId,
+      jiraInBlack: this.jiraInBlack,
     };
     this.isSaving = true;
     this.configService.save(config).subscribe(() => {

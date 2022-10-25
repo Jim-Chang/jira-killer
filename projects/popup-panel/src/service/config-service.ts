@@ -10,6 +10,7 @@ export type Config = {
   epicFieldId: string;
   storyPointFieldId: string;
   pokerGameId: string;
+  jiraInBlack: boolean;
 };
 
 export const CONFIG_KEYS = [
@@ -21,6 +22,7 @@ export const CONFIG_KEYS = [
   'epicFieldId',
   'storyPointFieldId',
   'pokerGameId',
+  'jiraInBlack',
 ];
 
 @Injectable({
