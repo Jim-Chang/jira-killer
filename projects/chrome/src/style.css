@@ -22,7 +22,7 @@ html:not([jira-not-in-black]) .page,
 html:not([jira-not-in-black]) .media-card-inline-player,
 html:not([jira-not-in-black]) #tempo-nav,
 html:not([jira-not-in-black]) .tempo-app-container {
-  filter: invert(100%) hue-rotate(180deg) brightness(105%) contrast(105%);
+  filter: invert(95%) hue-rotate(180deg) brightness(105%) contrast(105%);
   border-color: transparent;
 }
 html:not([jira-not-in-black]) .media-viewer-popup img,
@@ -44,5 +44,5 @@ html:not([jira-not-in-black]) .media-viewer-popup iframe {
 html:not([jira-not-in-black]) .css-1ko5j7w,
 html:not([jira-not-in-black]) .css-1z0rgo9,
 html:not([jira-not-in-black]) .css-sw0u0k {
- filter: invert(86%) hue-rotate(180deg) brightness(105%) contrast(105%);
+ filter: invert(95%) hue-rotate(180deg) brightness(105%) contrast(105%);
 }
