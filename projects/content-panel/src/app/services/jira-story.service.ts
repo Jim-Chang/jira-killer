@@ -1,4 +1,5 @@
 import {
+  CustomIssueType,
   ISSUE_PREFIX_MAP,
   IssueLinkType,
   IssueStatus,
@@ -173,9 +174,12 @@ function findTargetStatus(checkStatusList: IssueStatus[], links: JiraIssueLink[]
 }
 
 function isSubTaskSummary(summary: string): boolean {
-  return Object.values(ISSUE_PREFIX_MAP)
-    .map((k) => summary.startsWith(k))
-    .some((ret) => ret);
+  const prefix = [
+    ISSUE_PREFIX_MAP[CustomIssueType.FETask],
+    ISSUE_PREFIX_MAP[CustomIssueType.BETask],
+    ISSUE_PREFIX_MAP[JiraIssueType.Task],
+  ];
+  return prefix.map((k) => summary.startsWith(k)).some((ret) => ret);
 }
 
 function isMeetSubTaskStatusSpec(statusList: IssueStatus[], spec: SubtaskStatusSpec): boolean {
