@@ -26,7 +26,7 @@ export class AppComponent {
     if (this.isShowTopPanel) {
       return { top: '0', left };
     } else {
-      return { top: `${-this.topPanel?.nativeElement.offsetHeight ?? -1000}px`, left };
+      return { top: `${-this.topPanel?.nativeElement.offsetHeight || -1000}px`, left };
     }
   }
 
@@ -35,7 +35,7 @@ export class AppComponent {
     if (this.isShowLeftPanel) {
       return { left: '0', top };
     } else {
-      return { left: `${-this.leftPanel?.nativeElement.offsetWidth ?? -1000}px`, top };
+      return { left: `${-this.leftPanel?.nativeElement.offsetWidth || -1000}px`, top };
     }
   }
 
