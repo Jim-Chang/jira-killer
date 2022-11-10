@@ -41,8 +41,6 @@ html:not([jira-not-in-black]) .media-viewer-popup iframe {
   background: white;
 }
 
-html:not([jira-not-in-black]) .css-1ko5j7w,
-html:not([jira-not-in-black]) .css-1z0rgo9,
-html:not([jira-not-in-black]) .css-sw0u0k {
+html:not([jira-not-in-black]) .renderer-overrides {
  filter: invert(95%) hue-rotate(180deg) brightness(105%) contrast(105%);
 }
