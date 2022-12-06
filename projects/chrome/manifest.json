@@ -1,6 +1,6 @@
 {
   "name": "Jira Killer",
-  "version": "1.0",
+  "version": "1.0.1",
   "description": "Let Jira be cool",
   "manifest_version": 3,
   "permissions": [
@@ -8,6 +8,9 @@
       "activeTab",
       "webNavigation"
   ],
+  "icons": {
+    "128": "icon.png"
+  },
   "action": {
       "default_popup": "popup-panel/index.html"
   },
@@ -18,7 +21,8 @@
   "content_scripts": [
     {
       "matches": ["https://*.atlassian.net/*"],
-      "js": ["content.js"]
+      "js": ["content.js"],
+      "css": ["style.css"]
     }
   ],
   "web_accessible_resources": [

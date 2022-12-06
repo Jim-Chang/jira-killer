@@ -1,10 +1,10 @@
-import {Component, NgZone} from '@angular/core';
-import {Config, ConfigService} from "../service/config-service";
+import { ConfigService } from '../service/config-service';
+import { Component, NgZone } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.sass']
+  styleUrls: ['./app.component.sass'],
 })
 export class AppComponent {
   jiraDomain: string;
@@ -17,10 +17,13 @@ export class AppComponent {
   epicFieldId: string;
   storyPointFieldId: string;
 
-  isSaving = false;
+  pokerGameId: string;
+  jiraInBlack: boolean;
 
-  constructor(private zone: NgZone, private configService: ConfigService) {
-  }
+  isSaving = false;
+  msg = '';
+
+  constructor(private zone: NgZone, private configService: ConfigService) {}
 
   ngOnInit(): void {
     this.configService.load().subscribe((config) => {
@@ -31,6 +34,8 @@ export class AppComponent {
       this.sprintFieldId = config.sprintFieldId;
       this.epicFieldId = config.epicFieldId;
       this.storyPointFieldId = config.storyPointFieldId;
+      this.pokerGameId = config.pokerGameId;
+      this.jiraInBlack = config.jiraInBlack;
     });
   }
 
@@ -39,6 +44,7 @@ export class AppComponent {
   }
 
   onClickSaveBtn(): void {
+    this.msg = '';
     const config = {
       jiraDomain: this.jiraDomain,
       email: this.email,
@@ -47,8 +53,13 @@ export class AppComponent {
       sprintFieldId: this.sprintFieldId,
       epicFieldId: this.epicFieldId,
       storyPointFieldId: this.storyPointFieldId,
+      pokerGameId: this.pokerGameId,
+      jiraInBlack: this.jiraInBlack,
     };
     this.isSaving = true;
-    this.configService.save(config).subscribe(() => this.isSaving = false);
+    this.configService.save(config).subscribe(() => {
+      this.isSaving = false;
+      this.msg = 'OK!';
+    });
   }
 }

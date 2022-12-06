@@ -1,4 +1,26 @@
-<div class="container">
-  <sort-backlog-issue></sort-backlog-issue>
-  <breakdown-task></breakdown-task>
+<div class="top-container" [ngStyle]="topPanelPlace">
+  <div #topPanel>
+    <div class="center">
+      <story-board></story-board>
+    </div>
+    <hr>
+    <div class="center">
+      <backlog></backlog>
+    </div>
+    <hr>
+    <div class="center">
+      <breakdown-task></breakdown-task>
+    </div>
+    <hr>
+  </div>
+  <button class="switch-btn top-btn" (click)="onClickTopSwitchBtn()">{{switchTopBtnText}}</button>
+</div>
+
+<div class="left-container" [ngStyle]="leftPanelPlace">
+  <div #leftPanel>
+    <poker></poker>
+  </div>
+  <div>
+    <button class="switch-btn left-btn" (click)="onClickLeftSwitchBtn()">{{switchLeftBtnText}}</button>
+  </div>
 </div>

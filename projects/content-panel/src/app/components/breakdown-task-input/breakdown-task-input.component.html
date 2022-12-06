@@ -7,7 +7,7 @@
     <option [value]="JiraIssueType.Test">QA Test</option>
   </select>
   <input [(ngModel)]="summary"  name="summary" type="text">
-  <input [(ngModel)]="storyPoint" (change)="onChangeStoryPoint()" name="story_point" type="number" style="width: 40px;">
+  <input [(ngModel)]="storyPoint" (change)="onChangeStoryPoint()" name="story_point" type="number">
   <button (click)="onClickSaveBtn()" [disabled]="!canSave()">{{saveBtnText}}</button>
   <a *ngIf="issueKey" data-name="issue-key" target="_blank" [href]="issueUrl">{{issueKey}}</a>
   <span data-name="status" style="margin-left: 2px;"></span>

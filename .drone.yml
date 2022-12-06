@@ -1,0 +1,38 @@
+---
+kind: pipeline
+type: docker
+name: default
+
+platform:
+  os: linux
+  arch: arm64
+
+trigger:
+  event:
+    - tag
+
+clone:
+  depth: 1
+
+steps:
+  - name: build
+    image: node:14.17.6-buster-slim
+    pull: if-not-exists
+    environment:
+      CRX_KEY:
+        from_secret: crx_key
+    commands:
+      - npm install
+      - npm run build
+      - npm run crx
+      - tar zcvf dist.tar.gz dist
+
+  - name: publish
+    image: plugins/github-release
+    settings:
+      api_key:
+        from_secret: github_api_token
+      files:
+        - dist.tar.gz
+        - crx/dist.crx
+      title: ${DRONE_TAG}

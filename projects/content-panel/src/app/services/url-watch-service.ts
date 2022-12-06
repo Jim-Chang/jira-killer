@@ -1,12 +1,10 @@
-import {Injectable, NgZone} from "@angular/core";
-import {Subject} from "rxjs";
-
+import { Injectable, NgZone } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UrlWatchService {
-
   private observer: MutationObserver;
   private oldHref = '';
 
@@ -19,7 +17,7 @@ export class UrlWatchService {
     });
     this.observer.observe(document.body, {
       childList: true,
-      subtree: true
+      subtree: true,
     });
   }
 

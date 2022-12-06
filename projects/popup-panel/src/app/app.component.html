@@ -1,15 +1,36 @@
 <div>
-  <h2>Jira Killer</h2>
-  <span>Jira Domain: </span><input [(ngModel)]="jiraDomain" type="text">
-  <hr>
-  <h3>Auth</h3>
-  <span>Email: </span><input [(ngModel)]="email" type="text">
-  <span>Api Token: </span><input [(ngModel)]="apiToken" type="password">
-  <hr>
-  <h3>Field ID</h3>
-  <span>Team</span><input [(ngModel)]="teamFieldId" type="text">
-  <span>Sprint</span><input [(ngModel)]="sprintFieldId" type="text">
-  <span>EPIC</span><input [(ngModel)]="epicFieldId" type="text">
-  <span>StoryPoint</span><input [(ngModel)]="storyPointFieldId" type="text">
-  <button (click)="onClickSaveBtn()" [disabled]="isSaving">{{saveBtnText}}</button>
+  <div>
+    <h2>Jira Killer</h2>
+    <span>Jira Domain: </span><input [(ngModel)]="jiraDomain" type="text">
+  </div>
+
+  <div>
+    <h3>Auth</h3>
+    <span>Email: </span><input [(ngModel)]="email" type="text">
+    <span>Api Token: </span><input [(ngModel)]="apiToken" type="password">
+    <a href="https://id.atlassian.com/manage-profile/security/api-tokens" target="_blank">Get Token</a>
+  </div>
+
+  <div>
+    <h3>Field ID</h3>
+    <span>Team</span><input [(ngModel)]="teamFieldId" type="text">
+    <span>Sprint</span><input [(ngModel)]="sprintFieldId" type="text">
+    <span>EPIC</span><input [(ngModel)]="epicFieldId" type="text">
+    <span>StoryPoint</span><input [(ngModel)]="storyPointFieldId" type="text">
+  </div>
+
+  <div>
+    <h3>Poker Game</h3>
+    <span>PokerGameID</span><input [(ngModel)]="pokerGameId" type="text">
+    <a href="https://www.scrumpoker-online.org/" target="_blank">Create Game</a>
+  </div>
+
+  <div>
+    <h3>Jira In Black</h3>
+    <input [(ngModel)]="jiraInBlack" type="checkbox"><span>Is Enable</span>
+  </div>
+
+  <div>
+    <button (click)="onClickSaveBtn()" [disabled]="isSaving">{{saveBtnText}}</button><span> {{msg}}</span>
+  </div>
 </div>

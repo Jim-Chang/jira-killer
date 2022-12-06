@@ -1,6 +1,37 @@
-.container
-  background: white
+.top-container
+  background: none
   position: absolute
-  top: 0
-  left: 50%
   z-index: 10000
+  transition: top 0.2s ease-out
+  div
+    background: white
+  button
+    display: block
+    margin: 0 auto
+
+.left-container
+  background: none
+  position: absolute
+  z-index: 10000
+  display: flex
+  transition: left 0.2s ease-out
+  text-align: center
+  align-items: center
+  justify-content: center
+  div
+    background: white
+
+.switch-btn
+  width: 25px
+  height: 25px
+
+.top-btn
+  width: 50px
+
+.left-btn
+  height: 50px
+
+.center
+  display: flex
+  align-content: center
+  justify-content: center

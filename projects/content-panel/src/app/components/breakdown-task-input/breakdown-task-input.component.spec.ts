@@ -1,6 +1,5 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { BreakdownTaskInputComponent } from './breakdown-task-input.component';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 describe('BreakdownTaskInputComponent', () => {
   let component: BreakdownTaskInputComponent;
@@ -8,9 +7,8 @@ describe('BreakdownTaskInputComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BreakdownTaskInputComponent ]
-    })
-    .compileComponents();
+      declarations: [BreakdownTaskInputComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(BreakdownTaskInputComponent);
     component = fixture.componentInstance;
