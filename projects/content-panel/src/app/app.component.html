@@ -1,10 +1,16 @@
 <div class="top-container" [ngStyle]="topPanelPlace">
   <div #topPanel>
-    <story-board></story-board>
+    <div class="center">
+      <story-board></story-board>
+    </div>
     <hr>
-    <backlog></backlog>
+    <div class="center">
+      <backlog></backlog>
+    </div>
     <hr>
-    <breakdown-task></breakdown-task>
+    <div class="center">
+      <breakdown-task></breakdown-task>
+    </div>
     <hr>
   </div>
   <button class="switch-btn top-btn" (click)="onClickTopSwitchBtn()">{{switchTopBtnText}}</button>
