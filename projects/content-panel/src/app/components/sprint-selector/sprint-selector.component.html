@@ -1,0 +1,4 @@
+<select name="type" [(ngModel)]="sprintId" (change)="onSelectChange()">
+    <option disabled selected value>Select Sprint</option>
+    <option *ngFor="let sp of sprints$ | async" [value]="sp.id">[{{sp.state}}] [{{sp.id}}] {{sp.name}}</option>
+</select>

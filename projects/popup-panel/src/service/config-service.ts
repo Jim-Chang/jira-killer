@@ -11,6 +11,7 @@ export type Config = {
   storyPointFieldId: string;
   pokerGameId: string;
   jiraInBlack: boolean;
+  breakdownBySubtask: boolean;
 };
 
 export const CONFIG_KEYS = [
@@ -23,6 +24,7 @@ export const CONFIG_KEYS = [
   'storyPointFieldId',
   'pokerGameId',
   'jiraInBlack',
+  'breakdownBySubtask',
 ];
 
 @Injectable({

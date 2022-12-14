@@ -1,0 +1,27 @@
+<div class="container">
+  <div class="selector">
+    Sprint:
+    <sprint-selector [(sprintId)]="sprintId"></sprint-selector>
+    <button (click)="onClickCalculate()" [disabled]="!enableCalBtn">Calculate</button>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Assignee</th>
+        <th>Story Points</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let userId of userIds">
+        <td>
+          <div class="flex-v-center">
+            <div><img class="head" [src]="userMap[userId].avatarUrls['48x48']"></div>
+            <div>{{userMap[userId].displayName}}</div>
+          </div>
+        </td>
+        <td>{{workloadMap[userId]}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>

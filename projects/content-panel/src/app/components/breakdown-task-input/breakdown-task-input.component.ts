@@ -1,4 +1,5 @@
 import { CustomIssueType, ISSUE_PREFIX_MAP, JiraIssueType } from '../../lib/define';
+import { ConfigService } from '../../services/config.service';
 import { JiraService } from '../../services/jira.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { switchMap } from 'rxjs';
@@ -23,6 +24,7 @@ export class BreakdownTaskInputComponent implements OnInit {
 
   private isSaving = false;
   private created = false;
+  private breakdownBySubtask = false;
 
   get saveBtnText(): string {
     return this.isSaving ? 'Saving' : 'Save';
@@ -35,7 +37,13 @@ export class BreakdownTaskInputComponent implements OnInit {
     return '';
   }
 
-  constructor(private jiraService: JiraService) {}
+  constructor(private jiraService: JiraService, private configService: ConfigService) {
+    this.configService.loadByKeys<{ breakdownBySubtask: boolean }>(['breakdownBySubtask']).subscribe((cfg) => {
+      if (cfg.breakdownBySubtask) {
+        this.breakdownBySubtask = cfg.breakdownBySubtask;
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.summary = this.parentSummary;
@@ -60,18 +68,30 @@ export class BreakdownTaskInputComponent implements OnInit {
     console.log(this.issueType, this.summary, this.storyPoint);
     this.isSaving = true;
 
-    this.jiraService
-      .getIssue(this.parentIssueKey)
-      .pipe(
-        switchMap((issue) => this.jiraService.createIssue(issue, this.summary, this.issueType, this.storyPoint)),
-        switchMap((key) => {
+    // use subtask to breakdown, but not test type
+    if (this.breakdownBySubtask && this.issueType !== JiraIssueType.Test) {
+      this.jiraService
+        .getIssue(this.parentIssueKey)
+        .pipe(switchMap((issue) => this.jiraService.createSubtask(issue, this.summary, this.storyPoint)))
+        .subscribe((key) => {
           this.issueKey = key;
-          return this.jiraService.blockIssue(this.issueKey, this.parentIssueKey);
-        }),
-      )
-      .subscribe(() => {
-        this.isSaving = false;
-        this.created = true;
-      });
+          this.isSaving = false;
+          this.created = true;
+        });
+    } else {
+      this.jiraService
+        .getIssue(this.parentIssueKey)
+        .pipe(
+          switchMap((issue) => this.jiraService.createIssue(issue, this.summary, this.issueType, this.storyPoint)),
+          switchMap((key) => {
+            this.issueKey = key;
+            return this.jiraService.blockIssue(this.issueKey, this.parentIssueKey);
+          }),
+        )
+        .subscribe(() => {
+          this.isSaving = false;
+          this.created = true;
+        });
+    }
   }
 }

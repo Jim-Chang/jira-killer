@@ -1,7 +1,7 @@
 import { CustomIssueType, JiraIssue, JiraIssueType, LOG_PREFIX } from '../lib/define';
 import { JiraService } from './jira.service';
 import { Injectable } from '@angular/core';
-import { combineLatest, forkJoin, map, Observable } from 'rxjs';
+import { combineLatest, map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +23,11 @@ export class JiraIssueSortService {
       if (shouldSortTypes.includes(issue.issueType) && (issue.issueLinks?.length ?? 0) > 0) {
         // only looks first block issue
         const blockIssueLink = issue.issueLinks!.find(
-          (link) => link.type.name === 'Blocks' && link.outwardIssue?.fields.issuetype.name === 'Story',
+          (link) =>
+            link.type.name === 'Blocks' &&
+            [JiraIssueType.Story, JiraIssueType.Improvement].includes(
+              link.outwardIssue?.fields.issuetype.name as JiraIssueType,
+            ),
         );
         if (blockIssueLink && blockIssueLink.outwardIssue) {
           const blockIssueKey = blockIssueLink.outwardIssue.key;

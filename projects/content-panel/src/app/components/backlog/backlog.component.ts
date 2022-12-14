@@ -26,7 +26,6 @@ import {
   styleUrls: ['./backlog.component.sass'],
 })
 export class BacklogComponent {
-  sprints$ = new Subject<JiraSprint[]>();
   sortBtnText = 'Sort';
   isSorting = false;
 
@@ -34,7 +33,6 @@ export class BacklogComponent {
   projectKey: string | null = null;
   wantBrowseIssueKey = '';
 
-  private lastBoardId: number | null = null;
   private destroy$ = new Subject<void>();
 
   get enableSortBtn(): boolean {
@@ -86,26 +84,6 @@ export class BacklogComponent {
   }
 
   private reset(): void {
-    const _clearSpOpt = () => {
-      this.sprints$.next([]);
-      this.sprintId = 0;
-    };
-
-    const boardId = getUrlBoardId();
-
-    if (boardId) {
-      if (boardId !== this.lastBoardId) {
-        _clearSpOpt();
-
-        this.jiraService.getAllSprint(boardId).subscribe((sps) => {
-          this.sprints$.next(sps);
-        });
-      }
-    } else {
-      _clearSpOpt();
-    }
-    this.lastBoardId = boardId;
-
     this.projectKey = getUrlProjectKey();
   }
 
