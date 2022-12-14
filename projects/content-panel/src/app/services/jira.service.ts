@@ -77,6 +77,8 @@ export class JiraService {
           teamId: ret.fields[this.fieldService.teamField]?.id ?? null,
           sprintId: sprints.length > 0 ? sprints[0].id : null,
           status: ret.fields.status.name,
+          storyPoint: ret.fields[this.fieldService.storyPointField] ?? null,
+          assignee: ret.fields.assignee,
         };
         console.log('clean issue', issue);
         return issue;
@@ -121,6 +123,8 @@ export class JiraService {
                 : null,
             issueLinks: issue.fields.issuelinks,
             status: issue.fields.status.name,
+            storyPoint: issue.fields[this.fieldService.storyPointField] ?? null,
+            assignee: issue.fields.assignee,
           };
         });
       }),

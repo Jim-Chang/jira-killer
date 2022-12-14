@@ -3,7 +3,9 @@ import { BacklogComponent } from './components/backlog/backlog.component';
 import { BreakdownTaskInputComponent } from './components/breakdown-task-input/breakdown-task-input.component';
 import { BreakdownTaskComponent } from './components/breakdown-task/breakdown-task.component';
 import { PokerComponent } from './components/poker/poker.component';
+import { SprintSelectorComponent } from './components/sprint-selector/sprint-selector.component';
 import { StoryBoardComponent } from './components/story-board/story-board.component';
+import { WorkloadComponent } from './components/workload/workload.component';
 import { setExtensionId } from './lib/define';
 import { HttpClientModule } from '@angular/common/http';
 import { Injector, NgModule } from '@angular/core';
@@ -19,6 +21,8 @@ import { BrowserModule } from '@angular/platform-browser';
     BacklogComponent,
     StoryBoardComponent,
     PokerComponent,
+    WorkloadComponent,
+    SprintSelectorComponent,
   ],
   imports: [BrowserModule, FormsModule, HttpClientModule],
   providers: [],

@@ -47,6 +47,17 @@ export enum IssueStatus {
   Closed = 'Closed',
 }
 
+export type JiraUser = {
+  accountId: string;
+  displayName: string;
+  avatarUrls: {
+    '16x16': string;
+    '24x24': string;
+    '32x32': string;
+    '48x48': string;
+  };
+};
+
 export type JiraIssue = {
   id: string;
   key: string;
@@ -58,6 +69,8 @@ export type JiraIssue = {
   sprintId: number | null;
   status: IssueStatus;
   issueLinks?: JiraIssueLink[];
+  storyPoint: number | null;
+  assignee: JiraUser | null;
 };
 
 export type LinkedIssue = {
