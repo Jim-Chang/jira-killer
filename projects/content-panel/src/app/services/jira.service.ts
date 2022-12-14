@@ -1,4 +1,4 @@
-import { IssueStatus, IssueType, JiraIssue, JiraSprint } from '../lib/define';
+import { IssueStatus, IssueType, JiraIssue, JiraIssueType, JiraSprint } from '../lib/define';
 import { ConfigService } from './config.service';
 import { JiraFieldService } from './jira-field.service';
 import { HttpClient } from '@angular/common/http';
@@ -153,6 +153,21 @@ export class JiraService {
     );
   }
 
+  createSubtask(fieldSource: JiraIssue, summary: string, storyPoint: number | null): Observable<string> {
+    console.log('create subtask');
+    const data = this.buildCreateSubtaskData(
+      fieldSource.projKey,
+      fieldSource.key,
+      summary,
+      storyPoint,
+      fieldSource.teamId,
+    );
+    return this.ready.pipe(
+      switchMap(() => this.http.post<any>(`${this.baseURL}/rest/api/2/issue/`, data, { headers: this.headers })),
+      map((ret) => ret.key),
+    );
+  }
+
   blockIssue(fromKey: string, toKey: string): Observable<boolean> {
     console.log('block issue');
     const data = this.buildBlockIssueData(fromKey, toKey);
@@ -217,6 +232,38 @@ export class JiraService {
     if (sprintId) {
       data.fields[this.fieldService.sprintField] = sprintId;
     }
+    if (teamId) {
+      data.fields[this.fieldService.teamField] = teamId;
+    }
+    if (storyPoint) {
+      data.fields[this.fieldService.storyPointField] = storyPoint;
+    }
+    return data;
+  }
+
+  private buildCreateSubtaskData(
+    projKey: string,
+    parentKey: string,
+    summary: string,
+    storyPoint: number | null,
+    teamId: string | null,
+  ): any {
+    const data: any = {
+      fields: {
+        project: {
+          key: projKey,
+        },
+        parent: {
+          key: parentKey,
+        },
+        assignee: null,
+        summary: summary,
+        description: '',
+        issuetype: {
+          name: JiraIssueType.Subtask,
+        },
+      },
+    };
     if (teamId) {
       data.fields[this.fieldService.teamField] = teamId;
     }

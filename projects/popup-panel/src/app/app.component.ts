@@ -19,6 +19,7 @@ export class AppComponent {
 
   pokerGameId: string;
   jiraInBlack: boolean;
+  breakdownBySubtask: boolean;
 
   isSaving = false;
   msg = '';
@@ -36,6 +37,7 @@ export class AppComponent {
       this.storyPointFieldId = config.storyPointFieldId;
       this.pokerGameId = config.pokerGameId;
       this.jiraInBlack = config.jiraInBlack;
+      this.breakdownBySubtask = config.breakdownBySubtask;
     });
   }
 
@@ -55,6 +57,7 @@ export class AppComponent {
       storyPointFieldId: this.storyPointFieldId,
       pokerGameId: this.pokerGameId,
       jiraInBlack: this.jiraInBlack,
+      breakdownBySubtask: this.breakdownBySubtask,
     };
     this.isSaving = true;
     this.configService.save(config).subscribe(() => {
