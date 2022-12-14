@@ -16,6 +16,7 @@ export enum JiraIssueType {
   Task = 'Task',
   Bug = 'Bug',
   Test = 'Test',
+  Improvement = 'Improvement',
 }
 
 export enum CustomIssueType {
