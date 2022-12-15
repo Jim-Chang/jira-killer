@@ -26,6 +26,9 @@ steps:
       - npm run build
       - npm run crx
       - tar zcvf dist.tar.gz dist
+      - apt update
+      - apt install zip -y
+      - zip -r dist.zip dist
 
   - name: publish
     image: plugins/github-release
@@ -34,5 +37,6 @@ steps:
         from_secret: github_api_token
       files:
         - dist.tar.gz
+        - dist.zip
         - crx/dist.crx
       title: ${DRONE_TAG}
