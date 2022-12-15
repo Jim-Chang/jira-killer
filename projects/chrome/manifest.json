@@ -4,9 +4,7 @@
   "description": "Let Jira be cool",
   "manifest_version": 3,
   "permissions": [
-      "storage",
-      "activeTab",
-      "webNavigation"
+      "storage"
   ],
   "icons": {
     "128": "icon.png"
