@@ -13,6 +13,7 @@ export class WorkloadComponent {
   userIds: string[] = [];
   userMap: { [id: string]: JiraUser } = {};
   workloadMap: { [id: string]: number } = {};
+  unassignedPoints = 0;
 
   private isCalculating = false;
 
@@ -28,6 +29,7 @@ export class WorkloadComponent {
     this.jiraService.getIssuesBySprint(this.sprintId).subscribe((issues) => {
       const userMap: { [id: string]: JiraUser } = {};
       const workloadMap: { [id: string]: number } = {};
+      let unassignedPoints = 0;
 
       const _ensureUserInMap = (user: JiraUser) => {
         if (!(user.accountId in userMap)) {
@@ -42,11 +44,14 @@ export class WorkloadComponent {
         if (issue.assignee && issue.storyPoint) {
           _ensureUserInMap(issue.assignee);
           workloadMap[issue.assignee.accountId] += issue.storyPoint;
+        } else if (issue.storyPoint) {
+          unassignedPoints += issue.storyPoint;
         }
       });
 
       this.userMap = userMap;
       this.workloadMap = workloadMap;
+      this.unassignedPoints = unassignedPoints;
       this.userIds = Object.keys(this.userMap);
 
       this.isCalculating = false;
