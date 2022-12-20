@@ -40,3 +40,10 @@ steps:
         - dist.zip
         - crx/dist.crx
       title: ${DRONE_TAG}
+
+  - name: slack-notify
+    image: plugins/slack
+    settings:
+      webhook:
+        from_secret: slack_webhook
+      channel: drone-ci
