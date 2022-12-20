@@ -1,4 +1,5 @@
 let EXTENSION_ID = '';
+let ASSET_ROOT_URL = '';
 
 export function setExtensionId(id: string): void {
   EXTENSION_ID = id;
@@ -6,6 +7,14 @@ export function setExtensionId(id: string): void {
 
 export function getExtensionId(): string {
   return EXTENSION_ID;
+}
+
+export function setAssetRootUrl(url: string): void {
+  ASSET_ROOT_URL = url;
+}
+
+export function getAssetUrl(path: string): string {
+  return `${ASSET_ROOT_URL}${path}`;
 }
 
 export const LOG_PREFIX = '[Jira Killer]';

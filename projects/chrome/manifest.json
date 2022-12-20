@@ -26,10 +26,7 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "content-panel/main.js",
-        "content-panel/polyfills.js",
-        "content-panel/runtime.js",
-        "content-panel/vendor.js"
+        "content-panel/*"
       ],
       "matches": ["https://*.atlassian.net/*"]
     }

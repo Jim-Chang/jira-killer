@@ -6,7 +6,11 @@ chrome.storage.sync.get('jiraInBlack', (cfg) => {
   }
 });
 
-$(`<jira-killer-id id="jiraKillerId" data="${chrome.runtime.id}"></jira-killer-id>`).appendTo(document.body);
+$(
+  `<jira-killer-id id="jiraKillerId" data-runtime-id="${
+    chrome.runtime.id
+  }" data-asset-root-url="${chrome.runtime.getURL('content-panel/assets/')}"></jira-killer-id>`,
+).appendTo(document.body);
 
 const runtime = chrome.runtime.getURL('content-panel/runtime.js');
 const polyfills = chrome.runtime.getURL('content-panel/polyfills.js');
