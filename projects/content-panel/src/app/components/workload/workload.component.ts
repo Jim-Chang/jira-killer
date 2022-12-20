@@ -1,7 +1,8 @@
-import { JiraUser } from '../../lib/define';
+import { getAssetUrl, JiraUser } from '../../lib/define';
 import { JiraService } from '../../services/jira.service';
 import { UrlWatchService } from '../../services/url-watch-service';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'workload',
@@ -14,6 +15,7 @@ export class WorkloadComponent {
   userMap: { [id: string]: JiraUser } = {};
   workloadMap: { [id: string]: number } = {};
   unassignedPoints = 0;
+  totalPoints = 0;
 
   private isCalculating = false;
 
@@ -21,7 +23,11 @@ export class WorkloadComponent {
     return !this.isCalculating && !!this.sprintId;
   }
 
-  constructor(private urlWatchService: UrlWatchService, private jiraService: JiraService) {}
+  constructor(
+    private urlWatchService: UrlWatchService,
+    private jiraService: JiraService,
+    private sanitizer: DomSanitizer,
+  ) {}
 
   onClickCalculate(): void {
     this.isCalculating = true;
@@ -52,9 +58,15 @@ export class WorkloadComponent {
       this.userMap = userMap;
       this.workloadMap = workloadMap;
       this.unassignedPoints = unassignedPoints;
+      this.totalPoints = unassignedPoints + Object.values(workloadMap).reduce((acc, pts) => acc + pts, 0);
+
       this.userIds = Object.keys(this.userMap);
 
       this.isCalculating = false;
     });
+  }
+
+  getImgUrl(filename: string): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(getAssetUrl(`img/${filename}`));
   }
 }

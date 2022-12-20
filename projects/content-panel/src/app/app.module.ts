@@ -6,7 +6,7 @@ import { PokerComponent } from './components/poker/poker.component';
 import { SprintSelectorComponent } from './components/sprint-selector/sprint-selector.component';
 import { StoryBoardComponent } from './components/story-board/story-board.component';
 import { WorkloadComponent } from './components/workload/workload.component';
-import { setExtensionId } from './lib/define';
+import { setAssetRootUrl, setExtensionId } from './lib/define';
 import { HttpClientModule } from '@angular/common/http';
 import { Injector, NgModule } from '@angular/core';
 import { createCustomElement } from '@angular/elements';
@@ -35,7 +35,8 @@ export class AppModule {
 
   ngDoBootstrap(): void {
     const idEle = document.getElementById('jiraKillerId');
-    setExtensionId(idEle!.getAttribute('data') as string);
+    setExtensionId(idEle!.getAttribute('data-runtime-id') as string);
+    setAssetRootUrl(idEle!.getAttribute('data-asset-root-url') as string);
     idEle!.remove();
 
     const applicationWrapper = createCustomElement(AppComponent, { injector: this.injector });

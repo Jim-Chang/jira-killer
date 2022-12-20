@@ -6,6 +6,9 @@ This extension provides the following features:
 2. With one click, you can create a sub task and fill in the necessary information
 3. Optimize workload calculation, can calculate story or sub task
 4. Play poker while planning, saving the life of the mouse button when switching browser tabs
+
+You can install from [Chrome Extension Store](https://chrome.google.com/webstore/detail/jira-killer/geaokmikfnlagcafdoncanagegopiphp).
+
 ## How to develop
 
 Switch to project root directory and enter following commands in console:
