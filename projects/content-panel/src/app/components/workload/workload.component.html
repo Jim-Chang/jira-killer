@@ -30,6 +30,15 @@
         </td>
         <td>{{workloadMap[userId]}}</td>
       </tr>
+      <tr class="b-top" *ngIf="totalPoints">
+        <td>
+          <div class="flex-v-center">
+            <div><img class="head" [src]="getImgUrl('sigma.png')"></div>
+            <div class="highlight">Total</div>
+          </div>
+        </td>
+        <td class="highlight">{{totalPoints}}</td>
+      </tr>
     </tbody>
   </table>
 

@@ -15,6 +15,7 @@ export class WorkloadComponent {
   userMap: { [id: string]: JiraUser } = {};
   workloadMap: { [id: string]: number } = {};
   unassignedPoints = 0;
+  totalPoints = 0;
 
   private isCalculating = false;
 
@@ -57,6 +58,8 @@ export class WorkloadComponent {
       this.userMap = userMap;
       this.workloadMap = workloadMap;
       this.unassignedPoints = unassignedPoints;
+      this.totalPoints = unassignedPoints + Object.values(workloadMap).reduce((acc, pts) => acc + pts, 0);
+
       this.userIds = Object.keys(this.userMap);
 
       this.isCalculating = false;
