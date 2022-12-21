@@ -1,5 +1,9 @@
 import * as $ from 'jquery';
 
+function isInConfluence(): boolean {
+  return window.location.href.includes('.atlassian.net/wiki');
+}
+
 function initBlackTheme() {
   chrome.storage.sync.get('jiraInBlack', (cfg) => {
     if (cfg.jiraInBlack) {
@@ -9,6 +13,11 @@ function initBlackTheme() {
 }
 
 function initPanelNgApp() {
+  // if in confluence, no need panel now
+  if (isInConfluence()) {
+    return;
+  }
+
   window.addEventListener('DOMContentLoaded', () => {
     // set data for angular panel app
     $(
