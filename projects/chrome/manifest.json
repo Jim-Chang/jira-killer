@@ -4,7 +4,11 @@
   "description": "Let Jira be cool",
   "manifest_version": 3,
   "permissions": [
-      "storage"
+      "storage",
+      "webRequest"
+  ],
+  "host_permissions": [
+    "https://*.atlassian.net/*"
   ],
   "icons": {
     "128": "icon.png"
