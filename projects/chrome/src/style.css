@@ -1,34 +1,34 @@
 /** https://github.com/jbronssin/jira-black **/
-html:not([jira-not-in-black]) {
+html[jira-in-black] {
   filter: invert(86%) hue-rotate(180deg) brightness(105%) contrast(105%);
   background: white;
 }
 body {
   background: white;
 }
-html:not([jira-not-in-black]) #ak-side-navigation [data-navheader*="true"] span:empty,
-html:not([jira-not-in-black]) .atlaskit-portal [data-placement="bottom-end"] span:empty,
-html:not([jira-not-in-black]) [aria-label*="profile"] span:empty,
-html:not([jira-not-in-black]) [data-testid*="profile"] span:empty,
-html:not([jira-not-in-black]) [data-test-id*="profile"] span:empty,
-html:not([jira-not-in-black]) span[role="img"],
-html:not([jira-not-in-black]) img,
-html:not([jira-not-in-black]) svg,
-html:not([jira-not-in-black]) iframe,
-html:not([jira-not-in-black]) .emoji-common-emoji-sprite,
-html:not([jira-not-in-black]) .pdfViewer,
-html:not([jira-not-in-black]) .media-viewer-popup,
-html:not([jira-not-in-black]) .page,
-html:not([jira-not-in-black]) .media-card-inline-player,
-html:not([jira-not-in-black]) #tempo-nav,
-html:not([jira-not-in-black]) .tempo-app-container {
+html[jira-in-black] #ak-side-navigation [data-navheader*="true"] span:empty,
+html[jira-in-black] .atlaskit-portal [data-placement="bottom-end"] span:empty,
+html[jira-in-black] [aria-label*="profile"] span:empty,
+html[jira-in-black] [data-testid*="profile"] span:empty,
+html[jira-in-black] [data-test-id*="profile"] span:empty,
+html[jira-in-black] span[role="img"],
+html[jira-in-black] img,
+html[jira-in-black] svg,
+html[jira-in-black] iframe,
+html[jira-in-black] .emoji-common-emoji-sprite,
+html[jira-in-black] .pdfViewer,
+html[jira-in-black] .media-viewer-popup,
+html[jira-in-black] .page,
+html[jira-in-black] .media-card-inline-player,
+html[jira-in-black] #tempo-nav,
+html[jira-in-black] .tempo-app-container {
   filter: invert(95%) hue-rotate(180deg) brightness(105%) contrast(105%);
   border-color: transparent;
 }
-html:not([jira-not-in-black]) .media-viewer-popup img,
-html:not([jira-not-in-black]) .media-viewer-popup span[role="img"],
-html:not([jira-not-in-black]) .media-viewer-popup svg,
-html:not([jira-not-in-black]) .media-viewer-popup iframe {
+html[jira-in-black] .media-viewer-popup img,
+html[jira-in-black] .media-viewer-popup span[role="img"],
+html[jira-in-black] .media-viewer-popup svg,
+html[jira-in-black] .media-viewer-popup iframe {
   filter: none;
 }
 #gh {
@@ -41,6 +41,6 @@ html:not([jira-not-in-black]) .media-viewer-popup iframe {
   background: white;
 }
 
-html:not([jira-not-in-black]) .renderer-overrides {
+html[jira-in-black] .renderer-overrides {
  filter: invert(95%) hue-rotate(180deg) brightness(105%) contrast(105%);
 }

@@ -24,7 +24,8 @@
     {
       "matches": ["https://*.atlassian.net/*"],
       "js": ["content.js"],
-      "css": ["style.css"]
+      "css": ["style.css"],
+      "run_at": "document_start"
     }
   ],
   "web_accessible_resources": [
