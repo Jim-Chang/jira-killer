@@ -26,7 +26,19 @@ function initPanelNgApp() {
   [runtime, polyfills, vendor, main].forEach((url) => (ngSrcHtml += `<script src="${url}" type="module"></script>`));
   $(ngSrcHtml).appendTo(document.head);
 }
+
+function initMessageListener() {
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    // if target of message which is from background.js is web page,
+    // use postMessage api of window to send message to panel app
+    if (request.target === 'webPage') {
+      window.postMessage({ event: request.event });
+    }
+  });
+}
+
 (() => {
   initBlackTheme();
   initPanelNgApp();
+  initMessageListener();
 })();
