@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+
 let EXTENSION_ID = '';
 let ASSET_ROOT_URL = '';
 
@@ -58,6 +60,16 @@ export enum IssueStatus {
   Closed = 'Closed',
 }
 
+export const ISSUE_STATUS_LIST = Object.values(IssueStatus);
+
+export type IssueStatusChangeDate = {
+  key: string;
+  storyPoint: number | null;
+  changeDateMap: {
+    [status in IssueStatus]: moment.Moment | null;
+  };
+};
+
 export type JiraUser = {
   accountId: string;
   displayName: string;
@@ -115,4 +127,21 @@ export type JiraSprint = {
   endDate?: string;
   completeDate?: string;
   originBoardId?: number;
+};
+
+export type JiraChangelogHistory = {
+  id: string;
+  created: string;
+  items: {
+    field: string;
+    fromString: string;
+    toString: string;
+  }[];
+};
+
+export type BurnUpChartData = {
+  totalPoints: number;
+  [IssueStatus.InReview]: number[];
+  [IssueStatus.ReadyForVerification]: number[];
+  [IssueStatus.Closed]: number[];
 };

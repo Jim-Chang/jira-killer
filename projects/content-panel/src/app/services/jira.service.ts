@@ -1,8 +1,18 @@
-import { IssueStatus, IssueType, JiraIssue, JiraIssueType, JiraSprint } from '../lib/define';
+import {
+  ISSUE_STATUS_LIST,
+  IssueStatus,
+  IssueStatusChangeDate,
+  IssueType,
+  JiraChangelogHistory,
+  JiraIssue,
+  JiraIssueType,
+  JiraSprint,
+} from '../lib/define';
 import { ConfigService } from './config.service';
 import { JiraFieldService } from './jira-field.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import * as moment from 'moment';
 import { EMPTY, expand, map, Observable, ReplaySubject, switchMap } from 'rxjs';
 
 type Config = { jiraDomain: string; email: string; apiToken: string };
@@ -125,6 +135,69 @@ export class JiraService {
             status: issue.fields.status.name,
             storyPoint: issue.fields[this.fieldService.storyPointField] ?? null,
             assignee: issue.fields.assignee,
+          };
+        });
+      }),
+    );
+  }
+
+  getIssueStatusChangeDatesBySprint(
+    sprintId: number,
+    issueTypes: IssueType[] = [],
+  ): Observable<IssueStatusChangeDate[]> {
+    console.log('getIssueStatusChangeDatesBySprint');
+    const params: any = { startAt: 0, maxResults: this.MAX_RESULTS, expand: 'changelog' };
+
+    if (issueTypes.length > 0) {
+      params.jql = `issuetype in (${issueTypes.join(',')})`;
+    }
+
+    const url = `${this.baseURL}/rest/agile/1.0/sprint/${sprintId}/issue`;
+    let allIssues: JiraIssue[] = [];
+
+    const _findStatusChangeDateMap = (changeHistories: JiraChangelogHistory[]) => {
+      const map: { [status in IssueStatus]: moment.Moment | null } = {
+        [IssueStatus.Open]: null,
+        [IssueStatus.ToBeHandled]: null,
+        [IssueStatus.InProgress]: null,
+        [IssueStatus.InReview]: null,
+        [IssueStatus.Resolved]: null,
+        [IssueStatus.ReadyForVerification]: null,
+        [IssueStatus.Done]: null,
+        [IssueStatus.Closed]: null,
+      };
+      changeHistories.forEach((h) => {
+        if (h.items.length > 0) {
+          // only take first item now
+          const item = h.items[0];
+          const toStatus = item.toString as any;
+          // if one status appear twice or above, will take last created time.
+          if (item.field === 'status' && ISSUE_STATUS_LIST.includes(toStatus)) {
+            map[toStatus as IssueStatus] = moment(h.created);
+          }
+        }
+      });
+      return map;
+    };
+
+    return this.ready.pipe(
+      switchMap(() => this.http.get<any>(url, { headers: this.headers, params })),
+      expand((issues) => {
+        if (issues.length > 0) {
+          allIssues = [...allIssues, ...issues];
+          params.startAt = allIssues.length;
+          return this.http.get<any>(url, { headers: this.headers, params });
+        }
+        return EMPTY;
+      }),
+      map((ret) => {
+        return ret.issues.map((issue: any) => {
+          // let histories sort asc of create date
+          const changeHistories = issue.changelog.histories.reverse() as JiraChangelogHistory[];
+          return {
+            key: issue.key,
+            storyPoint: issue.fields[this.fieldService.storyPointField] ?? null,
+            changeDateMap: _findStatusChangeDateMap(changeHistories),
           };
         });
       }),
