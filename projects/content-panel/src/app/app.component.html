@@ -23,11 +23,20 @@
   <button class="switch-btn top-btn" (click)="onClickTopLeftSwitchBtn()">{{getSwitchTopBtnText(isShowTopLeftPanel)}}</button>
 </div>
 
-<div class="left-container container" [ngStyle]="leftPanelPlace">
+<div class="left-container side-container container" [ngStyle]="leftPanelPlace">
   <div #leftPanel>
     <poker></poker>
   </div>
   <div>
-    <button class="switch-btn left-btn" (click)="onClickLeftSwitchBtn()">{{getSwitchLeftBtnText(isShowLeftPanel)}}</button>
+    <button class="switch-btn side-btn" (click)="onClickLeftSwitchBtn()">{{getSwitchLeftBtnText(isShowLeftPanel)}}</button>
+  </div>
+</div>
+
+<div class="right-container side-container container" [ngStyle]="rightPanelPlace">
+  <div>
+    <button class="switch-btn side-btn" (click)="onClickRightSwitchBtn()">{{getSwitchRightBtnText(isShowRightPanel)}}</button>
+  </div>
+  <div #rightPanel>
+    <chart></chart>
   </div>
 </div>

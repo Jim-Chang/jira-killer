@@ -2,6 +2,7 @@ import { AppComponent } from './app.component';
 import { BacklogComponent } from './components/backlog/backlog.component';
 import { BreakdownTaskInputComponent } from './components/breakdown-task-input/breakdown-task-input.component';
 import { BreakdownTaskComponent } from './components/breakdown-task/breakdown-task.component';
+import { ChartComponent } from './components/chart/chart.component';
 import { PokerComponent } from './components/poker/poker.component';
 import { SprintSelectorComponent } from './components/sprint-selector/sprint-selector.component';
 import { StoryBoardComponent } from './components/story-board/story-board.component';
@@ -23,6 +24,7 @@ import { BrowserModule } from '@angular/platform-browser';
     PokerComponent,
     WorkloadComponent,
     SprintSelectorComponent,
+    ChartComponent,
   ],
   imports: [BrowserModule, FormsModule, HttpClientModule],
   providers: [],

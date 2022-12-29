@@ -9,10 +9,12 @@ export class AppComponent {
   title = 'content-panel';
   isShowTopPanel = false;
   isShowLeftPanel = false;
+  isShowRightPanel = false;
   isShowTopLeftPanel = false;
 
   @ViewChild('topPanel') topPanel: ElementRef;
   @ViewChild('leftPanel') leftPanel: ElementRef;
+  @ViewChild('rightPanel') rightPanel: ElementRef;
   @ViewChild('topLeftPanel') topLeftPanel: ElementRef;
 
   getSwitchTopBtnText(panelShowStatus: boolean): string {
@@ -21,6 +23,10 @@ export class AppComponent {
 
   getSwitchLeftBtnText(panelShowStatus: boolean): string {
     return panelShowStatus ? '◀' : '▶';
+  }
+
+  getSwitchRightBtnText(panelShowStatus: boolean): string {
+    return panelShowStatus ? '▶' : '◀';
   }
 
   get topPanelPlace(): any {
@@ -49,6 +55,15 @@ export class AppComponent {
     }
   }
 
+  get rightPanelPlace(): any {
+    const top = `calc(50% - ${this.rightPanel?.nativeElement.offsetHeight / 2}px)`;
+    if (this.isShowRightPanel) {
+      return { right: '0', top };
+    } else {
+      return { right: `${-this.rightPanel?.nativeElement.offsetWidth || -1000}px`, top };
+    }
+  }
+
   onClickTopSwitchBtn(): void {
     this.isShowTopPanel = !this.isShowTopPanel;
   }
@@ -59,5 +74,9 @@ export class AppComponent {
 
   onClickLeftSwitchBtn(): void {
     this.isShowLeftPanel = !this.isShowLeftPanel;
+  }
+
+  onClickRightSwitchBtn(): void {
+    this.isShowRightPanel = !this.isShowRightPanel;
   }
 }
