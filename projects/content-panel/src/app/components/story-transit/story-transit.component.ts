@@ -7,11 +7,11 @@ import { Component } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'story-board',
-  templateUrl: './story-board.component.html',
-  styleUrls: ['./story-board.component.sass'],
+  selector: 'story-transit',
+  templateUrl: './story-transit.component.html',
+  styleUrls: ['./story-transit.component.sass'],
 })
-export class StoryBoardComponent {
+export class StoryTransitComponent {
   sprint: JiraSprint | null = null;
   needTransitResult = '';
 

@@ -22,11 +22,11 @@ import {
 } from 'rxjs';
 
 @Component({
-  selector: 'backlog',
-  templateUrl: './backlog.component.html',
-  styleUrls: ['./backlog.component.sass'],
+  selector: 'backlog-sort',
+  templateUrl: './backlog-sort.component.html',
+  styleUrls: ['./backlog-sort.component.sass'],
 })
-export class BacklogComponent {
+export class BacklogSortComponent {
   sortBtnText = 'Sort';
   isSorting = false;
 
