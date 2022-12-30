@@ -1,4 +1,4 @@
-import { JiraSprint } from '../../lib/define';
+import { JiraSprint } from '../../lib/jira-define';
 import { getUrlBoardId } from '../../lib/utils';
 import { JiraService } from '../../services/jira.service';
 import { UrlWatchService } from '../../services/url-watch-service';

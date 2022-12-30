@@ -1,4 +1,4 @@
-import { JiraIssue } from '../../lib/define';
+import { Issue } from '../../lib/define';
 import { getUrlSelectedIssueId } from '../../lib/utils';
 import { JiraService } from '../../services/jira.service';
 import { UrlWatchService } from '../../services/url-watch-service';
@@ -12,7 +12,7 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class BreakdownTaskComponent {
   taskRowCount = 0;
-  selectedIssue: JiraIssue | null = null;
+  selectedIssue: Issue | null = null;
 
   private destroy$ = new Subject<void>();
 

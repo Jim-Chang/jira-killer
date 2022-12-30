@@ -1,4 +1,5 @@
-import { JiraIssue, JiraSprint } from '../../lib/define';
+import { Issue } from '../../lib/define';
+import { JiraSprint } from '../../lib/jira-define';
 import { getUrlBoardId, getUrlProjectKey } from '../../lib/utils';
 import { ConfigService } from '../../services/config.service';
 import { JiraIssueSortService } from '../../services/jira-issue-sort.service';

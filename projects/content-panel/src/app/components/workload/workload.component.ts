@@ -1,4 +1,5 @@
-import { getAssetUrl, JiraUser } from '../../lib/define';
+import { getAssetUrl } from '../../lib/define';
+import { JiraUser } from '../../lib/jira-define';
 import { JiraAppRequestWatchService } from '../../services/jira-app-request-watch.service';
 import { JiraService } from '../../services/jira.service';
 import { UrlWatchService } from '../../services/url-watch-service';

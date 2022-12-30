@@ -1,4 +1,5 @@
-import { BurnUpChartData, IssueStatus, IssueStatusChangeLog, JiraSprint } from '../lib/define';
+import { BurnUpChartData, IssueStatus, IssueStatusChangeLog } from '../lib/define';
+import { JiraSprint } from '../lib/jira-define';
 import { JiraService } from './jira.service';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';

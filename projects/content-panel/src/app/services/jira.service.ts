@@ -1,14 +1,5 @@
-import {
-  ISSUE_STATUS_LIST,
-  IssueStatus,
-  IssueStatusChangeLog,
-  IssueType,
-  JiraChangelogHistory,
-  JiraChangelogItem,
-  JiraIssue,
-  JiraIssueType,
-  JiraSprint,
-} from '../lib/define';
+import { ISSUE_STATUS_LIST, IssueStatus, IssueStatusChangeLog, IssueType, Issue, JiraIssueType } from '../lib/define';
+import { JiraChangelogHistory, JiraChangelogItem, JiraSprint } from '../lib/jira-define';
 import { ConfigService } from './config.service';
 import { JiraFieldService } from './jira-field.service';
 import { HttpClient } from '@angular/common/http';
@@ -69,7 +60,7 @@ export class JiraService {
     return `https://${this.config.jiraDomain}.atlassian.net/browse/${issueKey}`;
   }
 
-  getIssue(key: string): Observable<JiraIssue> {
+  getIssue(key: string): Observable<Issue> {
     return this.ready.pipe(
       switchMap(() => this.http.get<any>(`${this.baseURL}/rest/api/2/issue/${key}`, { headers: this.headers })),
       map((ret: any) => {
@@ -78,7 +69,7 @@ export class JiraService {
         let sprints = ret.fields[this.fieldService.sprintField] ?? [];
         sprints = sprints.filter((s: any) => s.state !== 'closed');
 
-        const issue: JiraIssue = {
+        const issue: Issue = {
           id: ret.id,
           key: ret.key,
           summary: ret.fields.summary,
@@ -97,8 +88,7 @@ export class JiraService {
     );
   }
 
-  getIssuesBySprint(sprintId: number, issueTypes: IssueType[] = []): Observable<JiraIssue[]> {
-    console.log('getIssuesBySprint');
+  getIssuesBySprint(sprintId: number, issueTypes: IssueType[] = []): Observable<Issue[]> {
     const params: any = { startAt: 0, maxResults: this.MAX_RESULTS };
 
     if (issueTypes.length > 0) {
@@ -106,7 +96,7 @@ export class JiraService {
     }
 
     const url = `${this.baseURL}/rest/agile/1.0/sprint/${sprintId}/issue`;
-    let allIssues: JiraIssue[] = [];
+    let allIssues: Issue[] = [];
 
     return this.ready.pipe(
       switchMap(() => this.http.get<any>(url, { headers: this.headers, params })),
@@ -143,7 +133,6 @@ export class JiraService {
   }
 
   getIssueStatusChangeLogsBySprint(sprintId: number, issueTypes: IssueType[] = []): Observable<IssueStatusChangeLog[]> {
-    console.log('getIssueStatusChangeLogsBySprint');
     const params: any = { startAt: 0, maxResults: this.MAX_RESULTS, expand: 'changelog' };
 
     if (issueTypes.length > 0) {
@@ -151,7 +140,7 @@ export class JiraService {
     }
 
     const url = `${this.baseURL}/rest/agile/1.0/sprint/${sprintId}/issue`;
-    let allIssues: JiraIssue[] = [];
+    let allIssues: Issue[] = [];
 
     const _isStatusChangelog = (item: JiraChangelogItem) => item.field === 'status';
 
@@ -198,7 +187,7 @@ export class JiraService {
   }
 
   createIssue(
-    fieldSource: JiraIssue,
+    fieldSource: Issue,
     summary: string,
     issueType: IssueType,
     storyPoint: number | null,
@@ -219,7 +208,7 @@ export class JiraService {
     );
   }
 
-  createSubtask(fieldSource: JiraIssue, summary: string, storyPoint: number | null): Observable<string> {
+  createSubtask(fieldSource: Issue, summary: string, storyPoint: number | null): Observable<string> {
     console.log('create subtask');
     const data = this.buildCreateSubtaskData(
       fieldSource.projKey,
