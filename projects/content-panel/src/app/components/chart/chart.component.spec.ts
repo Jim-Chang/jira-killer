@@ -1,16 +1,16 @@
-import { StoryBoardComponent } from './story-board.component';
+import { ChartComponent } from './chart.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-describe('StoryBoardComponent', () => {
-  let component: StoryBoardComponent;
-  let fixture: ComponentFixture<StoryBoardComponent>;
+describe('ChartComponent', () => {
+  let component: ChartComponent;
+  let fixture: ComponentFixture<ChartComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [StoryBoardComponent],
+      declarations: [ChartComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(StoryBoardComponent);
+    fixture = TestBed.createComponent(ChartComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

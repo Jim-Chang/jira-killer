@@ -1,3 +1,6 @@
+import { JiraIssueLink, JiraUser } from './jira-define';
+import * as moment from 'moment';
+
 let EXTENSION_ID = '';
 let ASSET_ROOT_URL = '';
 
@@ -58,18 +61,17 @@ export enum IssueStatus {
   Closed = 'Closed',
 }
 
-export type JiraUser = {
-  accountId: string;
-  displayName: string;
-  avatarUrls: {
-    '16x16': string;
-    '24x24': string;
-    '32x32': string;
-    '48x48': string;
+export const ISSUE_STATUS_LIST = Object.values(IssueStatus);
+
+export type IssueStatusChangeLog = {
+  key: string;
+  storyPoint: number | null;
+  statusLogMap: {
+    [status in IssueStatus]: moment.Moment | null;
   };
 };
 
-export type JiraIssue = {
+export type Issue = {
   id: string;
   key: string;
   summary: string;
@@ -84,35 +86,10 @@ export type JiraIssue = {
   assignee: JiraUser | null;
 };
 
-export type LinkedIssue = {
-  key: string;
-  fields: {
-    summary: string;
-    issuetype: {
-      name: IssueType;
-    };
-    status: {
-      name: IssueStatus;
-    };
-  };
-};
-
-export type JiraIssueLink = {
-  type: {
-    name: IssueLinkType;
-  };
-  outwardIssue?: LinkedIssue;
-  inwardIssue?: LinkedIssue;
-};
-
-export type JiraSprint = {
-  id: number;
-  self: string;
-  state: string;
-  name: string;
-  goal: string;
-  startDate?: string;
-  endDate?: string;
-  completeDate?: string;
-  originBoardId?: number;
+export type BurnUpChartData = {
+  totalPoints: number;
+  refBurnUpLine: number[];
+  [IssueStatus.InReview]: number[];
+  [IssueStatus.ReadyForVerification]: number[];
+  [IssueStatus.Closed]: number[];
 };

@@ -1,4 +1,4 @@
-import { CustomIssueType, JiraIssue, JiraIssueType, LOG_PREFIX } from '../lib/define';
+import { CustomIssueType, Issue, JiraIssueType, LOG_PREFIX } from '../lib/define';
 import { JiraService } from './jira.service';
 import { Injectable } from '@angular/core';
 import { combineLatest, map, Observable } from 'rxjs';
@@ -9,7 +9,7 @@ import { combineLatest, map, Observable } from 'rxjs';
 export class JiraIssueSortService {
   constructor(private jiraService: JiraService) {}
 
-  doSort(issues: JiraIssue[]): Observable<boolean> {
+  doSort(issues: Issue[]): Observable<boolean> {
     const shouldSortTypes: string[] = [
       JiraIssueType.Task,
       JiraIssueType.Bug,

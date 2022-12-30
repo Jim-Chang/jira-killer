@@ -2,6 +2,3 @@
   <sprint-selector [(sprintId)]="sprintId"></sprint-selector>
   <button (click)="onClickSortBtn()" [disabled]="!enableSortBtn">{{sortBtnText}}</button>
 </div>
-<div>
-  <input [(ngModel)]="wantBrowseIssueKey" (keyup.enter)="onClickBrowseIssueBtn()"><button (click)="onClickBrowseIssueBtn()">Browse Issue</button>
-</div>

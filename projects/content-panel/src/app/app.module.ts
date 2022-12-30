@@ -1,10 +1,12 @@
 import { AppComponent } from './app.component';
-import { BacklogComponent } from './components/backlog/backlog.component';
+import { BacklogSortComponent } from './components/backlog-sort/backlog-sort.component';
 import { BreakdownTaskInputComponent } from './components/breakdown-task-input/breakdown-task-input.component';
 import { BreakdownTaskComponent } from './components/breakdown-task/breakdown-task.component';
+import { BrowseIssueComponent } from './components/browse-issue/browse-issue.component';
+import { ChartComponent } from './components/chart/chart.component';
 import { PokerComponent } from './components/poker/poker.component';
 import { SprintSelectorComponent } from './components/sprint-selector/sprint-selector.component';
-import { StoryBoardComponent } from './components/story-board/story-board.component';
+import { StoryTransitComponent } from './components/story-transit/story-transit.component';
 import { WorkloadComponent } from './components/workload/workload.component';
 import { setAssetRootUrl, setExtensionId } from './lib/define';
 import { HttpClientModule } from '@angular/common/http';
@@ -18,11 +20,13 @@ import { BrowserModule } from '@angular/platform-browser';
     AppComponent,
     BreakdownTaskComponent,
     BreakdownTaskInputComponent,
-    BacklogComponent,
-    StoryBoardComponent,
+    BacklogSortComponent,
+    StoryTransitComponent,
     PokerComponent,
     WorkloadComponent,
     SprintSelectorComponent,
+    ChartComponent,
+    BrowseIssueComponent,
   ],
   imports: [BrowserModule, FormsModule, HttpClientModule],
   providers: [],

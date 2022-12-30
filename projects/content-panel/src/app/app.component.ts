@@ -9,10 +9,12 @@ export class AppComponent {
   title = 'content-panel';
   isShowTopPanel = false;
   isShowLeftPanel = false;
+  isShowRightPanel = false;
   isShowTopLeftPanel = false;
 
   @ViewChild('topPanel') topPanel: ElementRef;
   @ViewChild('leftPanel') leftPanel: ElementRef;
+  @ViewChild('rightPanel') rightPanel: ElementRef;
   @ViewChild('topLeftPanel') topLeftPanel: ElementRef;
 
   getSwitchTopBtnText(panelShowStatus: boolean): string {
@@ -21,6 +23,10 @@ export class AppComponent {
 
   getSwitchLeftBtnText(panelShowStatus: boolean): string {
     return panelShowStatus ? '◀' : '▶';
+  }
+
+  getSwitchRightBtnText(panelShowStatus: boolean): string {
+    return panelShowStatus ? '▶' : '◀';
   }
 
   get topPanelPlace(): any {
@@ -36,7 +42,7 @@ export class AppComponent {
     if (this.isShowTopLeftPanel) {
       return { top: '0', left: '0' };
     } else {
-      return { top: `${-this.topLeftPanel?.nativeElement.offsetHeight - 8 || -1000}px`, left: '0' };
+      return { top: `${-this.topLeftPanel?.nativeElement.offsetHeight || -1000}px`, left: '0' };
     }
   }
 
@@ -46,6 +52,15 @@ export class AppComponent {
       return { left: '0', top };
     } else {
       return { left: `${-this.leftPanel?.nativeElement.offsetWidth || -1000}px`, top };
+    }
+  }
+
+  get rightPanelPlace(): any {
+    const top = `calc(50% - ${this.rightPanel?.nativeElement.offsetHeight / 2}px)`;
+    if (this.isShowRightPanel) {
+      return { right: '0', top };
+    } else {
+      return { right: `${-this.rightPanel?.nativeElement.offsetWidth || -1000}px`, top };
     }
   }
 
@@ -59,5 +74,9 @@ export class AppComponent {
 
   onClickLeftSwitchBtn(): void {
     this.isShowLeftPanel = !this.isShowLeftPanel;
+  }
+
+  onClickRightSwitchBtn(): void {
+    this.isShowRightPanel = !this.isShowRightPanel;
   }
 }

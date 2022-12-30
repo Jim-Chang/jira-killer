@@ -1,50 +1,21 @@
-import { JiraIssue, JiraSprint } from '../../lib/define';
-import { getUrlBoardId, getUrlProjectKey } from '../../lib/utils';
+import { getUrlProjectKey } from '../../lib/utils';
 import { ConfigService } from '../../services/config.service';
-import { JiraIssueSortService } from '../../services/jira-issue-sort.service';
-import { JiraService } from '../../services/jira.service';
 import { UrlWatchService } from '../../services/url-watch-service';
-import { Component, OnInit } from '@angular/core';
-import {
-  EMPTY,
-  expand,
-  filter,
-  map,
-  Observable,
-  of,
-  repeat,
-  Subject,
-  switchMap,
-  take,
-  takeUntil,
-  takeWhile,
-} from 'rxjs';
+import { Component } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'backlog',
-  templateUrl: './backlog.component.html',
-  styleUrls: ['./backlog.component.sass'],
+  selector: 'browse-issue',
+  templateUrl: './browse-issue.component.html',
+  styleUrls: ['./browse-issue.component.sass'],
 })
-export class BacklogComponent {
-  sortBtnText = 'Sort';
-  isSorting = false;
-
-  sprintId = 0;
+export class BrowseIssueComponent {
   projectKey: string | null = null;
   wantBrowseIssueKey = '';
 
   private destroy$ = new Subject<void>();
 
-  get enableSortBtn(): boolean {
-    return !this.isSorting && !!this.sprintId;
-  }
-
-  constructor(
-    private jiraService: JiraService,
-    private issueSortService: JiraIssueSortService,
-    private urlWatchService: UrlWatchService,
-    private configService: ConfigService,
-  ) {
+  constructor(private configService: ConfigService, private urlWatchService: UrlWatchService) {
     this.urlWatchService.urlChange$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.reset();
     });
@@ -52,19 +23,6 @@ export class BacklogComponent {
 
   ngOnDestroy(): void {
     this.destroy$.next();
-  }
-
-  onClickSortBtn(): void {
-    this.isSorting = true;
-    this.sortBtnText = 'Sorting';
-
-    this.jiraService
-      .getIssuesBySprint(this.sprintId)
-      .pipe(switchMap((issues) => this.issueSortService.doSort(issues)))
-      .subscribe((ret) => {
-        this.isSorting = false;
-        this.sortBtnText = ret ? 'Finish' : 'Fail';
-      });
   }
 
   onClickBrowseIssueBtn(): void {

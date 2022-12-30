@@ -1,16 +1,16 @@
-import { BacklogComponent } from './backlog.component';
+import { BacklogSortComponent } from './backlog-sort.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 describe('SortBacklogIssueComponent', () => {
-  let component: BacklogComponent;
-  let fixture: ComponentFixture<BacklogComponent>;
+  let component: BacklogSortComponent;
+  let fixture: ComponentFixture<BacklogSortComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [BacklogComponent],
+      declarations: [BacklogSortComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(BacklogComponent);
+    fixture = TestBed.createComponent(BacklogSortComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

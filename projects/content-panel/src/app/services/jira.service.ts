@@ -1,8 +1,10 @@
-import { IssueStatus, IssueType, JiraIssue, JiraIssueType, JiraSprint } from '../lib/define';
+import { ISSUE_STATUS_LIST, IssueStatus, IssueStatusChangeLog, IssueType, Issue, JiraIssueType } from '../lib/define';
+import { JiraChangelogHistory, JiraChangelogItem, JiraSprint } from '../lib/jira-define';
 import { ConfigService } from './config.service';
 import { JiraFieldService } from './jira-field.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import * as moment from 'moment';
 import { EMPTY, expand, map, Observable, ReplaySubject, switchMap } from 'rxjs';
 
 type Config = { jiraDomain: string; email: string; apiToken: string };
@@ -58,7 +60,7 @@ export class JiraService {
     return `https://${this.config.jiraDomain}.atlassian.net/browse/${issueKey}`;
   }
 
-  getIssue(key: string): Observable<JiraIssue> {
+  getIssue(key: string): Observable<Issue> {
     return this.ready.pipe(
       switchMap(() => this.http.get<any>(`${this.baseURL}/rest/api/2/issue/${key}`, { headers: this.headers })),
       map((ret: any) => {
@@ -67,7 +69,7 @@ export class JiraService {
         let sprints = ret.fields[this.fieldService.sprintField] ?? [];
         sprints = sprints.filter((s: any) => s.state !== 'closed');
 
-        const issue: JiraIssue = {
+        const issue: Issue = {
           id: ret.id,
           key: ret.key,
           summary: ret.fields.summary,
@@ -86,8 +88,7 @@ export class JiraService {
     );
   }
 
-  getIssuesBySprint(sprintId: number, issueTypes: IssueType[] = []): Observable<JiraIssue[]> {
-    console.log('getIssuesBySprint');
+  getIssuesBySprint(sprintId: number, issueTypes: IssueType[] = []): Observable<Issue[]> {
     const params: any = { startAt: 0, maxResults: this.MAX_RESULTS };
 
     if (issueTypes.length > 0) {
@@ -95,7 +96,7 @@ export class JiraService {
     }
 
     const url = `${this.baseURL}/rest/agile/1.0/sprint/${sprintId}/issue`;
-    let allIssues: JiraIssue[] = [];
+    let allIssues: Issue[] = [];
 
     return this.ready.pipe(
       switchMap(() => this.http.get<any>(url, { headers: this.headers, params })),
@@ -131,8 +132,62 @@ export class JiraService {
     );
   }
 
+  getIssueStatusChangeLogsBySprint(sprintId: number, issueTypes: IssueType[] = []): Observable<IssueStatusChangeLog[]> {
+    const params: any = { startAt: 0, maxResults: this.MAX_RESULTS, expand: 'changelog' };
+
+    if (issueTypes.length > 0) {
+      params.jql = `issuetype in (${issueTypes.join(',')})`;
+    }
+
+    const url = `${this.baseURL}/rest/agile/1.0/sprint/${sprintId}/issue`;
+    let allIssues: Issue[] = [];
+
+    const _isStatusChangelog = (item: JiraChangelogItem) => item.field === 'status';
+
+    const _genStatusLogMap = (changeHistories: JiraChangelogHistory[]) => {
+      const map: { [status in IssueStatus]: moment.Moment | null } = {} as any;
+      ISSUE_STATUS_LIST.forEach((status) => (map[status] = null));
+
+      changeHistories.forEach((h) => {
+        if (h.items.length > 0) {
+          // only take first item now
+          const item = h.items[0];
+          const toStatus = item.toString as IssueStatus;
+          // if one status appear twice or above, will take last created time.
+          if (_isStatusChangelog(item) && ISSUE_STATUS_LIST.includes(toStatus)) {
+            map[toStatus] = moment(h.created);
+          }
+        }
+      });
+      return map;
+    };
+
+    return this.ready.pipe(
+      switchMap(() => this.http.get<any>(url, { headers: this.headers, params })),
+      expand((issues) => {
+        if (issues.length > 0) {
+          allIssues = [...allIssues, ...issues];
+          params.startAt = allIssues.length;
+          return this.http.get<any>(url, { headers: this.headers, params });
+        }
+        return EMPTY;
+      }),
+      map((ret) => {
+        return ret.issues.map((issue: any) => {
+          // let histories sort asc of create date
+          const changeHistories = issue.changelog.histories.reverse() as JiraChangelogHistory[];
+          return {
+            key: issue.key,
+            storyPoint: issue.fields[this.fieldService.storyPointField] ?? null,
+            statusLogMap: _genStatusLogMap(changeHistories),
+          };
+        });
+      }),
+    );
+  }
+
   createIssue(
-    fieldSource: JiraIssue,
+    fieldSource: Issue,
     summary: string,
     issueType: IssueType,
     storyPoint: number | null,
@@ -153,7 +208,7 @@ export class JiraService {
     );
   }
 
-  createSubtask(fieldSource: JiraIssue, summary: string, storyPoint: number | null): Observable<string> {
+  createSubtask(fieldSource: Issue, summary: string, storyPoint: number | null): Observable<string> {
     console.log('create subtask');
     const data = this.buildCreateSubtaskData(
       fieldSource.projKey,

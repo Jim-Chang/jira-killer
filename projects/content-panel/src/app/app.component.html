@@ -1,15 +1,31 @@
 <div class="top-container container" [ngStyle]="topPanelPlace">
   <div #topPanel>
     <div class="center">
-      <story-board></story-board>
+      <div>
+        <h3>Story Transition</h3>
+        <story-transit></story-transit>
+      </div>
     </div>
     <hr>
     <div class="center">
-      <backlog></backlog>
+      <div>
+        <h3>Sort Backlog</h3>
+        <backlog-sort></backlog-sort>
+      </div>
     </div>
     <hr>
     <div class="center">
-      <breakdown-task></breakdown-task>
+      <div>
+        <h3>Quick Browse Issue</h3>
+        <browse-issue></browse-issue>
+      </div>
+    </div>
+    <hr>
+    <div class="center">
+      <div>
+        <h3>Task Breakdown</h3>
+        <breakdown-task></breakdown-task>
+      </div>
     </div>
     <hr>
   </div>
@@ -18,16 +34,27 @@
 
 <div class="top-left-container container" [ngStyle]="topLeftPanelPlace">
   <div #topLeftPanel>
+    <h3>Workload</h3>
     <workload></workload>
   </div>
   <button class="switch-btn top-btn" (click)="onClickTopLeftSwitchBtn()">{{getSwitchTopBtnText(isShowTopLeftPanel)}}</button>
 </div>
 
-<div class="left-container container" [ngStyle]="leftPanelPlace">
+<div class="left-container side-container container" [ngStyle]="leftPanelPlace">
   <div #leftPanel>
     <poker></poker>
   </div>
   <div>
-    <button class="switch-btn left-btn" (click)="onClickLeftSwitchBtn()">{{getSwitchLeftBtnText(isShowLeftPanel)}}</button>
+    <button class="switch-btn side-btn" (click)="onClickLeftSwitchBtn()">{{getSwitchLeftBtnText(isShowLeftPanel)}}</button>
+  </div>
+</div>
+
+<div class="right-container side-container container" [ngStyle]="rightPanelPlace">
+  <div>
+    <button class="switch-btn side-btn" (click)="onClickRightSwitchBtn()">{{getSwitchRightBtnText(isShowRightPanel)}}</button>
+  </div>
+  <div #rightPanel>
+    <h3>Chart Panel</h3>
+    <chart></chart>
   </div>
 </div>

@@ -19,7 +19,10 @@
         "@angular/platform-browser-dynamic": "^14.2.0",
         "@angular/router": "^14.2.0",
         "axios": "^1.1.2",
+        "chart.js": "^4.1.1",
+        "chartjs-plugin-annotation": "^2.1.1",
         "jquery": "^3.6.1",
+        "moment": "^2.29.4",
         "ngx-build-plus": "^14.0.0",
         "rxjs": "~7.5.0",
         "tslib": "^2.3.0",
@@ -2599,6 +2602,11 @@
         "@jridgewell/sourcemap-codec": "1.4.14"
       }
     },
+    "node_modules/@kurkle/color": {
+      "version": "0.3.1",
+      "resolved": "https://registry.npmjs.org/@kurkle/color/-/color-0.3.1.tgz",
+      "integrity": "sha512-hW0GwZj06z/ZFUW2Espl7toVDjghJN+EKqyXzPSV8NV89d5BYp5rRMBJoc+aUN0x5OXDMeRQHazejr2Xmqj2tw=="
+    },
     "node_modules/@leichtgewicht/ip-codec": {
       "version": "2.0.4",
       "resolved": "https://registry.npmjs.org/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz",
@@ -4103,6 +4111,25 @@
       "version": "0.7.0",
       "resolved": "https://registry.npmjs.org/chardet/-/chardet-0.7.0.tgz",
       "integrity": "sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA=="
+    },
+    "node_modules/chart.js": {
+      "version": "4.1.1",
+      "resolved": "https://registry.npmjs.org/chart.js/-/chart.js-4.1.1.tgz",
+      "integrity": "sha512-P0pCosNXp+LR8zO/QTkZKT6Hb7p0DPFtypEeVOf+6x06hX13NIb75R0DXUA4Ksx/+48chDQKtCCmRCviQRTqsA==",
+      "dependencies": {
+        "@kurkle/color": "^0.3.0"
+      },
+      "engines": {
+        "pnpm": "^7.0.0"
+      }
+    },
+    "node_modules/chartjs-plugin-annotation": {
+      "version": "2.1.1",
+      "resolved": "https://registry.npmjs.org/chartjs-plugin-annotation/-/chartjs-plugin-annotation-2.1.1.tgz",
+      "integrity": "sha512-RVKfwNpecvVZdEUshqk9RtqjwVn9koehQBiz1ZWclgFOVayr2CSTENI6VqsyjuYtzBTFEX6Qark7SqYtnwNiAA==",
+      "peerDependencies": {
+        "chart.js": ">=3.7.0"
+      }
     },
     "node_modules/chokidar": {
       "version": "3.5.3",
@@ -8420,6 +8447,14 @@
       },
       "engines": {
         "node": ">=10"
+      }
+    },
+    "node_modules/moment": {
+      "version": "2.29.4",
+      "resolved": "https://registry.npmjs.org/moment/-/moment-2.29.4.tgz",
+      "integrity": "sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==",
+      "engines": {
+        "node": "*"
       }
     },
     "node_modules/ms": {
@@ -14420,6 +14455,11 @@
         "@jridgewell/sourcemap-codec": "1.4.14"
       }
     },
+    "@kurkle/color": {
+      "version": "0.3.1",
+      "resolved": "https://registry.npmjs.org/@kurkle/color/-/color-0.3.1.tgz",
+      "integrity": "sha512-hW0GwZj06z/ZFUW2Espl7toVDjghJN+EKqyXzPSV8NV89d5BYp5rRMBJoc+aUN0x5OXDMeRQHazejr2Xmqj2tw=="
+    },
     "@leichtgewicht/ip-codec": {
       "version": "2.0.4",
       "resolved": "https://registry.npmjs.org/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz",
@@ -15643,6 +15683,20 @@
       "version": "0.7.0",
       "resolved": "https://registry.npmjs.org/chardet/-/chardet-0.7.0.tgz",
       "integrity": "sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA=="
+    },
+    "chart.js": {
+      "version": "4.1.1",
+      "resolved": "https://registry.npmjs.org/chart.js/-/chart.js-4.1.1.tgz",
+      "integrity": "sha512-P0pCosNXp+LR8zO/QTkZKT6Hb7p0DPFtypEeVOf+6x06hX13NIb75R0DXUA4Ksx/+48chDQKtCCmRCviQRTqsA==",
+      "requires": {
+        "@kurkle/color": "^0.3.0"
+      }
+    },
+    "chartjs-plugin-annotation": {
+      "version": "2.1.1",
+      "resolved": "https://registry.npmjs.org/chartjs-plugin-annotation/-/chartjs-plugin-annotation-2.1.1.tgz",
+      "integrity": "sha512-RVKfwNpecvVZdEUshqk9RtqjwVn9koehQBiz1ZWclgFOVayr2CSTENI6VqsyjuYtzBTFEX6Qark7SqYtnwNiAA==",
+      "requires": {}
     },
     "chokidar": {
       "version": "3.5.3",
@@ -18735,6 +18789,11 @@
       "version": "1.0.4",
       "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-1.0.4.tgz",
       "integrity": "sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw=="
+    },
+    "moment": {
+      "version": "2.29.4",
+      "resolved": "https://registry.npmjs.org/moment/-/moment-2.29.4.tgz",
+      "integrity": "sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w=="
     },
     "ms": {
       "version": "2.1.2",

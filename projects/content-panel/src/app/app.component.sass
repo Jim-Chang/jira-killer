@@ -1,6 +1,6 @@
 .container
   background: none
-  position: absolute
+  position: fixed
   z-index: 10000
   div
     background: white
@@ -17,12 +17,17 @@
     display: block
     margin: 0 auto
 
-.left-container
+.side-container
   display: flex
-  transition: left 0.2s ease-out
   text-align: center
   align-items: center
   justify-content: center
+
+.left-container
+  transition: left 0.2s ease-out
+
+.right-container
+  transition: right 0.2s ease-out
 
 .switch-btn
   width: 25px
@@ -31,10 +36,16 @@
 .top-btn
   width: 50px
 
-.left-btn
+.side-btn
   height: 50px
 
 .center
   display: flex
   align-content: center
   justify-content: center
+
+h3
+  text-align: center
+  margin: 10px 0
+  font-size: 18px
+  font-weight: 400

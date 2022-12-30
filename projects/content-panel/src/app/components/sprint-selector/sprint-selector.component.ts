@@ -1,4 +1,4 @@
-import { JiraSprint } from '../../lib/define';
+import { JiraSprint } from '../../lib/jira-define';
 import { getUrlBoardId } from '../../lib/utils';
 import { JiraService } from '../../services/jira.service';
 import { UrlWatchService } from '../../services/url-watch-service';
@@ -12,16 +12,25 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class SprintSelectorComponent {
   @Input() sprintId = 0;
+  @Input() sprint: JiraSprint | null;
+  @Input() disabled: boolean = false;
   @Output() sprintIdChange = new EventEmitter<number>();
+  @Output() sprintChange = new EventEmitter<JiraSprint | null>();
 
   sprints$ = new Subject<JiraSprint[]>();
   private lastBoardId: number | null = null;
+  private sprintIdMap: { [id: number]: JiraSprint } = {};
 
   private destroy$ = new Subject<void>();
 
   constructor(private jiraService: JiraService, private urlWatchService: UrlWatchService) {
     this.urlWatchService.urlChange$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.reset();
+    });
+
+    this.sprints$.subscribe((sps) => {
+      this.sprintIdMap = {};
+      sps.forEach((sp) => (this.sprintIdMap[sp.id] = sp));
     });
   }
 
@@ -31,13 +40,15 @@ export class SprintSelectorComponent {
 
   onSelectChange(): void {
     this.sprintIdChange.emit(this.sprintId);
+    this.sprintChange.emit(this.sprintIdMap[this.sprintId]);
   }
 
   private reset(): void {
     const _clearSpOpt = () => {
       this.sprints$.next([]);
       this.sprintId = 0;
-      this.sprintIdChange.emit(0);
+      this.sprint = null;
+      this.onSelectChange();
     };
 
     const boardId = getUrlBoardId();

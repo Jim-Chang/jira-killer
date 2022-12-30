@@ -1,13 +1,5 @@
-import {
-  CustomIssueType,
-  ISSUE_PREFIX_MAP,
-  IssueLinkType,
-  IssueStatus,
-  JiraIssue,
-  JiraIssueLink,
-  JiraIssueType,
-  LinkedIssue,
-} from '../lib/define';
+import { CustomIssueType, ISSUE_PREFIX_MAP, IssueLinkType, IssueStatus, Issue, JiraIssueType } from '../lib/define';
+import { JiraIssueLink, JiraLinkedIssue } from '../lib/jira-define';
 import { JiraService } from './jira.service';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
@@ -28,7 +20,7 @@ type StoryNextStatus =
   | IssueStatus.ReadyForVerification
   | IssueStatus.Closed;
 
-type TransitData = { [s in StoryNextStatus]: JiraIssue[] };
+type TransitData = { [s in StoryNextStatus]: Issue[] };
 
 type SubtaskStatusSpec = {
   notInStatusList: IssueStatus[];
@@ -124,7 +116,7 @@ export class JiraStoryService {
     );
   }
 
-  private transitIssueToNewStatus(issues: JiraIssue[]): TransitData {
+  private transitIssueToNewStatus(issues: Issue[]): TransitData {
     const data: TransitData = {
       [IssueStatus.ToBeHandled]: [],
       [IssueStatus.InProgress]: [],
@@ -143,7 +135,7 @@ export class JiraStoryService {
     return data;
   }
 
-  private needChangeToStatus(issue: JiraIssue): IssueStatus | null {
+  private needChangeToStatus(issue: Issue): IssueStatus | null {
     if (!issue.issueLinks) {
       return null;
     }
@@ -188,6 +180,6 @@ function isMeetSubTaskStatusSpec(statusList: IssueStatus[], spec: SubtaskStatusS
   return !hasShouldNotInStatus && hasShouldInStatus;
 }
 
-function getIssueStatus(linkedIssue: LinkedIssue): IssueStatus {
+function getIssueStatus(linkedIssue: JiraLinkedIssue): IssueStatus {
   return linkedIssue.fields.status.name;
 }
