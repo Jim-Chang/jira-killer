@@ -1,10 +1,9 @@
+import { registerPluginToChart } from '../../lib/chart-register';
 import { BurnUpChartData, IssueStatus, JiraSprint } from '../../lib/define';
 import { ChartService } from '../../services/chart-service';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { Chart, registerables } from 'chart.js';
-
-// https://github.com/sgratzl/chartjs-chart-wordcloud/issues/4
-Chart.register(...registerables);
+import { Chart } from 'chart.js';
+import * as moment from 'moment';
 
 @Component({
   selector: 'chart',
@@ -23,7 +22,9 @@ export class ChartComponent {
     return !this.isCalculating && !!this.sprint;
   }
 
-  constructor(private chartService: ChartService) {}
+  constructor(private chartService: ChartService) {
+    registerPluginToChart();
+  }
 
   onClickCalculate(): void {
     if (this.sprint.startDate && this.sprint.endDate) {
@@ -41,12 +42,18 @@ export class ChartComponent {
     const dayCount = this.chartService.getDayDiff(this.sprint.startDate as string, this.sprint.endDate as string) + 1;
 
     const data = {
-      labels: [...Array(dayCount).keys()],
+      labels: [...Array(dayCount).keys()].map((i) => i + 1),
       datasets: [
         {
           label: 'Commitment',
           data: Array(dayCount).fill(burnUpChartData.totalPoints),
           borderColor: 'red',
+          yAxisID: 'y',
+        },
+        {
+          label: 'Burn Up Ref',
+          data: burnUpChartData.refBurnUpLine,
+          borderColor: 'gray',
           yAxisID: 'y',
         },
         {
@@ -86,6 +93,7 @@ export class ChartComponent {
             display: true,
             text: 'Burn Up Chart',
           },
+          annotation: {},
         },
         scales: {
           y: {
@@ -96,6 +104,21 @@ export class ChartComponent {
         },
       },
     };
+
+    const today = moment();
+    if (this.chartService.isDateInSprint(today, this.sprint)) {
+      const dayDeltaOfToday = this.chartService.getDayDiff(this.sprint.startDate as string, moment());
+      config.options.plugins.annotation = {
+        annotations: {
+          vLine: {
+            type: 'line',
+            xMin: dayDeltaOfToday,
+            xMax: dayDeltaOfToday,
+            borderColor: 'red',
+          },
+        },
+      };
+    }
 
     if (this.chart) {
       this.chart.destroy();

@@ -10,6 +10,10 @@ const ISSUE_STATUS_AWARE: IssueStatusAware[] = [
   IssueStatus.ReadyForVerification,
   IssueStatus.Closed,
 ];
+const OFF_DAY = [6, 0]; // in js, sunday = 0
+
+const getDateOfStart = (date: moment.Moment | string) => moment(date).startOf('day');
+const getDateOfEnd = (date: moment.Moment | string) => moment(date).endOf('day');
 
 @Injectable({
   providedIn: 'root',
@@ -29,24 +33,18 @@ export class ChartService {
     if (!d1 || !d2) {
       throw 'date should be string or moment obj';
     }
-    if (typeof d1 === 'string') {
-      d1 = moment(d1);
-    }
-    if (typeof d2 === 'string') {
-      d2 = moment(d2);
-    }
-    return Math.abs(d1.diff(d2, 'day', false));
+    let [_d1, _d2] = [moment(d1), moment(d2)];
+    [_d1, _d2] = _d1 < _d2 ? [getDateOfStart(_d1), getDateOfEnd(_d2)] : [getDateOfEnd(_d1), getDateOfStart(_d2)];
+    return Math.abs(_d1.diff(_d2, 'day', false));
   }
 
   isDateInSprint(date: moment.Moment, sprint: JiraSprint): boolean {
-    const startDate = moment(sprint.startDate as string).set({ hour: 0, minute: 0, second: 0 });
-    const endDate = moment(sprint.endDate as string).set({ hour: 23, minute: 59, second: 59 });
+    const startDate = getDateOfStart(sprint.startDate as string);
+    const endDate = getDateOfEnd(sprint.endDate as string);
     return date >= startDate && date <= endDate;
   }
 
   private calculateBurnUpChartData(sprint: JiraSprint, issueStatusChangeLogs: IssueStatusChangeLog[]): BurnUpChartData {
-    console.log('issueStatusChangeLogs', issueStatusChangeLogs);
-
     const dayDiff = this.getDayDiff(sprint.startDate as string, sprint.endDate as string);
     const chartData: BurnUpChartData = { totalPoints: 0 } as any;
     ISSUE_STATUS_AWARE.forEach((status) => (chartData[status] = Array(dayDiff + 1).fill(0)));
@@ -70,14 +68,31 @@ export class ChartService {
           });
       });
 
+    chartData.refBurnUpLine = this.genRefBurnDailyPoints(sprint, chartData.totalPoints);
+
     // aggregate points day by day
     for (let i = 1; i < dayDiff + 1; i++) {
-      ISSUE_STATUS_AWARE.forEach((status) => {
+      [...ISSUE_STATUS_AWARE, 'refBurnUpLine'].forEach((status) => {
         chartData[status as IssueStatusAware][i] += chartData[status as IssueStatusAware][i - 1];
       });
     }
-
-    console.log('chart data', chartData);
     return chartData;
+  }
+
+  private genRefBurnDailyPoints(sprint: JiraSprint, totalPoints: number): number[] {
+    const startDate = getDateOfStart(sprint.startDate as string);
+    const endDate = getDateOfStart(sprint.endDate as string);
+
+    const dayDiff = this.getDayDiff(startDate, endDate);
+
+    const workingDayMask: number[] = [...Array(dayDiff + 1).keys()].map((deltaDay) => {
+      // because moment.add() will modify date self, we should clone start date for calculation
+      const day = moment(startDate).add(deltaDay, 'days').day();
+      return OFF_DAY.includes(day) ? 0 : 1;
+    });
+
+    const workingDayCount = workingDayMask.reduce((prev, cur) => prev + cur);
+    const avgPointsPerDay = totalPoints / workingDayCount;
+    return workingDayMask.map((mask) => mask * avgPointsPerDay);
   }
 }

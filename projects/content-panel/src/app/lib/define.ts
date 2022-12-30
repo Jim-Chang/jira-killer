@@ -143,6 +143,7 @@ export type JiraChangelogItem = {
 
 export type BurnUpChartData = {
   totalPoints: number;
+  refBurnUpLine: number[];
   [IssueStatus.InReview]: number[];
   [IssueStatus.ReadyForVerification]: number[];
   [IssueStatus.Closed]: number[];
