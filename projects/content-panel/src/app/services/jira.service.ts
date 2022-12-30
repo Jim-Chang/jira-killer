@@ -1,9 +1,10 @@
 import {
   ISSUE_STATUS_LIST,
   IssueStatus,
-  IssueStatusChangeDate,
+  IssueStatusChangeLog,
   IssueType,
   JiraChangelogHistory,
+  JiraChangelogItem,
   JiraIssue,
   JiraIssueType,
   JiraSprint,
@@ -141,11 +142,8 @@ export class JiraService {
     );
   }
 
-  getIssueStatusChangeDatesBySprint(
-    sprintId: number,
-    issueTypes: IssueType[] = [],
-  ): Observable<IssueStatusChangeDate[]> {
-    console.log('getIssueStatusChangeDatesBySprint');
+  getIssueStatusChangeLogsBySprint(sprintId: number, issueTypes: IssueType[] = []): Observable<IssueStatusChangeLog[]> {
+    console.log('getIssueStatusChangeLogsBySprint');
     const params: any = { startAt: 0, maxResults: this.MAX_RESULTS, expand: 'changelog' };
 
     if (issueTypes.length > 0) {
@@ -155,25 +153,20 @@ export class JiraService {
     const url = `${this.baseURL}/rest/agile/1.0/sprint/${sprintId}/issue`;
     let allIssues: JiraIssue[] = [];
 
-    const _findStatusChangeDateMap = (changeHistories: JiraChangelogHistory[]) => {
-      const map: { [status in IssueStatus]: moment.Moment | null } = {
-        [IssueStatus.Open]: null,
-        [IssueStatus.ToBeHandled]: null,
-        [IssueStatus.InProgress]: null,
-        [IssueStatus.InReview]: null,
-        [IssueStatus.Resolved]: null,
-        [IssueStatus.ReadyForVerification]: null,
-        [IssueStatus.Done]: null,
-        [IssueStatus.Closed]: null,
-      };
+    const _isStatusChangelog = (item: JiraChangelogItem) => item.field === 'status';
+
+    const _genStatusLogMap = (changeHistories: JiraChangelogHistory[]) => {
+      const map: { [status in IssueStatus]: moment.Moment | null } = {} as any;
+      ISSUE_STATUS_LIST.forEach((status) => (map[status] = null));
+
       changeHistories.forEach((h) => {
         if (h.items.length > 0) {
           // only take first item now
           const item = h.items[0];
-          const toStatus = item.toString as any;
+          const toStatus = item.toString as IssueStatus;
           // if one status appear twice or above, will take last created time.
-          if (item.field === 'status' && ISSUE_STATUS_LIST.includes(toStatus)) {
-            map[toStatus as IssueStatus] = moment(h.created);
+          if (_isStatusChangelog(item) && ISSUE_STATUS_LIST.includes(toStatus)) {
+            map[toStatus] = moment(h.created);
           }
         }
       });
@@ -197,7 +190,7 @@ export class JiraService {
           return {
             key: issue.key,
             storyPoint: issue.fields[this.fieldService.storyPointField] ?? null,
-            changeDateMap: _findStatusChangeDateMap(changeHistories),
+            statusLogMap: _genStatusLogMap(changeHistories),
           };
         });
       }),

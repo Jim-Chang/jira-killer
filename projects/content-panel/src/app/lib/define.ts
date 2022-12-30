@@ -62,10 +62,10 @@ export enum IssueStatus {
 
 export const ISSUE_STATUS_LIST = Object.values(IssueStatus);
 
-export type IssueStatusChangeDate = {
+export type IssueStatusChangeLog = {
   key: string;
   storyPoint: number | null;
-  changeDateMap: {
+  statusLogMap: {
     [status in IssueStatus]: moment.Moment | null;
   };
 };
@@ -132,11 +132,13 @@ export type JiraSprint = {
 export type JiraChangelogHistory = {
   id: string;
   created: string;
-  items: {
-    field: string;
-    fromString: string;
-    toString: string;
-  }[];
+  items: JiraChangelogItem[];
+};
+
+export type JiraChangelogItem = {
+  field: string;
+  fromString: string;
+  toString: string;
 };
 
 export type BurnUpChartData = {
