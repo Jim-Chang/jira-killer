@@ -14,7 +14,7 @@ import * as moment from 'moment';
 export class ChartComponent {
   @ViewChild('burnUpChart') burnUpChart: ElementRef;
 
-  sprint: JiraSprint;
+  sprint: JiraSprint | null;
 
   private isCalculating = false;
   private chart: Chart;
@@ -23,12 +23,16 @@ export class ChartComponent {
     return !this.isCalculating && !!this.sprint;
   }
 
+  get enableSelector(): boolean {
+    return !this.isCalculating;
+  }
+
   constructor(private chartService: ChartService) {
     registerPluginToChart();
   }
 
   onClickCalculate(): void {
-    if (this.sprint.startDate && this.sprint.endDate) {
+    if (this.sprint && this.sprint.startDate && this.sprint.endDate) {
       this.isCalculating = true;
       this.chartService.getBurnUpChartData(this.sprint).subscribe((data) => {
         this.drawBurnUpChart(data);
@@ -40,7 +44,7 @@ export class ChartComponent {
   }
 
   private drawBurnUpChart(burnUpChartData: BurnUpChartData): void {
-    const dayCount = this.chartService.getDayDiff(this.sprint.startDate as string, this.sprint.endDate as string) + 1;
+    const dayCount = this.chartService.getDayDiff(this.sprint!.startDate as string, this.sprint!.endDate as string) + 1;
 
     const data = {
       labels: [...Array(dayCount).keys()].map((i) => i + 1),
@@ -107,8 +111,8 @@ export class ChartComponent {
     };
 
     const today = moment();
-    if (this.chartService.isDateInSprint(today, this.sprint)) {
-      const dayDeltaOfToday = this.chartService.getDayDiff(this.sprint.startDate as string, moment());
+    if (this.chartService.isDateInSprint(today, this.sprint!)) {
+      const dayDeltaOfToday = this.chartService.getDayDiff(this.sprint!.startDate as string, moment());
       config.options.plugins.annotation = {
         annotations: {
           vLine: {

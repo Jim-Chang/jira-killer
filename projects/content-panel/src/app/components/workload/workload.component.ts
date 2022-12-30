@@ -27,6 +27,10 @@ export class WorkloadComponent {
     return !this.isCalculating && !!this.sprintId;
   }
 
+  get enableSelector(): boolean {
+    return !this.isCalculating;
+  }
+
   constructor(
     private urlWatchService: UrlWatchService,
     private jiraService: JiraService,

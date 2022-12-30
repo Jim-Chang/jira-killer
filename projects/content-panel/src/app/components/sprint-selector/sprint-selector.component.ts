@@ -12,9 +12,10 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class SprintSelectorComponent {
   @Input() sprintId = 0;
-  @Input() sprint: JiraSprint;
+  @Input() sprint: JiraSprint | null;
+  @Input() disabled: boolean = false;
   @Output() sprintIdChange = new EventEmitter<number>();
-  @Output() sprintChange = new EventEmitter<JiraSprint>();
+  @Output() sprintChange = new EventEmitter<JiraSprint | null>();
 
   sprints$ = new Subject<JiraSprint[]>();
   private lastBoardId: number | null = null;
@@ -46,7 +47,8 @@ export class SprintSelectorComponent {
     const _clearSpOpt = () => {
       this.sprints$.next([]);
       this.sprintId = 0;
-      this.sprintIdChange.emit(0);
+      this.sprint = null;
+      this.onSelectChange();
     };
 
     const boardId = getUrlBoardId();

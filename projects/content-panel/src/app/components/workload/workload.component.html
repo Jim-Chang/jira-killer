@@ -1,7 +1,7 @@
 <div class="container">
   <div class="selector">
     Sprint:
-    <sprint-selector [(sprintId)]="sprintId"></sprint-selector>
+    <sprint-selector [(sprintId)]="sprintId" [disabled]="!enableSelector"></sprint-selector>
     <button (click)="onClickCalculate()" [disabled]="!enableCalBtn">Calculate</button>
   </div>
   <table>
