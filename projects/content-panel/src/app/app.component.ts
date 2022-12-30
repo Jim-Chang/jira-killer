@@ -42,7 +42,7 @@ export class AppComponent {
     if (this.isShowTopLeftPanel) {
       return { top: '0', left: '0' };
     } else {
-      return { top: `${-this.topLeftPanel?.nativeElement.offsetHeight - 8 || -1000}px`, left: '0' };
+      return { top: `${-this.topLeftPanel?.nativeElement.offsetHeight || -1000}px`, left: '0' };
     }
   }
 

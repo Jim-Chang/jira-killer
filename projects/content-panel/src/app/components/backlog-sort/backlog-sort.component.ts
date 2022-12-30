@@ -1,25 +1,7 @@
-import { Issue } from '../../lib/define';
-import { JiraSprint } from '../../lib/jira-define';
-import { getUrlBoardId, getUrlProjectKey } from '../../lib/utils';
-import { ConfigService } from '../../services/config.service';
 import { JiraIssueSortService } from '../../services/jira-issue-sort.service';
 import { JiraService } from '../../services/jira.service';
-import { UrlWatchService } from '../../services/url-watch-service';
-import { Component, OnInit } from '@angular/core';
-import {
-  EMPTY,
-  expand,
-  filter,
-  map,
-  Observable,
-  of,
-  repeat,
-  Subject,
-  switchMap,
-  take,
-  takeUntil,
-  takeWhile,
-} from 'rxjs';
+import { Component } from '@angular/core';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'backlog-sort',
@@ -31,29 +13,12 @@ export class BacklogSortComponent {
   isSorting = false;
 
   sprintId = 0;
-  projectKey: string | null = null;
-  wantBrowseIssueKey = '';
-
-  private destroy$ = new Subject<void>();
 
   get enableSortBtn(): boolean {
     return !this.isSorting && !!this.sprintId;
   }
 
-  constructor(
-    private jiraService: JiraService,
-    private issueSortService: JiraIssueSortService,
-    private urlWatchService: UrlWatchService,
-    private configService: ConfigService,
-  ) {
-    this.urlWatchService.urlChange$.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.reset();
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-  }
+  constructor(private jiraService: JiraService, private issueSortService: JiraIssueSortService) {}
 
   onClickSortBtn(): void {
     this.isSorting = true;
@@ -66,42 +31,5 @@ export class BacklogSortComponent {
         this.isSorting = false;
         this.sortBtnText = ret ? 'Finish' : 'Fail';
       });
-  }
-
-  onClickBrowseIssueBtn(): void {
-    this.configService.loadByKeys<{ jiraDomain: string }>(['jiraDomain']).subscribe((cfg) => {
-      if (!cfg.jiraDomain) {
-        console.error('Please set jira domain first');
-        return;
-      }
-      const key = this.cleanIssueKey(this.wantBrowseIssueKey);
-      if (!key) {
-        console.error('Not key format');
-        return;
-      }
-      const url = `https://${cfg.jiraDomain}.atlassian.net/browse/${key}`;
-      window.open(url, '_blank')?.focus();
-    });
-  }
-
-  private reset(): void {
-    this.projectKey = getUrlProjectKey();
-  }
-
-  private cleanIssueKey(key: string): string | null {
-    let ret: string | null = null;
-
-    if (key.match(/[a-zA-Z]+[0-9]+/)) {
-      // fts1234
-      const prefix = key.match(/[a-zA-Z]+/)![0];
-      const code = key.replace(prefix, '');
-      ret = `${prefix}-${code}`.toUpperCase();
-    } else if (key.match(/[a-zA-Z]+-[0-9]+/)) {
-      // fts-1234
-      ret = key.toUpperCase();
-    } else if (this.projectKey && key.match(/^[0-9]+/)) {
-      ret = `${this.projectKey}-${key}`;
-    }
-    return ret;
   }
 }

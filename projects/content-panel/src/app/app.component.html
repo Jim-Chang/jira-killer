@@ -1,15 +1,31 @@
 <div class="top-container container" [ngStyle]="topPanelPlace">
   <div #topPanel>
     <div class="center">
-      <story-transit></story-transit>
+      <div>
+        <h3>Story Transition</h3>
+        <story-transit></story-transit>
+      </div>
     </div>
     <hr>
     <div class="center">
-      <backlog-sort></backlog-sort>
+      <div>
+        <h3>Sort Backlog</h3>
+        <backlog-sort></backlog-sort>
+      </div>
     </div>
     <hr>
     <div class="center">
-      <breakdown-task></breakdown-task>
+      <div>
+        <h3>Quick Browse Issue</h3>
+        <browse-issue></browse-issue>
+      </div>
+    </div>
+    <hr>
+    <div class="center">
+      <div>
+        <h3>Task Breakdown</h3>
+        <breakdown-task></breakdown-task>
+      </div>
     </div>
     <hr>
   </div>
@@ -18,6 +34,7 @@
 
 <div class="top-left-container container" [ngStyle]="topLeftPanelPlace">
   <div #topLeftPanel>
+    <h3>Workload</h3>
     <workload></workload>
   </div>
   <button class="switch-btn top-btn" (click)="onClickTopLeftSwitchBtn()">{{getSwitchTopBtnText(isShowTopLeftPanel)}}</button>
