@@ -20,6 +20,7 @@
         "@angular/router": "^14.2.0",
         "axios": "^1.1.2",
         "chart.js": "^4.1.1",
+        "chartjs-plugin-annotation": "^2.1.1",
         "jquery": "^3.6.1",
         "moment": "^2.29.4",
         "ngx-build-plus": "^14.0.0",
@@ -4120,6 +4121,14 @@
       },
       "engines": {
         "pnpm": "^7.0.0"
+      }
+    },
+    "node_modules/chartjs-plugin-annotation": {
+      "version": "2.1.1",
+      "resolved": "https://registry.npmjs.org/chartjs-plugin-annotation/-/chartjs-plugin-annotation-2.1.1.tgz",
+      "integrity": "sha512-RVKfwNpecvVZdEUshqk9RtqjwVn9koehQBiz1ZWclgFOVayr2CSTENI6VqsyjuYtzBTFEX6Qark7SqYtnwNiAA==",
+      "peerDependencies": {
+        "chart.js": ">=3.7.0"
       }
     },
     "node_modules/chokidar": {
@@ -15682,6 +15691,12 @@
       "requires": {
         "@kurkle/color": "^0.3.0"
       }
+    },
+    "chartjs-plugin-annotation": {
+      "version": "2.1.1",
+      "resolved": "https://registry.npmjs.org/chartjs-plugin-annotation/-/chartjs-plugin-annotation-2.1.1.tgz",
+      "integrity": "sha512-RVKfwNpecvVZdEUshqk9RtqjwVn9koehQBiz1ZWclgFOVayr2CSTENI6VqsyjuYtzBTFEX6Qark7SqYtnwNiAA==",
+      "requires": {}
     },
     "chokidar": {
       "version": "3.5.3",

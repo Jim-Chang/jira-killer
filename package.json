@@ -30,6 +30,7 @@
     "@angular/router": "^14.2.0",
     "axios": "^1.1.2",
     "chart.js": "^4.1.1",
+    "chartjs-plugin-annotation": "^2.1.1",
     "jquery": "^3.6.1",
     "moment": "^2.29.4",
     "ngx-build-plus": "^14.0.0",
