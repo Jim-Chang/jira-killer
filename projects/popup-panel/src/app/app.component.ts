@@ -18,6 +18,7 @@ export class AppComponent {
   storyPointFieldId: string;
 
   pokerGameId: string;
+  dashboardGSheetUrl: string;
   jiraInBlack: boolean;
   breakdownBySubtask: boolean;
 
@@ -36,17 +37,13 @@ export class AppComponent {
       this.epicFieldId = config.epicFieldId;
       this.storyPointFieldId = config.storyPointFieldId;
       this.pokerGameId = config.pokerGameId;
+      this.dashboardGSheetUrl = config.dashboardGSheetUrl;
       this.jiraInBlack = config.jiraInBlack;
       this.breakdownBySubtask = config.breakdownBySubtask;
     });
   }
 
-  get saveBtnText(): string {
-    return this.isSaving ? 'Saving...' : 'Save';
-  }
-
-  onClickSaveBtn(): void {
-    this.msg = '';
+  onConfigChange(): void {
     const config = {
       jiraDomain: this.jiraDomain,
       email: this.email,
@@ -56,13 +53,11 @@ export class AppComponent {
       epicFieldId: this.epicFieldId,
       storyPointFieldId: this.storyPointFieldId,
       pokerGameId: this.pokerGameId,
+      dashboardGSheetUrl: this.dashboardGSheetUrl,
       jiraInBlack: this.jiraInBlack,
       breakdownBySubtask: this.breakdownBySubtask,
     };
     this.isSaving = true;
-    this.configService.save(config).subscribe(() => {
-      this.isSaving = false;
-      this.msg = 'OK!';
-    });
+    this.configService.save(config).subscribe();
   }
 }
