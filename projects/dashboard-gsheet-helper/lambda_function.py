@@ -6,11 +6,15 @@ from gsheet_helper import GSheetHelper
 load_dotenv()
 
 
-def build_response(status_code, body):
+def build_response(status_code, body=None):
     return {
         "statusCode": status_code,
-        "headers": {"Content-Type": "application/json"},
-        "body": json.dumps(body),
+        "headers": {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "https://hardcoretech.atlassian.net",
+            "Access-Control-Allow-Headers": "Content-Type",
+        },
+        "body": json.dumps(body) if body else "",
     }
 
 
@@ -36,6 +40,12 @@ class Handler:
 
 
 def lambda_handler(event, context):
+    print(event)
+    method = event["requestContext"]["http"]["method"]
+
+    if method == "OPTIONS":
+        return build_response(200)
+
     data = json.loads(event["body"])
     func_name = data.get("func_name", None)
     params = data.get("params", {})
