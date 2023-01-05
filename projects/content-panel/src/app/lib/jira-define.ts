@@ -11,6 +11,31 @@ export type JiraUser = {
   };
 };
 
+export type JiraIssue = {
+  id: string;
+  key: string;
+  fields: {
+    summary: string;
+    issuetype: {
+      name: IssueType;
+    };
+    project: {
+      key: string;
+    };
+    status: {
+      name: string;
+    };
+    assignee: JiraUser;
+    subtasks: JiraIssue[];
+
+    issuelinks?: JiraIssueLink[];
+    [key: string]: any;
+  };
+  changelog?: {
+    histories: JiraChangelogHistory[];
+  };
+};
+
 export type JiraLinkedIssue = {
   key: string;
   fields: {

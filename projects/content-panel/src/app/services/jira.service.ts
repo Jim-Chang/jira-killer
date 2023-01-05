@@ -1,5 +1,5 @@
 import { ISSUE_STATUS_LIST, IssueStatus, IssueStatusChangeLog, IssueType, Issue, JiraIssueType } from '../lib/define';
-import { JiraChangelogHistory, JiraChangelogItem, JiraSprint } from '../lib/jira-define';
+import { JiraChangelogHistory, JiraChangelogItem, JiraIssue, JiraSprint } from '../lib/jira-define';
 import { ConfigService } from './config.service';
 import { JiraFieldService } from './jira-field.service';
 import { HttpClient } from '@angular/common/http';
@@ -62,8 +62,8 @@ export class JiraService {
 
   getIssue(key: string): Observable<Issue> {
     return this.ready.pipe(
-      switchMap(() => this.http.get<any>(`${this.baseURL}/rest/api/2/issue/${key}`, { headers: this.headers })),
-      map((ret: any) => {
+      switchMap(() => this.http.get<JiraIssue>(`${this.baseURL}/rest/api/2/issue/${key}`, { headers: this.headers })),
+      map((ret: JiraIssue) => {
         console.log('get issue', ret);
 
         let sprints = ret.fields[this.fieldService.sprintField] ?? [];
@@ -78,7 +78,7 @@ export class JiraService {
           epicKey: ret.fields[this.fieldService.epicField] ?? null,
           teamId: ret.fields[this.fieldService.teamField]?.id ?? null,
           sprintId: sprints.length > 0 ? sprints[0].id : null,
-          status: ret.fields.status.name,
+          status: ret.fields.status.name as IssueStatus,
           storyPoint: ret.fields[this.fieldService.storyPointField] ?? null,
           assignee: ret.fields.assignee,
         };
@@ -109,7 +109,8 @@ export class JiraService {
         return EMPTY;
       }),
       map((ret) => {
-        return ret.issues.map((issue: any) => {
+        return ret.issues.map((_issue: any) => {
+          let issue = _issue as JiraIssue;
           return {
             id: issue.id,
             key: issue.key,
@@ -173,9 +174,10 @@ export class JiraService {
         return EMPTY;
       }),
       map((ret) => {
-        return ret.issues.map((issue: any) => {
+        return ret.issues.map((_issue: any) => {
+          let issue = _issue as JiraIssue;
           // let histories sort asc of create date
-          const changeHistories = issue.changelog.histories.reverse() as JiraChangelogHistory[];
+          const changeHistories = issue.changelog!.histories.reverse();
           return {
             key: issue.key,
             storyPoint: issue.fields[this.fieldService.storyPointField] ?? null,
