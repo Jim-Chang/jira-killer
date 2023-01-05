@@ -9,6 +9,7 @@
       <tr>
         <th>Assignee</th>
         <th>Story Points</th>
+        <th *ngIf="isShowRemainBudgetPoints()">Budget Points</th>
       </tr>
     </thead>
     <tbody>
@@ -29,6 +30,7 @@
           </div>
         </td>
         <td>{{workloadMap[userId]}}</td>
+        <td *ngIf="isShowRemainBudgetPoints()" [class]="isOverBudgetPoints(workloadMap[userId], planPointsMap[userId]) ? 'red' : 'green'">{{getRemainBudgetPoints(workloadMap[userId], planPointsMap[userId])}}</td>
       </tr>
       <tr class="b-top" *ngIf="totalPoints">
         <td>
@@ -38,6 +40,7 @@
           </div>
         </td>
         <td class="highlight">{{totalPoints}}</td>
+        <td *ngIf="isShowRemainBudgetPoints()" [class]="isOverBudgetPoints(totalPoints, totalBudget) ? 'red' : 'green'">{{getRemainBudgetPoints(totalPoints, totalBudget)}}</td>
       </tr>
     </tbody>
   </table>
