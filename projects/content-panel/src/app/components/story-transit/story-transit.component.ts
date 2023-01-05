@@ -1,5 +1,5 @@
-import { JiraSprint } from '../../lib/jira-define';
-import { getUrlBoardId } from '../../lib/utils';
+import { JiraSprint } from '../../define/jira-type';
+import { getUrlBoardId } from '../../lib/url-utils';
 import { JiraStoryService } from '../../services/jira-story.service';
 import { JiraService } from '../../services/jira.service';
 import { UrlWatchService } from '../../services/url-watch-service';

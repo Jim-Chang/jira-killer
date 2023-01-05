@@ -8,7 +8,7 @@ import { PokerComponent } from './components/poker/poker.component';
 import { SprintSelectorComponent } from './components/sprint-selector/sprint-selector.component';
 import { StoryTransitComponent } from './components/story-transit/story-transit.component';
 import { WorkloadComponent } from './components/workload/workload.component';
-import { setAssetRootUrl, setExtensionId } from './lib/define';
+import { setAssetRootUrl, setExtensionId } from './define/base';
 import { HttpClientModule } from '@angular/common/http';
 import { Injector, NgModule } from '@angular/core';
 import { createCustomElement } from '@angular/elements';

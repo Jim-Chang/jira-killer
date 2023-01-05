@@ -1,5 +1,5 @@
-import { getAssetUrl } from '../../lib/define';
-import { JiraUser } from '../../lib/jira-define';
+import { getAssetUrl } from '../../define/base';
+import { JiraUser } from '../../define/jira-type';
 import { DashboardGSheetService } from '../../services/dashboard-gsheet.service';
 import { JiraAppRequestWatchService } from '../../services/jira-app-request-watch.service';
 import { JiraService } from '../../services/jira.service';

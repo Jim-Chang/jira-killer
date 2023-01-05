@@ -1,4 +1,6 @@
-import { IssueLinkType, IssueStatus, IssueType } from './define';
+import { IssueLinkType } from './base';
+import { IssueStatus } from './issue-status';
+import { IssueType } from './issue-type';
 
 export type JiraUser = {
   accountId: string;
@@ -23,7 +25,7 @@ export type JiraIssue = {
       key: string;
     };
     status: {
-      name: string;
+      name: IssueStatus;
     };
     assignee: JiraUser;
     subtasks: JiraIssue[];

@@ -1,4 +1,5 @@
-import { CustomIssueType, Issue, JiraIssueType, LOG_PREFIX } from '../lib/define';
+import { Issue, LOG_PREFIX } from '../define/base';
+import { CustomIssueType, JiraIssueType } from '../define/issue-type';
 import { JiraService } from './jira.service';
 import { Injectable } from '@angular/core';
 import { combineLatest, map, Observable } from 'rxjs';

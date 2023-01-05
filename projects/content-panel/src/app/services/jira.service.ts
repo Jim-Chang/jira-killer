@@ -1,5 +1,7 @@
-import { ISSUE_STATUS_LIST, IssueStatus, IssueStatusChangeLog, IssueType, Issue, JiraIssueType } from '../lib/define';
-import { JiraChangelogHistory, JiraChangelogItem, JiraIssue, JiraSprint } from '../lib/jira-define';
+import { ISSUE_STATUS_LIST, IssueStatusChangeLog, Issue } from '../define/base';
+import { IssueStatus } from '../define/issue-status';
+import { IssueType, JiraIssueType } from '../define/issue-type';
+import { JiraChangelogHistory, JiraChangelogItem, JiraIssue, JiraSprint } from '../define/jira-type';
 import { ConfigService } from './config.service';
 import { JiraFieldService } from './jira-field.service';
 import { HttpClient } from '@angular/common/http';
@@ -78,9 +80,10 @@ export class JiraService {
           epicKey: ret.fields[this.fieldService.epicField] ?? null,
           teamId: ret.fields[this.fieldService.teamField]?.id ?? null,
           sprintId: sprints.length > 0 ? sprints[0].id : null,
-          status: ret.fields.status.name as IssueStatus,
+          status: ret.fields.status.name,
           storyPoint: ret.fields[this.fieldService.storyPointField] ?? null,
           assignee: ret.fields.assignee,
+          subtasks: ret.fields.subtasks,
         };
         console.log('clean issue', issue);
         return issue;
@@ -127,6 +130,7 @@ export class JiraService {
             status: issue.fields.status.name,
             storyPoint: issue.fields[this.fieldService.storyPointField] ?? null,
             assignee: issue.fields.assignee,
+            subtasks: issue.fields.subtasks,
           };
         });
       }),

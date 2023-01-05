@@ -1,4 +1,4 @@
-import { getExtensionId } from '../lib/define';
+import { getExtensionId } from '../define/base';
 import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 
