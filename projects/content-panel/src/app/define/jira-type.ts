@@ -1,4 +1,6 @@
-import { IssueLinkType, IssueStatus, IssueType } from './define';
+import { IssueLinkType } from './base';
+import { IssueStatus } from './issue-status';
+import { IssueType } from './issue-type';
 
 export type JiraUser = {
   accountId: string;
@@ -8,6 +10,32 @@ export type JiraUser = {
     '24x24': string;
     '32x32': string;
     '48x48': string;
+  };
+};
+
+export type JiraIssue = {
+  id: string;
+  key: string;
+  fields: {
+    summary: string;
+    issuetype: {
+      name: IssueType;
+    };
+    project: {
+      key: string;
+    };
+    status: {
+      name: IssueStatus;
+    };
+    assignee: JiraUser;
+    subtasks: JiraIssue[];
+    fixVersions: JiraFixVersion[];
+
+    issuelinks?: JiraIssueLink[];
+    [key: string]: any;
+  };
+  changelog?: {
+    histories: JiraChangelogHistory[];
   };
 };
 
@@ -54,4 +82,11 @@ export type JiraChangelogItem = {
   field: string;
   fromString: string;
   toString: string;
+};
+
+export type JiraFixVersion = {
+  id: string;
+  name: string;
+  released: boolean;
+  releaseDate: string;
 };

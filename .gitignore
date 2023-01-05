@@ -42,3 +42,10 @@ testem.log
 .DS_Store
 Thumbs.db
 .python-version
+
+# python proj
+credentials/
+python_lib/
+*.pyc
+dist.zip
+.env

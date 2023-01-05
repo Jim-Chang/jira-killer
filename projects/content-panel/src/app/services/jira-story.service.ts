@@ -1,5 +1,8 @@
-import { CustomIssueType, ISSUE_PREFIX_MAP, IssueLinkType, IssueStatus, Issue, JiraIssueType } from '../lib/define';
-import { JiraIssueLink, JiraLinkedIssue } from '../lib/jira-define';
+import { ISSUE_PREFIX_MAP, IssueLinkType, Issue } from '../define/base';
+import { IssueStatus } from '../define/issue-status';
+import { CustomIssueType, JiraIssueType } from '../define/issue-type';
+import { JiraIssue, JiraIssueLink, JiraLinkedIssue } from '../define/jira-type';
+import { ConfigService } from './config.service';
 import { JiraService } from './jira.service';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
@@ -100,7 +103,15 @@ const SUBTASK_STATUS_SPEC_MAP: { [s in StoryNextStatus]: SubtaskStatusSpec } = {
   providedIn: 'root',
 })
 export class JiraStoryService {
-  constructor(private jiraService: JiraService) {}
+  private breakdownBySubtask = false;
+
+  constructor(private jiraService: JiraService, private configService: ConfigService) {
+    this.configService.loadByKeys<{ breakdownBySubtask: boolean }>(['breakdownBySubtask']).subscribe((cfg) => {
+      if (cfg.breakdownBySubtask) {
+        this.breakdownBySubtask = cfg.breakdownBySubtask;
+      }
+    });
+  }
 
   doTransitStoryStatus$(sprintId: number): Observable<TransitData> {
     return this.jiraService.getIssuesBySprint(sprintId, [JiraIssueType.Story]).pipe(
@@ -136,15 +147,25 @@ export class JiraStoryService {
   }
 
   private needChangeToStatus(issue: Issue): IssueStatus | null {
-    if (!issue.issueLinks) {
-      return null;
+    if (this.breakdownBySubtask) {
+      if (issue.subtasks.length === 0) {
+        return null;
+      }
+    } else {
+      if (!issue.issueLinks) {
+        return null;
+      }
     }
+
     if (!Object.keys(CHECK_NEXT_STATUS_MAP).includes(issue.status)) {
       return null;
     }
     // @ts-ignore
     const checkStatusList = CHECK_NEXT_STATUS_MAP[issue.status];
-    return findTargetStatus(checkStatusList, issue.issueLinks!);
+
+    return this.breakdownBySubtask
+      ? findTargetStatusBySubtask(checkStatusList, issue.subtasks)
+      : findTargetStatusByIssueLink(checkStatusList, issue.issueLinks!);
   }
 }
 
@@ -155,7 +176,17 @@ function getStatusList(links: JiraIssueLink[]): IssueStatus[] {
   return links.filter(_subTaskFilter).map((l) => getIssueStatus(l.inwardIssue!));
 }
 
-function findTargetStatus(checkStatusList: IssueStatus[], links: JiraIssueLink[]): IssueStatus | null {
+function findTargetStatusBySubtask(checkStatusList: IssueStatus[], subtasks: JiraIssue[]): IssueStatus | null {
+  const targetStatus = checkStatusList.filter((status) => {
+    // @ts-ignore
+    const spec = SUBTASK_STATUS_SPEC_MAP[status];
+    const statusList = subtasks.map((jissue) => jissue.fields.status.name);
+    return isMeetSubTaskStatusSpec(statusList, spec);
+  });
+  return targetStatus.length > 0 ? targetStatus[0] : null;
+}
+
+function findTargetStatusByIssueLink(checkStatusList: IssueStatus[], links: JiraIssueLink[]): IssueStatus | null {
   const targetStatus = checkStatusList.filter((status) => {
     // @ts-ignore
     const spec = SUBTASK_STATUS_SPEC_MAP[status];

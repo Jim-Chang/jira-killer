@@ -1,5 +1,5 @@
 import { AppComponent } from './app.component';
-import { BacklogSortComponent } from './components/backlog-sort/backlog-sort.component';
+import { BacklogMaintenanceComponent } from './components/backlog-maintenance/backlog-maintenance.component';
 import { BreakdownTaskInputComponent } from './components/breakdown-task-input/breakdown-task-input.component';
 import { BreakdownTaskComponent } from './components/breakdown-task/breakdown-task.component';
 import { BrowseIssueComponent } from './components/browse-issue/browse-issue.component';
@@ -8,7 +8,7 @@ import { PokerComponent } from './components/poker/poker.component';
 import { SprintSelectorComponent } from './components/sprint-selector/sprint-selector.component';
 import { StoryTransitComponent } from './components/story-transit/story-transit.component';
 import { WorkloadComponent } from './components/workload/workload.component';
-import { setAssetRootUrl, setExtensionId } from './lib/define';
+import { setAssetRootUrl, setExtensionId } from './define/base';
 import { HttpClientModule } from '@angular/common/http';
 import { Injector, NgModule } from '@angular/core';
 import { createCustomElement } from '@angular/elements';
@@ -20,7 +20,7 @@ import { BrowserModule } from '@angular/platform-browser';
     AppComponent,
     BreakdownTaskComponent,
     BreakdownTaskInputComponent,
-    BacklogSortComponent,
+    BacklogMaintenanceComponent,
     StoryTransitComponent,
     PokerComponent,
     WorkloadComponent,

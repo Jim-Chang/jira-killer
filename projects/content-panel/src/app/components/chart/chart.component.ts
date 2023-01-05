@@ -1,6 +1,7 @@
+import { BurnUpChartData } from '../../define/base';
+import { IssueStatus } from '../../define/issue-status';
+import { JiraSprint } from '../../define/jira-type';
 import { registerPluginToChart } from '../../lib/chart-register';
-import { BurnUpChartData, IssueStatus } from '../../lib/define';
-import { JiraSprint } from '../../lib/jira-define';
 import { ChartService } from '../../services/chart-service';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Chart } from 'chart.js';

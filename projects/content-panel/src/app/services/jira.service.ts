@@ -1,5 +1,7 @@
-import { ISSUE_STATUS_LIST, IssueStatus, IssueStatusChangeLog, IssueType, Issue, JiraIssueType } from '../lib/define';
-import { JiraChangelogHistory, JiraChangelogItem, JiraSprint } from '../lib/jira-define';
+import { ISSUE_STATUS_LIST, IssueStatusChangeLog, Issue } from '../define/base';
+import { IssueStatus } from '../define/issue-status';
+import { IssueType, JiraIssueType } from '../define/issue-type';
+import { JiraChangelogHistory, JiraChangelogItem, JiraFixVersion, JiraIssue, JiraSprint } from '../define/jira-type';
 import { ConfigService } from './config.service';
 import { JiraFieldService } from './jira-field.service';
 import { HttpClient } from '@angular/common/http';
@@ -62,8 +64,8 @@ export class JiraService {
 
   getIssue(key: string): Observable<Issue> {
     return this.ready.pipe(
-      switchMap(() => this.http.get<any>(`${this.baseURL}/rest/api/2/issue/${key}`, { headers: this.headers })),
-      map((ret: any) => {
+      switchMap(() => this.http.get<JiraIssue>(`${this.baseURL}/rest/api/2/issue/${key}`, { headers: this.headers })),
+      map((ret: JiraIssue) => {
         console.log('get issue', ret);
 
         let sprints = ret.fields[this.fieldService.sprintField] ?? [];
@@ -81,6 +83,8 @@ export class JiraService {
           status: ret.fields.status.name,
           storyPoint: ret.fields[this.fieldService.storyPointField] ?? null,
           assignee: ret.fields.assignee,
+          subtasks: ret.fields.subtasks,
+          fixVersions: ret.fields.fixVersions,
         };
         console.log('clean issue', issue);
         return issue;
@@ -109,7 +113,8 @@ export class JiraService {
         return EMPTY;
       }),
       map((ret) => {
-        return ret.issues.map((issue: any) => {
+        return ret.issues.map((_issue: any) => {
+          let issue = _issue as JiraIssue;
           return {
             id: issue.id,
             key: issue.key,
@@ -126,6 +131,8 @@ export class JiraService {
             status: issue.fields.status.name,
             storyPoint: issue.fields[this.fieldService.storyPointField] ?? null,
             assignee: issue.fields.assignee,
+            subtasks: issue.fields.subtasks,
+            fixVersions: issue.fields.fixVersions,
           };
         });
       }),
@@ -173,9 +180,10 @@ export class JiraService {
         return EMPTY;
       }),
       map((ret) => {
-        return ret.issues.map((issue: any) => {
+        return ret.issues.map((_issue: any) => {
+          let issue = _issue as JiraIssue;
           // let histories sort asc of create date
-          const changeHistories = issue.changelog.histories.reverse() as JiraChangelogHistory[];
+          const changeHistories = issue.changelog!.histories.reverse();
           return {
             key: issue.key,
             storyPoint: issue.fields[this.fieldService.storyPointField] ?? null,
@@ -256,6 +264,19 @@ export class JiraService {
     return this.ready.pipe(
       switchMap(() => this.http.put<any>(`${this.baseURL}/rest/agile/1.0/issue/rank`, data, { headers: this.headers })),
       map(() => true),
+    );
+  }
+
+  updateFixVersionOfIssue(key: string, fixVersions: JiraFixVersion[]): Observable<void> {
+    console.log('updateFixVersionOfIssue');
+    const data = {
+      fields: {
+        fixVersions,
+      },
+    };
+    return this.ready.pipe(
+      switchMap(() => this.http.put<any>(`${this.baseURL}/rest/api/2/issue/${key}`, data, { headers: this.headers })),
+      map((ret) => console.log(ret)),
     );
   }
 

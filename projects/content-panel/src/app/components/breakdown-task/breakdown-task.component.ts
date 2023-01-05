@@ -1,5 +1,5 @@
-import { Issue } from '../../lib/define';
-import { getUrlSelectedIssueId } from '../../lib/utils';
+import { Issue } from '../../define/base';
+import { getUrlSelectedIssueId } from '../../lib/url-utils';
 import { JiraService } from '../../services/jira.service';
 import { UrlWatchService } from '../../services/url-watch-service';
 import { Component, OnInit } from '@angular/core';

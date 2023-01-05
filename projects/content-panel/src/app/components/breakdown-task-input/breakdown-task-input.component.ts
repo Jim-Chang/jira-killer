@@ -1,4 +1,5 @@
-import { CustomIssueType, ISSUE_PREFIX_MAP, JiraIssueType } from '../../lib/define';
+import { ISSUE_PREFIX_MAP } from '../../define/base';
+import { CustomIssueType, JiraIssueType } from '../../define/issue-type';
 import { ConfigService } from '../../services/config.service';
 import { JiraService } from '../../services/jira.service';
 import { Component, Input, OnInit } from '@angular/core';

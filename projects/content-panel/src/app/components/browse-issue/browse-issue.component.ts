@@ -1,4 +1,4 @@
-import { getUrlProjectKey } from '../../lib/utils';
+import { getUrlProjectKey } from '../../lib/url-utils';
 import { ConfigService } from '../../services/config.service';
 import { UrlWatchService } from '../../services/url-watch-service';
 import { Component } from '@angular/core';

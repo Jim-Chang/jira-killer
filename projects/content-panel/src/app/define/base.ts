@@ -1,4 +1,6 @@
-import { JiraIssueLink, JiraUser } from './jira-define';
+import { IssueStatus } from './issue-status';
+import { CustomIssueType, JiraIssueType } from './issue-type';
+import { JiraFixVersion, JiraIssue, JiraIssueLink, JiraUser } from './jira-type';
 import * as moment from 'moment';
 
 let EXTENSION_ID = '';
@@ -22,23 +24,6 @@ export function getAssetUrl(path: string): string {
 
 export const LOG_PREFIX = '[Jira Killer]';
 
-export enum JiraIssueType {
-  Epic = 'Epic',
-  Story = 'Story',
-  Task = 'Task',
-  Bug = 'Bug',
-  Test = 'Test',
-  Improvement = 'Improvement',
-  Subtask = 'Sub-task',
-}
-
-export enum CustomIssueType {
-  FETask = 'RD Frontend',
-  BETask = 'RD Backend',
-}
-
-export type IssueType = JiraIssueType | CustomIssueType;
-
 export enum IssueLinkType {
   Blocks = 'Blocks',
 }
@@ -49,17 +34,6 @@ export const ISSUE_PREFIX_MAP: { [key: string]: string } = {
   [JiraIssueType.Task]: 'RD - ',
   [JiraIssueType.Test]: 'QA - ',
 };
-
-export enum IssueStatus {
-  Open = 'Open',
-  ToBeHandled = 'To be Handled',
-  InProgress = 'In Progress',
-  InReview = 'In Review',
-  Resolved = 'Resolved',
-  ReadyForVerification = 'Ready for Verification',
-  Done = 'Done',
-  Closed = 'Closed',
-}
 
 export const ISSUE_STATUS_LIST = Object.values(IssueStatus);
 
@@ -84,6 +58,8 @@ export type Issue = {
   issueLinks?: JiraIssueLink[];
   storyPoint: number | null;
   assignee: JiraUser | null;
+  subtasks: JiraIssue[];
+  fixVersions: JiraFixVersion[];
 };
 
 export type BurnUpChartData = {
