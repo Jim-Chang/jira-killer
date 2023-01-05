@@ -14,7 +14,7 @@ def build_response(status_code, body=None):
             "Access-Control-Allow-Origin": "https://hardcoretech.atlassian.net",
             "Access-Control-Allow-Headers": "Content-Type",
         },
-        "body": json.dumps(body) if body else "",
+        "body": json.dumps(body) if body is not None else "",
     }
 
 
@@ -31,10 +31,6 @@ class Handler:
     @wrap_response
     def get_user_plan_points_by_sprint(sprint_id: str):
         helper = GSheetHelper()
-
-        if not helper.is_sprint_exist(sprint_id):
-            return 404, {"message": "sprint not found"}
-
         ret = helper.find_user_points_by_sprint(sprint_id)
         return 200, ret
 

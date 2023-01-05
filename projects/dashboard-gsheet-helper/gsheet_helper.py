@@ -28,9 +28,13 @@ class GSheetHelper:
         wks = self.sheet.worksheet_by_title(Tab.UserSpConfig.value)
         sprint_id_cols = wks.get_col(sp_col_idx, include_tailing_empty=False)
 
-        min_row_idx = sprint_id_cols.index(sprint_id) + 1
-        sprint_id_cols.reverse()
-        max_row_idx = len(sprint_id_cols) - sprint_id_cols.index(sprint_id)
+        try:
+            min_row_idx = sprint_id_cols.index(sprint_id) + 1
+            sprint_id_cols.reverse()
+            max_row_idx = len(sprint_id_cols) - sprint_id_cols.index(sprint_id)
+        except ValueError:
+            # sprint id not exist
+            return {}
 
         uname_col_idx = TAB_COL_IDX_MAP[Tab.UserSpConfig]["jira_user_name"]
         cp_sp_col_idx = TAB_COL_IDX_MAP[Tab.UserSpConfig]["tg_cp_sp_scrum"]
