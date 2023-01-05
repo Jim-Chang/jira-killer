@@ -44,7 +44,7 @@ class GSheetHelper:
         )
         user_name_id_map = self.get_user_name_id_map()
         ret = {
-            user_name_id_map.get(r[uname_col_idx - 1]): r[cp_sp_col_idx - 1]
+            user_name_id_map.get(r[uname_col_idx - 1]): float(r[cp_sp_col_idx - 1])
             for r in rows
         }
         return ret

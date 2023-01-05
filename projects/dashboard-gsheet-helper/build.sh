@@ -8,5 +8,4 @@ zip -r ../dist.zip .
 # zip credentials and source code
 cd ..
 zip -g dist.zip -r credentials
-zip -g dist.zip .env
 zip -g dist.zip *.py
