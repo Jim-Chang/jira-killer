@@ -1,7 +1,7 @@
 import { ISSUE_STATUS_LIST, IssueStatusChangeLog, Issue } from '../define/base';
 import { IssueStatus } from '../define/issue-status';
 import { IssueType, JiraIssueType } from '../define/issue-type';
-import { JiraChangelogHistory, JiraChangelogItem, JiraIssue, JiraSprint } from '../define/jira-type';
+import { JiraChangelogHistory, JiraChangelogItem, JiraFixVersion, JiraIssue, JiraSprint } from '../define/jira-type';
 import { ConfigService } from './config.service';
 import { JiraFieldService } from './jira-field.service';
 import { HttpClient } from '@angular/common/http';
@@ -84,6 +84,7 @@ export class JiraService {
           storyPoint: ret.fields[this.fieldService.storyPointField] ?? null,
           assignee: ret.fields.assignee,
           subtasks: ret.fields.subtasks,
+          fixVersions: ret.fields.fixVersions,
         };
         console.log('clean issue', issue);
         return issue;
@@ -131,6 +132,7 @@ export class JiraService {
             storyPoint: issue.fields[this.fieldService.storyPointField] ?? null,
             assignee: issue.fields.assignee,
             subtasks: issue.fields.subtasks,
+            fixVersions: issue.fields.fixVersions,
           };
         });
       }),
@@ -262,6 +264,19 @@ export class JiraService {
     return this.ready.pipe(
       switchMap(() => this.http.put<any>(`${this.baseURL}/rest/agile/1.0/issue/rank`, data, { headers: this.headers })),
       map(() => true),
+    );
+  }
+
+  updateFixVersionOfIssue(key: string, fixVersions: JiraFixVersion[]): Observable<void> {
+    console.log('updateFixVersionOfIssue');
+    const data = {
+      fields: {
+        fixVersions,
+      },
+    };
+    return this.ready.pipe(
+      switchMap(() => this.http.put<any>(`${this.baseURL}/rest/api/2/issue/${key}`, data, { headers: this.headers })),
+      map((ret) => console.log(ret)),
     );
   }
 

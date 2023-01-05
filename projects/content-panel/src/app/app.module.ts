@@ -1,5 +1,5 @@
 import { AppComponent } from './app.component';
-import { BacklogSortComponent } from './components/backlog-sort/backlog-sort.component';
+import { BacklogMaintenanceComponent } from './components/backlog-maintenance/backlog-maintenance.component';
 import { BreakdownTaskInputComponent } from './components/breakdown-task-input/breakdown-task-input.component';
 import { BreakdownTaskComponent } from './components/breakdown-task/breakdown-task.component';
 import { BrowseIssueComponent } from './components/browse-issue/browse-issue.component';
@@ -20,7 +20,7 @@ import { BrowserModule } from '@angular/platform-browser';
     AppComponent,
     BreakdownTaskComponent,
     BreakdownTaskInputComponent,
-    BacklogSortComponent,
+    BacklogMaintenanceComponent,
     StoryTransitComponent,
     PokerComponent,
     WorkloadComponent,

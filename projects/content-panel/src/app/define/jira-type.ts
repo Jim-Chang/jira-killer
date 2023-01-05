@@ -29,6 +29,7 @@ export type JiraIssue = {
     };
     assignee: JiraUser;
     subtasks: JiraIssue[];
+    fixVersions: JiraFixVersion[];
 
     issuelinks?: JiraIssueLink[];
     [key: string]: any;
@@ -81,4 +82,11 @@ export type JiraChangelogItem = {
   field: string;
   fromString: string;
   toString: string;
+};
+
+export type JiraFixVersion = {
+  id: string;
+  name: string;
+  released: boolean;
+  releaseDate: string;
 };

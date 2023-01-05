@@ -1,6 +1,6 @@
 import { IssueStatus } from './issue-status';
 import { CustomIssueType, JiraIssueType } from './issue-type';
-import { JiraIssue, JiraIssueLink, JiraUser } from './jira-type';
+import { JiraFixVersion, JiraIssue, JiraIssueLink, JiraUser } from './jira-type';
 import * as moment from 'moment';
 
 let EXTENSION_ID = '';
@@ -59,6 +59,7 @@ export type Issue = {
   storyPoint: number | null;
   assignee: JiraUser | null;
   subtasks: JiraIssue[];
+  fixVersions: JiraFixVersion[];
 };
 
 export type BurnUpChartData = {

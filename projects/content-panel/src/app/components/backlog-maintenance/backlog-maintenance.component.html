@@ -1,0 +1,20 @@
+<div>
+  <div class="center">
+    <sprint-selector [(sprintId)]="sprintId"></sprint-selector>
+  </div>
+  <table>
+    <tr>
+      <td>Sort Backlog:</td>
+      <td>
+        <button (click)="onClickSortBtn()" [disabled]="!enableSortBtn">Sort</button>
+      </td>
+    </tr>
+    <tr>
+      <td>Sync Fix Versions to Subtask:</td>
+      <td>
+        <button (click)="onClickCopyVerBtn()" [disabled]="!enableCopyVerBtn">Run</button>
+      </td>
+    </tr>
+  </table>
+
+</div>
