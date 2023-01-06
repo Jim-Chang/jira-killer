@@ -2,7 +2,7 @@ import { Issue, LOG_PREFIX } from '../define/base';
 import { CustomIssueType, JiraIssueType } from '../define/issue-type';
 import { JiraService } from './jira.service';
 import { Injectable } from '@angular/core';
-import { combineLatest, map, Observable } from 'rxjs';
+import { combineLatest, map, Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -40,7 +40,12 @@ export class JiraIssueSortService {
       }
     });
 
-    console.log(LOG_PREFIX, 'storyTasksKeyMap', storyTasksKeyMap);
+    console.log(LOG_PREFIX, 'JiraIssueSortService: storyTasksKeyMap', storyTasksKeyMap);
+
+    // if is empty, don't need sort
+    if (Object.keys(storyTasksKeyMap).length === 0) {
+      return of(true);
+    }
 
     return combineLatest(
       Object.entries(storyTasksKeyMap).map(([storyKey, taskKeys]) => {

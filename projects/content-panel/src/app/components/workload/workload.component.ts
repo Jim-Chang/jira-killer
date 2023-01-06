@@ -6,7 +6,7 @@ import { JiraService } from '../../services/jira.service';
 import { UrlWatchService } from '../../services/url-watch-service';
 import { Component } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { filter, merge, Subject, switchMap, combineLatest } from 'rxjs';
+import { filter, merge, Subject, switchMap, combineLatest, catchError, of } from 'rxjs';
 
 enum TriggerBy {
   User,
@@ -86,7 +86,12 @@ export class WorkloadComponent {
           this.isCalculating = true;
           return combineLatest([
             this.jiraService.getIssuesBySprint(this.sprintId),
-            this.dashboardGSheetSvc.getUserPlanPointsMapBySprint(this.sprintId, triggerBy === TriggerBy.Api),
+            this.dashboardGSheetSvc.getUserPlanPointsMapBySprint(this.sprintId, triggerBy === TriggerBy.Api).pipe(
+              catchError(() => {
+                console.info('getUserPlanPointsMapBySprint fail, pass calculate budget ');
+                return of({});
+              }),
+            ),
           ]);
         }),
       )

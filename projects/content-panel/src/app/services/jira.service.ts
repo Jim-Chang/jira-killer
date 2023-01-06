@@ -1,7 +1,14 @@
 import { ISSUE_STATUS_LIST, IssueStatusChangeLog, Issue } from '../define/base';
 import { IssueStatus } from '../define/issue-status';
 import { IssueType, JiraIssueType } from '../define/issue-type';
-import { JiraChangelogHistory, JiraChangelogItem, JiraFixVersion, JiraIssue, JiraSprint } from '../define/jira-type';
+import {
+  JiraChangelogHistory,
+  JiraChangelogItem,
+  JiraFixVersion,
+  JiraIssue,
+  JiraIssueLink,
+  JiraSprint,
+} from '../define/jira-type';
 import { ConfigService } from './config.service';
 import { JiraFieldService } from './jira-field.service';
 import { HttpClient } from '@angular/common/http';
@@ -67,25 +74,7 @@ export class JiraService {
       switchMap(() => this.http.get<JiraIssue>(`${this.baseURL}/rest/api/2/issue/${key}`, { headers: this.headers })),
       map((ret: JiraIssue) => {
         console.log('get issue', ret);
-
-        let sprints = ret.fields[this.fieldService.sprintField] ?? [];
-        sprints = sprints.filter((s: any) => s.state !== 'closed');
-
-        const issue: Issue = {
-          id: ret.id,
-          key: ret.key,
-          summary: ret.fields.summary,
-          issueType: ret.fields.issuetype.name,
-          projKey: ret.fields.project.key,
-          epicKey: ret.fields[this.fieldService.epicField] ?? null,
-          teamId: ret.fields[this.fieldService.teamField]?.id ?? null,
-          sprintId: sprints.length > 0 ? sprints[0].id : null,
-          status: ret.fields.status.name,
-          storyPoint: ret.fields[this.fieldService.storyPointField] ?? null,
-          assignee: ret.fields.assignee,
-          subtasks: ret.fields.subtasks,
-          fixVersions: ret.fields.fixVersions,
-        };
+        const issue = this.bulidIssueFromJiraIssue(ret);
         console.log('clean issue', issue);
         return issue;
       }),
@@ -113,28 +102,7 @@ export class JiraService {
         return EMPTY;
       }),
       map((ret) => {
-        return ret.issues.map((_issue: any) => {
-          let issue = _issue as JiraIssue;
-          return {
-            id: issue.id,
-            key: issue.key,
-            summary: issue.fields.summary,
-            issueType: issue.fields.issuetype.name,
-            projKey: issue.fields.project.key,
-            epicKey: issue.fields[this.fieldService.epicField] ?? null,
-            teamId: issue.fields[this.fieldService.teamField]?.id ?? null,
-            sprintId:
-              issue.fields[this.fieldService.sprintField]?.length > 0
-                ? issue.fields[this.fieldService.sprintField][0].id
-                : null,
-            issueLinks: issue.fields.issuelinks,
-            status: issue.fields.status.name,
-            storyPoint: issue.fields[this.fieldService.storyPointField] ?? null,
-            assignee: issue.fields.assignee,
-            subtasks: issue.fields.subtasks,
-            fixVersions: issue.fields.fixVersions,
-          };
-        });
+        return ret.issues.map((issue: any) => this.bulidIssueFromJiraIssue(issue));
       }),
     );
   }
@@ -276,7 +244,6 @@ export class JiraService {
     };
     return this.ready.pipe(
       switchMap(() => this.http.put<any>(`${this.baseURL}/rest/api/2/issue/${key}`, data, { headers: this.headers })),
-      map((ret) => console.log(ret)),
     );
   }
 
@@ -360,6 +327,27 @@ export class JiraService {
       outwardIssue: {
         key: toKey,
       },
+    };
+  }
+
+  private bulidIssueFromJiraIssue(jiraIssue: JiraIssue): Issue {
+    let sprints = jiraIssue.fields[this.fieldService.sprintField] ?? [];
+    sprints = sprints.filter((s: JiraSprint) => s.state !== 'closed');
+    return {
+      id: jiraIssue.id,
+      key: jiraIssue.key,
+      summary: jiraIssue.fields.summary,
+      issueType: jiraIssue.fields.issuetype.name,
+      projKey: jiraIssue.fields.project.key,
+      epicKey: jiraIssue.fields[this.fieldService.epicField] ?? null,
+      teamId: jiraIssue.fields[this.fieldService.teamField]?.id ?? null,
+      sprintId: sprints.length > 0 ? sprints[0].id : null,
+      issueLinks: jiraIssue.fields.issuelinks,
+      status: jiraIssue.fields.status.name,
+      storyPoint: jiraIssue.fields[this.fieldService.storyPointField] ?? null,
+      assignee: jiraIssue.fields.assignee,
+      subtasks: jiraIssue.fields.subtasks,
+      fixVersions: jiraIssue.fields.fixVersions,
     };
   }
 }

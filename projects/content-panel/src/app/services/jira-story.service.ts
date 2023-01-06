@@ -1,4 +1,4 @@
-import { ISSUE_PREFIX_MAP, IssueLinkType, Issue } from '../define/base';
+import { Issue, ISSUE_PREFIX_MAP, IssueLinkType } from '../define/base';
 import { IssueStatus } from '../define/issue-status';
 import { CustomIssueType, JiraIssueType } from '../define/issue-type';
 import { JiraIssue, JiraIssueLink, JiraLinkedIssue } from '../define/jira-type';
@@ -114,7 +114,7 @@ export class JiraStoryService {
   }
 
   doTransitStoryStatus$(sprintId: number): Observable<TransitData> {
-    return this.jiraService.getIssuesBySprint(sprintId, [JiraIssueType.Story]).pipe(
+    return this.jiraService.getIssuesBySprint(sprintId, [JiraIssueType.Story, JiraIssueType.Improvement]).pipe(
       map((issues) => this.transitIssueToNewStatus(issues)),
       // switchMap((transitData) => {
       //   console.log('transit data', transitData);
@@ -183,7 +183,7 @@ function findTargetStatusBySubtask(checkStatusList: IssueStatus[], subtasks: Jir
     const statusList = subtasks.map((jissue) => jissue.fields.status.name);
     return isMeetSubTaskStatusSpec(statusList, spec);
   });
-  return targetStatus.length > 0 ? targetStatus[0] : null;
+  return targetStatus.length > 0 ? targetStatus[targetStatus.length - 1] : null;
 }
 
 function findTargetStatusByIssueLink(checkStatusList: IssueStatus[], links: JiraIssueLink[]): IssueStatus | null {
@@ -193,7 +193,7 @@ function findTargetStatusByIssueLink(checkStatusList: IssueStatus[], links: Jira
     const statusList = getStatusList(links);
     return isMeetSubTaskStatusSpec(statusList, spec);
   });
-  return targetStatus.length > 0 ? targetStatus[0] : null;
+  return targetStatus.length > 0 ? targetStatus[targetStatus.length - 1] : null;
 }
 
 function isSubTaskSummary(summary: string): boolean {
