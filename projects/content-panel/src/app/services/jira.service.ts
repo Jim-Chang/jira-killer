@@ -73,9 +73,7 @@ export class JiraService {
     return this.ready.pipe(
       switchMap(() => this.http.get<JiraIssue>(`${this.baseURL}/rest/api/2/issue/${key}`, { headers: this.headers })),
       map((ret: JiraIssue) => {
-        console.log('get issue', ret);
         const issue = this.bulidIssueFromJiraIssue(ret);
-        console.log('clean issue', issue);
         return issue;
       }),
     );

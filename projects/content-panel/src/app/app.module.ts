@@ -7,6 +7,7 @@ import { ChartComponent } from './components/chart/chart.component';
 import { PokerComponent } from './components/poker/poker.component';
 import { SprintSelectorComponent } from './components/sprint-selector/sprint-selector.component';
 import { StoryTransitComponent } from './components/story-transit/story-transit.component';
+import { SubtaskListComponent } from './components/subtask-list/subtask-list.component';
 import { WorkloadComponent } from './components/workload/workload.component';
 import { setAssetRootUrl, setExtensionId } from './define/base';
 import { HttpClientModule } from '@angular/common/http';
@@ -27,6 +28,7 @@ import { BrowserModule } from '@angular/platform-browser';
     SprintSelectorComponent,
     ChartComponent,
     BrowseIssueComponent,
+    SubtaskListComponent,
   ],
   imports: [BrowserModule, FormsModule, HttpClientModule],
   providers: [],
