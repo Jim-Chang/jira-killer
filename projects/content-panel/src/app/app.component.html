@@ -1,5 +1,5 @@
 <div class="top-container container" [ngStyle]="topPanelPlace">
-  <div #topPanel>
+  <div class="card" #topPanel>
     <div class="center">
       <div>
         <h3>Story Transition</h3>
@@ -27,13 +27,12 @@
         <breakdown-task></breakdown-task>
       </div>
     </div>
-    <hr>
   </div>
   <button class="switch-btn top-btn" (click)="onClickTopSwitchBtn()">{{getSwitchTopBtnText(isShowTopPanel)}}</button>
 </div>
 
 <div class="top-left-container container" [ngStyle]="topLeftPanelPlace">
-  <div #topLeftPanel>
+  <div class="card" #topLeftPanel>
     <h3>Workload</h3>
     <workload></workload>
   </div>
@@ -41,7 +40,7 @@
 </div>
 
 <div class="left-container side-container container" [ngStyle]="leftPanelPlace">
-  <div #leftPanel>
+  <div class="card" #leftPanel>
     <poker></poker>
   </div>
   <div>
@@ -53,14 +52,14 @@
   <div>
     <button class="switch-btn side-btn" (click)="onClickRightSwitchBtn()">{{getSwitchRightBtnText(isShowRightPanel)}}</button>
   </div>
-  <div #rightPanel>
+  <div class="card" #rightPanel>
     <h3>Chart Panel</h3>
     <chart></chart>
   </div>
 </div>
 
 <div class="bottom-container container" [ngStyle]="bottomPanelPlace">
-  <div #bottomPanel>
+  <div class="card" #bottomPanel>
     <subtask-list></subtask-list>
   </div>
 </div>
