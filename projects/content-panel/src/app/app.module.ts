@@ -10,6 +10,7 @@ import { StoryTransitComponent } from './components/story-transit/story-transit.
 import { SubtaskListComponent } from './components/subtask-list/subtask-list.component';
 import { WorkloadComponent } from './components/workload/workload.component';
 import { setAssetRootUrl, setExtensionId } from './define/base';
+import { MpTrackDirective } from './directives/mp-track/mp-track.directive';
 import { HttpClientModule } from '@angular/common/http';
 import { Injector, NgModule } from '@angular/core';
 import { createCustomElement } from '@angular/elements';
@@ -29,6 +30,7 @@ import { BrowserModule } from '@angular/platform-browser';
     ChartComponent,
     BrowseIssueComponent,
     SubtaskListComponent,
+    MpTrackDirective,
   ],
   imports: [BrowserModule, FormsModule, HttpClientModule],
   providers: [],

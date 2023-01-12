@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  mixpanelToken: 'ea67e5c90c184086d1a044d8b159912f',
 };
 
 /*
