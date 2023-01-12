@@ -22,6 +22,7 @@
         "chart.js": "^4.1.1",
         "chartjs-plugin-annotation": "^2.1.1",
         "jquery": "^3.6.1",
+        "mixpanel-browser": "^2.45.0",
         "moment": "^2.29.4",
         "ngx-build-plus": "^14.0.0",
         "rxjs": "~7.5.0",
@@ -35,6 +36,7 @@
         "@types/chrome": "^0.0.197",
         "@types/jasmine": "~4.0.0",
         "@types/jquery": "^3.5.14",
+        "@types/mixpanel-browser": "^2.38.0",
         "crx": "^5.0.1",
         "jasmine-core": "~4.3.0",
         "karma": "~6.4.0",
@@ -2979,6 +2981,12 @@
       "version": "3.0.1",
       "resolved": "https://registry.npmjs.org/@types/mime/-/mime-3.0.1.tgz",
       "integrity": "sha512-Y4XFY5VJAuw0FgAqPNd6NNoV44jbq9Bz2L7Rh/J6jLTiHBSBJa9fxqQIvkIld4GsoDOcCbvzOUAbLPsSKKg+uA=="
+    },
+    "node_modules/@types/mixpanel-browser": {
+      "version": "2.38.0",
+      "resolved": "https://registry.npmjs.org/@types/mixpanel-browser/-/mixpanel-browser-2.38.0.tgz",
+      "integrity": "sha512-TR8rvsILnqXA7oiiGOxuMGXwvDeCoQDonXJB5UR+TYvEAFpiK8ReFj5LhZT+Xhm3NpI9aPoju30jB2ssorSUww==",
+      "dev": true
     },
     "node_modules/@types/node": {
       "version": "18.8.4",
@@ -8437,6 +8445,11 @@
       "engines": {
         "node": ">= 8"
       }
+    },
+    "node_modules/mixpanel-browser": {
+      "version": "2.45.0",
+      "resolved": "https://registry.npmjs.org/mixpanel-browser/-/mixpanel-browser-2.45.0.tgz",
+      "integrity": "sha512-PQ1DaTk68yyYtLA0iejmzPA9iNDhT4uIZpqZjRTw7HWpYfl123fydHb2laKanaKjm8YDmrGGz3+xZ4Q6joogyg=="
     },
     "node_modules/mkdirp": {
       "version": "1.0.4",
@@ -14784,6 +14797,12 @@
       "resolved": "https://registry.npmjs.org/@types/mime/-/mime-3.0.1.tgz",
       "integrity": "sha512-Y4XFY5VJAuw0FgAqPNd6NNoV44jbq9Bz2L7Rh/J6jLTiHBSBJa9fxqQIvkIld4GsoDOcCbvzOUAbLPsSKKg+uA=="
     },
+    "@types/mixpanel-browser": {
+      "version": "2.38.0",
+      "resolved": "https://registry.npmjs.org/@types/mixpanel-browser/-/mixpanel-browser-2.38.0.tgz",
+      "integrity": "sha512-TR8rvsILnqXA7oiiGOxuMGXwvDeCoQDonXJB5UR+TYvEAFpiK8ReFj5LhZT+Xhm3NpI9aPoju30jB2ssorSUww==",
+      "dev": true
+    },
     "@types/node": {
       "version": "18.8.4",
       "resolved": "https://registry.npmjs.org/@types/node/-/node-18.8.4.tgz",
@@ -18784,6 +18803,11 @@
         "minipass": "^3.0.0",
         "yallist": "^4.0.0"
       }
+    },
+    "mixpanel-browser": {
+      "version": "2.45.0",
+      "resolved": "https://registry.npmjs.org/mixpanel-browser/-/mixpanel-browser-2.45.0.tgz",
+      "integrity": "sha512-PQ1DaTk68yyYtLA0iejmzPA9iNDhT4uIZpqZjRTw7HWpYfl123fydHb2laKanaKjm8YDmrGGz3+xZ4Q6joogyg=="
     },
     "mkdirp": {
       "version": "1.0.4",

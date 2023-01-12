@@ -7,8 +7,10 @@ import { ChartComponent } from './components/chart/chart.component';
 import { PokerComponent } from './components/poker/poker.component';
 import { SprintSelectorComponent } from './components/sprint-selector/sprint-selector.component';
 import { StoryTransitComponent } from './components/story-transit/story-transit.component';
+import { SubtaskListComponent } from './components/subtask-list/subtask-list.component';
 import { WorkloadComponent } from './components/workload/workload.component';
 import { setAssetRootUrl, setExtensionId } from './define/base';
+import { MpTrackDirective } from './directives/mp-track/mp-track.directive';
 import { HttpClientModule } from '@angular/common/http';
 import { Injector, NgModule } from '@angular/core';
 import { createCustomElement } from '@angular/elements';
@@ -27,6 +29,8 @@ import { BrowserModule } from '@angular/platform-browser';
     SprintSelectorComponent,
     ChartComponent,
     BrowseIssueComponent,
+    SubtaskListComponent,
+    MpTrackDirective,
   ],
   imports: [BrowserModule, FormsModule, HttpClientModule],
   providers: [],

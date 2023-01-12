@@ -13,6 +13,7 @@ export class AppComponent {
   isShowTopLeftPanel = false;
 
   @ViewChild('topPanel') topPanel: ElementRef;
+  @ViewChild('bottomPanel') bottomPanel: ElementRef;
   @ViewChild('leftPanel') leftPanel: ElementRef;
   @ViewChild('rightPanel') rightPanel: ElementRef;
   @ViewChild('topLeftPanel') topLeftPanel: ElementRef;
@@ -36,6 +37,11 @@ export class AppComponent {
     } else {
       return { top: `${-this.topPanel?.nativeElement.offsetHeight - 6 || -1000}px`, left };
     }
+  }
+
+  get bottomPanelPlace(): any {
+    const left = `calc(50% - ${this.bottomPanel?.nativeElement.offsetWidth / 2}px)`;
+    return { bottom: '0', left };
   }
 
   get topLeftPanelPlace(): any {

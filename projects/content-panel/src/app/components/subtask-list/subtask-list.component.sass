@@ -1,0 +1,63 @@
+.container
+  padding: 10px
+  max-height: 60px
+  transition: max-height 0.3s ease-out
+  border-radius: 7px
+
+tr
+  cursor: pointer
+  &:not(:last-child)
+    border-bottom: solid 1px lightgrey
+  &:hover
+    background-color: lightgray
+
+td
+  padding: 5px 10px
+
+.avatar
+  width: 30px
+  height: 30px
+  border-radius: 100%
+  margin: 0 10px
+
+.empty-avatar
+  background: gray
+  color: white
+
+.story-point
+  padding: 3px 8px
+  border-radius: 15px
+  background: lightgrey
+  border: 1px solid white
+
+.status
+  font-weight: bold
+  text-transform: uppercase
+  padding: 2px 3px
+  border-radius: 4px
+
+.green
+  color: #006644
+  background: #99ffdd
+
+
+.purple
+  color: #ab47bc
+  background: #f3e5f5
+
+.blue
+  color: #0747A6
+  background: #9fdfff
+
+.gray
+  color: #42526E
+  background: #dbebff
+
+.t-center
+  text-align: center
+
+.issue-summary
+  max-width: 450px
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis

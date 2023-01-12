@@ -8,7 +8,14 @@
   </select>
   <input [(ngModel)]="summary"  name="summary" type="text">
   <input [(ngModel)]="storyPoint" (change)="onChangeStoryPoint()" name="story_point" type="number">
-  <button (click)="onClickSaveBtn()" [disabled]="!canSave()">{{saveBtnText}}</button>
+  <button
+    (click)="onClickSaveBtn()"
+    [disabled]="!canSave()"
+    mpTrack
+    mpTriggerEvent="click"
+    mpEventName="Click Save Breakdown Task"
+    [mpEventData]="{fromIssueKey: parentIssueKey, breakdownIssueType: issueType, breakdownStoryPoint: storyPoint}"
+  >{{saveBtnText}}</button>
   <a *ngIf="issueKey" data-name="issue-key" target="_blank" [href]="issueUrl">{{issueKey}}</a>
   <span data-name="status" style="margin-left: 2px;"></span>
 </div>

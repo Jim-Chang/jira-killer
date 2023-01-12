@@ -1,0 +1,30 @@
+<div class="container"
+     [hidden]="!isShow"
+     (wheel)="onScrollSubtask($event)"
+     [ngStyle]="containerHeight"
+     mpTrack
+     mpTriggerEvent="wheel"
+     mpEventName="Scroll Bottom Subtask List"
+>
+  <table #subtaskList>
+    <tr
+      *ngFor="let issue of subtasks"
+      (click)="onClickSubtask(issue)"
+      mpTrack
+      mpTriggerEvent="click"
+      mpEventName="Click Subtask Of Bottom Subtask List"
+      [mpEventData]="{issueKey: issue.key}"
+    >
+      <td class="t-center">{{issue.key}}</td>
+      <td class="issue-summary">{{issue.summary}}</td>
+      <td>
+        <img class="avatar" *ngIf="issue.assignee; else emptyAvatar" [alt]="issue.assignee.displayName" [src]="getAssigneeAvatarUrl(issue.assignee)">
+        <ng-template #emptyAvatar>
+          <svg class="avatar empty-avatar" width="30" height="30" viewBox="0 0 24 24" role="presentation"><g fill="currentColor" fill-rule="evenodd"><path d="M6 14c0-1.105.902-2 2.009-2h7.982c1.11 0 2.009.894 2.009 2.006v4.44c0 3.405-12 3.405-12 0V14z"></path><circle cx="12" cy="7" r="4"></circle></g></svg>
+        </ng-template>
+      </td>
+      <td class="t-center"><span class="story-point">{{issue.storyPoint}}</span></td>
+      <td><span class="status" [ngClass]="getStatusColor(issue.status)">{{issue.status}}</span></td>
+    </tr>
+  </table>
+</div>

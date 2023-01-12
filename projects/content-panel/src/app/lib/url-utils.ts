@@ -52,3 +52,9 @@ export function getUrlProjectKey(): string | null {
 
   return null;
 }
+
+export function isShowJiraIssueDetailModel(): boolean {
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  return urlParams.get('modal') === 'detail';
+}

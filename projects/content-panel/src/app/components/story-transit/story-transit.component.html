@@ -1,5 +1,12 @@
 <div>
   <p>Transit Story Status: {{sprint?.name}}</p>
   <p [innerHTML]="needTransitResult"></p>
-  <button [disabled]="!sprint" (click)="onClickTransitStoryStatusBtn()">Find transition</button>
+  <button
+    [disabled]="!sprint"
+    (click)="onClickTransitStoryStatusBtn()"
+    mpTrack
+    mpTriggerEvent="click"
+    mpEventName="Click Transit Story"
+    [mpEventData]="{springName: sprint?.name, sprintId: sprint?.id}"
+  >Find transition</button>
 </div>
