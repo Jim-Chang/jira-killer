@@ -1,6 +1,20 @@
-<div class="container" [hidden]="!isShow" (wheel)="onScrollSubtask($event)" [ngStyle]="containerHeight">
+<div class="container"
+     [hidden]="!isShow"
+     (wheel)="onScrollSubtask($event)"
+     [ngStyle]="containerHeight"
+     mpTrack
+     mpTriggerEvent="wheel"
+     mpEventName="Scroll Bottom Subtask List"
+>
   <table #subtaskList>
-    <tr *ngFor="let issue of subtasks" (click)="onClickSubtask(issue)">
+    <tr
+      *ngFor="let issue of subtasks"
+      (click)="onClickSubtask(issue)"
+      mpTrack
+      mpTriggerEvent="click"
+      mpEventName="Click Subtask Of Bottom Subtask List"
+      [mpEventData]="{issueKey: issue.key}"
+    >
       <td class="t-center">{{issue.key}}</td>
       <td class="issue-summary">{{issue.summary}}</td>
       <td>

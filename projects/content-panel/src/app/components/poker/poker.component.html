@@ -1,4 +1,9 @@
 <div>
-  <p class="url" (click)="onClickUrl()">{{url}} <span *ngIf="isCopied">Copied!</span></p>
+  <p class="url"
+     (click)="onClickUrl()"
+     mpTrack
+     mpTriggerEvent="click"
+     mpEventName="Click Copy Poker URL"
+  >{{url}}<span *ngIf="isCopied">Copied!</span></p>
 </div>
 <iframe width="600px" height="800px" [src]="safeUrl" *ngIf="safeUrl"></iframe>

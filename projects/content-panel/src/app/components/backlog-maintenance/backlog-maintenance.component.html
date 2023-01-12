@@ -6,13 +6,27 @@
     <tr>
       <td>Sort Backlog:</td>
       <td>
-        <button (click)="onClickSortBtn()" [disabled]="!enableSortBtn">Sort</button>
+        <button
+          (click)="onClickSortBtn()"
+          [disabled]="!enableSortBtn"
+          mpTrack
+          mpTriggerEvent="click"
+          mpEventName="Click Sort Backlog"
+          [mpEventData]="{springId: sprintId}"
+        >Sort</button>
       </td>
     </tr>
     <tr>
       <td>Sync Fix Versions to Subtask:</td>
       <td>
-        <button (click)="onClickCopyVerBtn()" [disabled]="!enableCopyVerBtn">Run</button>
+        <button
+          (click)="onClickCopyVerBtn()"
+          [disabled]="!enableCopyVerBtn"
+          mpTrack
+          mpTriggerEvent="click"
+          mpEventName="Click Sync Fix Versions To Subtask"
+          [mpEventData]="{springId: sprintId}"
+        >Run</button>
       </td>
     </tr>
   </table>

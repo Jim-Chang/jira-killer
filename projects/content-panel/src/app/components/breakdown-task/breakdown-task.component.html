@@ -3,5 +3,11 @@
   <breakdown-task-input *ngFor="let i of [].constructor(taskRowCount)" [parentSummary]="selectedIssue!.summary" [parentIssueKey]="selectedIssue!.key"></breakdown-task-input>
 </div>
 <div>
-  <button (click)="onClickAddTaskBtn()" [disabled]="!selectedIssue">+ Add Task</button>
+  <button
+    (click)="onClickAddTaskBtn()"
+    [disabled]="!selectedIssue"
+    mpTrack
+    mpTriggerEvent="click"
+    mpEventName="Click Add Breakdown Task Row"
+  >+ Add Task</button>
 </div>

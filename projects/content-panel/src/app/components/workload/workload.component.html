@@ -2,7 +2,14 @@
   <div class="selector">
     Sprint:
     <sprint-selector [(sprintId)]="sprintId" [disabled]="!enableSelector"></sprint-selector>
-    <button (click)="onClickCalculate()" [disabled]="!enableCalBtn">Calculate</button>
+    <button
+      (click)="onClickCalculate()"
+      [disabled]="!enableCalBtn"
+      mpTrack
+      mpTriggerEvent="click"
+      mpEventName="Click Calculate Workload"
+      [mpEventData]="{springId: sprintId}"
+    >Calculate</button>
   </div>
   <table>
     <thead>

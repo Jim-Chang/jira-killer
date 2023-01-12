@@ -1,3 +1,17 @@
 <div>
-  <input [(ngModel)]="wantBrowseIssueKey" (keyup.enter)="onClickBrowseIssueBtn()"><button (click)="onClickBrowseIssueBtn()">Browse Issue</button>
+  <input
+    [(ngModel)]="wantBrowseIssueKey"
+    (keyup.enter)="onClickBrowseIssueBtn()"
+    mpTrack
+    mpTriggerEvent="keyup.enter"
+    mpEventName="Click Browse Issue"
+    [mpEventData]="{issueKey: wantBrowseIssueKey, by: 'pressEnter'}"
+  >
+  <button
+    (click)="onClickBrowseIssueBtn()"
+    mpTrack
+    mpTriggerEvent="click"
+    mpEventName="Click Browse Issue"
+    [mpEventData]="{issueKey: wantBrowseIssueKey, by: 'clickBtn'}"
+  >Browse Issue</button>
 </div>
