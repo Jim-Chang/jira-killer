@@ -1,6 +1,6 @@
 {
   "name": "Jira Killer",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Let Jira be cool",
   "manifest_version": 3,
   "permissions": [

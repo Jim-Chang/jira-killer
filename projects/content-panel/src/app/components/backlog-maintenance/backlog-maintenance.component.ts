@@ -1,7 +1,8 @@
+import { JqlBuilder } from '../../lib/jql-builder';
 import { JiraIssueSortService } from '../../services/jira-issue-sort.service';
 import { JiraService } from '../../services/jira.service';
 import { Component } from '@angular/core';
-import { combineLatest, switchMap } from 'rxjs';
+import { combineLatest, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'backlog-maintenance',
@@ -11,6 +12,7 @@ import { combineLatest, switchMap } from 'rxjs';
 export class BacklogMaintenanceComponent {
   isSorting = false;
   isCopyVer = false;
+  isSetAllBugReviewed = false;
 
   sprintId = 0;
 
@@ -20,6 +22,10 @@ export class BacklogMaintenanceComponent {
 
   get enableCopyVerBtn(): boolean {
     return !this.isCopyVer && !!this.sprintId;
+  }
+
+  get enableSetAllBugReviewed(): boolean {
+    return !this.isSetAllBugReviewed && !!this.sprintId;
   }
 
   constructor(private jiraService: JiraService, private issueSortService: JiraIssueSortService) {}
@@ -50,5 +56,26 @@ export class BacklogMaintenanceComponent {
         }),
       )
       .subscribe(() => (this.isCopyVer = false));
+  }
+
+  onClickSetAllBugReviewedBtn(): void {
+    this.isSetAllBugReviewed = true;
+
+    const targetLabel = 'NeedBugReview';
+    const jqlBuilder = new JqlBuilder();
+    jqlBuilder.filterLabels([targetLabel]);
+
+    this.jiraService
+      .getIssuesBySprint(this.sprintId, jqlBuilder.build())
+      .pipe(
+        switchMap((issues) => {
+          if (issues.length > 0) {
+            const reqs$ = issues.map((issue) => this.jiraService.removeLabelOfIssue(issue.key, targetLabel));
+            return combineLatest(reqs$);
+          }
+          return of(null);
+        }),
+      )
+      .subscribe(() => (this.isSetAllBugReviewed = false));
   }
 }
