@@ -2,6 +2,7 @@ import { Issue, ISSUE_PREFIX_MAP, IssueLinkType } from '../define/base';
 import { IssueStatus } from '../define/issue-status';
 import { CustomIssueType, JiraIssueType } from '../define/issue-type';
 import { JiraIssue, JiraIssueLink, JiraLinkedIssue } from '../define/jira-type';
+import { JqlBuilder } from '../lib/jql-builder';
 import { ConfigService } from './config.service';
 import { JiraService } from './jira.service';
 import { Injectable } from '@angular/core';
@@ -114,7 +115,9 @@ export class JiraStoryService {
   }
 
   doTransitStoryStatus$(sprintId: number): Observable<TransitData> {
-    return this.jiraService.getIssuesBySprint(sprintId, [JiraIssueType.Story, JiraIssueType.Improvement]).pipe(
+    const jqlBuilder = new JqlBuilder();
+    jqlBuilder.filterIssueTypes([JiraIssueType.Story, JiraIssueType.Improvement]);
+    return this.jiraService.getIssuesBySprint(sprintId, jqlBuilder.build()).pipe(
       map((issues) => this.transitIssueToNewStatus(issues)),
       // switchMap((transitData) => {
       //   console.log('transit data', transitData);

@@ -79,11 +79,11 @@ export class JiraService {
     );
   }
 
-  getIssuesBySprint(sprintId: number, issueTypes: IssueType[] = []): Observable<Issue[]> {
+  getIssuesBySprint(sprintId: number, jql: string | null = null): Observable<Issue[]> {
     const params: any = { startAt: 0, maxResults: this.MAX_RESULTS };
 
-    if (issueTypes.length > 0) {
-      params.jql = `issuetype in (${issueTypes.join(',')})`;
+    if (jql) {
+      params.jql = jql;
     }
 
     const url = `${this.baseURL}/rest/agile/1.0/sprint/${sprintId}/issue`;
@@ -105,11 +105,11 @@ export class JiraService {
     );
   }
 
-  getIssueStatusChangeLogsBySprint(sprintId: number, issueTypes: IssueType[] = []): Observable<IssueStatusChangeLog[]> {
+  getIssueStatusChangeLogsBySprint(sprintId: number, jql: string | null = null): Observable<IssueStatusChangeLog[]> {
     const params: any = { startAt: 0, maxResults: this.MAX_RESULTS, expand: 'changelog' };
 
-    if (issueTypes.length > 0) {
-      params.jql = `issuetype in (${issueTypes.join(',')})`;
+    if (jql) {
+      params.jql = jql;
     }
 
     const url = `${this.baseURL}/rest/agile/1.0/sprint/${sprintId}/issue`;
