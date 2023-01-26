@@ -29,6 +29,19 @@
         >Run</button>
       </td>
     </tr>
+    <tr>
+      <td>Set All Bugs Reviewed:</td>
+      <td>
+        <button
+          (click)="onClickSetAllBugReviewedBtn()"
+          [disabled]="!enableSetAllBugReviewed"
+          mpTrack
+          mpTriggerEvent="click"
+          mpEventName="Click Set All Bug Reviewed"
+          [mpEventData]="{springId: sprintId}"
+        >Run</button>
+      </td>
+    </tr>
   </table>
 
 </div>

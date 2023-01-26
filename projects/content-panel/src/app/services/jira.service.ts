@@ -245,6 +245,19 @@ export class JiraService {
     );
   }
 
+  removeLabelOfIssue(key: string, labels: string | string[]): Observable<void> {
+    console.log('removeLabelOfIssue');
+    const _labels = Array.isArray(labels) ? labels : [labels];
+    const data = {
+      update: {
+        labels: _labels.map((label) => ({ remove: label })),
+      },
+    };
+    return this.ready.pipe(
+      switchMap(() => this.http.put<any>(`${this.baseURL}/rest/api/2/issue/${key}`, data, { headers: this.headers })),
+    );
+  }
+
   private buildCreateIssueData(
     projKey: string,
     summary: string,
