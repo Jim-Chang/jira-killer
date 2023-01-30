@@ -1,6 +1,6 @@
 import { ISSUE_STATUS_LIST, IssueStatusChangeLog, Issue } from '../define/base';
 import { IssueStatus } from '../define/issue-status';
-import { IssueType, JiraIssueType } from '../define/issue-type';
+import { IssueType, JiraIssueType, SubtaskIssueType } from '../define/issue-type';
 import {
   JiraChangelogHistory,
   JiraChangelogItem,
@@ -182,12 +182,18 @@ export class JiraService {
     );
   }
 
-  createSubtask(fieldSource: Issue, summary: string, storyPoint: number | null): Observable<string> {
+  createSubtask(
+    fieldSource: Issue,
+    summary: string,
+    subtaskIssueType: SubtaskIssueType,
+    storyPoint: number | null,
+  ): Observable<string> {
     console.log('create subtask');
     const data = this.buildCreateSubtaskData(
       fieldSource.projKey,
       fieldSource.key,
       summary,
+      subtaskIssueType,
       storyPoint,
       fieldSource.teamId,
     );
@@ -299,6 +305,7 @@ export class JiraService {
     projKey: string,
     parentKey: string,
     summary: string,
+    subtaskIssueType: SubtaskIssueType,
     storyPoint: number | null,
     teamId: string | null,
   ): any {
@@ -314,7 +321,7 @@ export class JiraService {
         summary: summary,
         description: '',
         issuetype: {
-          name: JiraIssueType.Subtask,
+          name: subtaskIssueType,
         },
       },
     };
