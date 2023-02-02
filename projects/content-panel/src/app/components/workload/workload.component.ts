@@ -1,4 +1,5 @@
 import { getAssetUrl } from '../../define/base';
+import { IssueStatus } from '../../define/issue-status';
 import { JiraUser } from '../../define/jira-type';
 import { DashboardGSheetService } from '../../services/dashboard-gsheet.service';
 import { JiraAppRequestWatchService } from '../../services/jira-app-request-watch.service';
@@ -21,11 +22,16 @@ enum TriggerBy {
 export class WorkloadComponent {
   sprintId = 0;
   userIds: string[] = [];
+
   userMap: { [id: string]: JiraUser } = {};
-  workloadMap: { [id: string]: number } = {};
+
   planPointsMap: { [id: string]: number } = {};
+  undonePointsMap: { [id: string]: number } = {};
+  budgetPointsMap: { [id: string]: number } = {};
+
   unassignedPoints = 0;
-  totalPoints = 0;
+  totalPlanPoints = 0;
+  totalUndonePoints = 0;
   totalBudget = 0;
 
   private isCalculating = false;
@@ -57,13 +63,6 @@ export class WorkloadComponent {
     return this.dashboardGSheetSvc.isSetGSheetUrl();
   }
 
-  getRemainBudgetPoints(workload: number, plan: number | undefined): string {
-    if (plan !== undefined) {
-      return `${Math.round((plan - workload) * 10) / 10}`;
-    }
-    return '-';
-  }
-
   isOverBudgetPoints(workload: number, plan: number | undefined): boolean {
     if (plan !== undefined) {
       return workload > plan;
@@ -86,44 +85,58 @@ export class WorkloadComponent {
           this.isCalculating = true;
           return combineLatest([
             this.jiraService.getIssuesBySprint(this.sprintId),
-            this.dashboardGSheetSvc.getUserPlanPointsMapBySprint(this.sprintId, triggerBy === TriggerBy.Api).pipe(
+            this.dashboardGSheetSvc.getUserBudgetPointsMapBySprint(this.sprintId, triggerBy === TriggerBy.Api).pipe(
               catchError(() => {
-                console.info('getUserPlanPointsMapBySprint fail, pass calculate budget ');
+                console.info('getUserBudgetPointsMapBySprint fail, pass calculate budget ');
                 return of({});
               }),
             ),
           ]);
         }),
       )
-      .subscribe(([issues, planPointsMap]) => {
+      .subscribe(([issues, budgetPointsMap]) => {
         const userMap: { [id: string]: JiraUser } = {};
-        const workloadMap: { [id: string]: number } = {};
+        const planPointsMap: { [id: string]: number } = {};
+        const undonePointsMap: { [id: string]: number } = {};
         let unassignedPoints = 0;
 
         const _ensureUserInMap = (user: JiraUser) => {
           if (!(user.accountId in userMap)) {
             userMap[user.accountId] = user;
           }
-          if (!(user.accountId in workloadMap)) {
-            workloadMap[user.accountId] = 0;
+          if (!(user.accountId in planPointsMap)) {
+            planPointsMap[user.accountId] = 0;
+          }
+          if (!(user.accountId in undonePointsMap)) {
+            undonePointsMap[user.accountId] = 0;
           }
         };
 
         issues.forEach((issue) => {
           if (issue.assignee && issue.storyPoint) {
-            _ensureUserInMap(issue.assignee);
-            workloadMap[issue.assignee.accountId] += issue.storyPoint;
+            const assignee = issue.assignee;
+            const storyPoint = issue.storyPoint;
+
+            _ensureUserInMap(assignee);
+
+            planPointsMap[assignee.accountId] += storyPoint;
+            if (issue.status !== IssueStatus.Closed) {
+              undonePointsMap[assignee.accountId] += storyPoint;
+            }
           } else if (issue.storyPoint) {
             unassignedPoints += issue.storyPoint;
           }
         });
 
         this.userMap = userMap;
-        this.workloadMap = workloadMap;
         this.planPointsMap = planPointsMap;
+        this.undonePointsMap = undonePointsMap;
+        this.budgetPointsMap = budgetPointsMap;
         this.unassignedPoints = unassignedPoints;
-        this.totalPoints = unassignedPoints + Object.values(workloadMap).reduce((acc, pts) => acc + pts, 0);
-        this.totalBudget = Object.values(planPointsMap).reduce((acc, pts) => acc + pts, 0);
+
+        this.totalPlanPoints = unassignedPoints + Object.values(planPointsMap).reduce((acc, pts) => acc + pts, 0);
+        this.totalUndonePoints = unassignedPoints + Object.values(undonePointsMap).reduce((acc, pts) => acc + pts, 0);
+        this.totalBudget = Object.values(budgetPointsMap).reduce((acc, pts) => acc + pts, 0);
 
         this.userIds = Object.keys(this.userMap);
 

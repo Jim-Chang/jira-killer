@@ -20,7 +20,7 @@ export class DashboardGSheetService {
     return !!this.baseUrl;
   }
 
-  getUserPlanPointsMapBySprint(sprintId: number, useCache = true): Observable<{ [id: string]: number }> {
+  getUserBudgetPointsMapBySprint(sprintId: number, useCache = true): Observable<{ [id: string]: number }> {
     if (!this.baseUrl) {
       console.log('Please set `dashboardGSheetUrl` first to use `DashboardGSheetService`');
       return of({});

@@ -15,7 +15,8 @@
     <thead>
       <tr>
         <th>Assignee</th>
-        <th>Story Points</th>
+        <th>Planed Points</th>
+        <th>Undone Points</th>
         <th *ngIf="isShowRemainBudgetPoints()">Budget Points</th>
       </tr>
     </thead>
@@ -28,6 +29,8 @@
           </div>
         </td>
         <td class="highlight">{{unassignedPoints}}</td>
+        <td>-</td>
+        <td>-</td>
       </tr>
       <tr *ngFor="let userId of userIds">
         <td>
@@ -36,18 +39,20 @@
             <div>{{userMap[userId].displayName}}</div>
           </div>
         </td>
-        <td>{{workloadMap[userId]}}</td>
-        <td *ngIf="isShowRemainBudgetPoints()" [class]="isOverBudgetPoints(workloadMap[userId], planPointsMap[userId]) ? 'red' : 'green'">{{getRemainBudgetPoints(workloadMap[userId], planPointsMap[userId])}}</td>
+        <td>{{planPointsMap[userId]}}</td>
+        <td [class]="isOverBudgetPoints(undonePointsMap[userId], budgetPointsMap[userId]) ? 'red' : 'green'">{{undonePointsMap[userId]}}</td>
+        <td *ngIf="isShowRemainBudgetPoints()">{{budgetPointsMap[userId] ?? '-'}}</td>
       </tr>
-      <tr class="b-top" *ngIf="totalPoints">
+      <tr class="b-top" *ngIf="totalPlanPoints">
         <td>
           <div class="flex-v-center">
             <div><img class="head" [src]="getImgUrl('sigma.png')"></div>
             <div class="highlight">Total</div>
           </div>
         </td>
-        <td class="highlight">{{totalPoints}}</td>
-        <td *ngIf="isShowRemainBudgetPoints()" [class]="isOverBudgetPoints(totalPoints, totalBudget) ? 'red' : 'green'">{{getRemainBudgetPoints(totalPoints, totalBudget)}}</td>
+        <td class="highlight">{{totalPlanPoints}}</td>
+        <td class="highlight" [class]="isOverBudgetPoints(totalUndonePoints, totalBudget) ? 'red' : 'green'">{{totalUndonePoints}}</td>
+        <td class="highlight" *ngIf="isShowRemainBudgetPoints()">{{totalBudget}}</td>
       </tr>
     </tbody>
   </table>
