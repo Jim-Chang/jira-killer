@@ -1,5 +1,5 @@
 import { IssueStatus } from './issue-status';
-import { CustomIssueType, JiraIssueType } from './issue-type';
+import { JiraIssueType } from './issue-type';
 import { JiraFixVersion, JiraIssue, JiraIssueLink, JiraUser } from './jira-type';
 import * as moment from 'moment';
 
@@ -29,8 +29,8 @@ export enum IssueLinkType {
 }
 
 export const ISSUE_PREFIX_MAP: { [key: string]: string } = {
-  [CustomIssueType.FETask]: 'RD<FE> - ',
-  [CustomIssueType.BETask]: 'RD<BE> - ',
+  [JiraIssueType.FETask]: 'RD<FE> - ',
+  [JiraIssueType.BETask]: 'RD<BE> - ',
   [JiraIssueType.Task]: 'RD - ',
   [JiraIssueType.Test]: 'QA - ',
 };

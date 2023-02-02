@@ -1,6 +1,6 @@
 import { getAssetUrl, Issue, ISSUE_PREFIX_MAP } from '../../define/base';
 import { IssueStatus } from '../../define/issue-status';
-import { CustomIssueType, IssueType, JiraIssueType } from '../../define/issue-type';
+import { IssueType, JiraIssueType, JiraSubtaskIssueType } from '../../define/issue-type';
 import { JiraUser } from '../../define/jira-type';
 import { DashboardGSheetService } from '../../services/dashboard-gsheet.service';
 import { JiraAppRequestWatchService } from '../../services/jira-app-request-watch.service';
@@ -89,11 +89,11 @@ export class WorkloadComponent {
   }
 
   private getRealTaskIssueType(issue: Issue): IssueType {
-    if (issue.issueType === JiraIssueType.Subtask) {
-      if (issue.summary.startsWith(ISSUE_PREFIX_MAP[CustomIssueType.FETask])) {
-        return CustomIssueType.FETask;
-      } else if (issue.summary.startsWith(ISSUE_PREFIX_MAP[CustomIssueType.BETask])) {
-        return CustomIssueType.BETask;
+    if (issue.issueType === JiraSubtaskIssueType.Subtask) {
+      if (issue.summary.startsWith(ISSUE_PREFIX_MAP[JiraIssueType.FETask])) {
+        return JiraIssueType.FETask;
+      } else if (issue.summary.startsWith(ISSUE_PREFIX_MAP[JiraIssueType.BETask])) {
+        return JiraIssueType.BETask;
       }
       return JiraIssueType.Task;
     }
@@ -158,11 +158,11 @@ export class WorkloadComponent {
 
             if (issue.status !== IssueStatus.Closed) {
               const type = this.getRealTaskIssueType(issue);
-              if (type === CustomIssueType.FETask) {
+              if (type === JiraIssueType.FETask) {
                 feTotalUndonePoints += storyPoint;
-              } else if (type === CustomIssueType.BETask) {
+              } else if (type === JiraIssueType.BETask) {
                 beTotalUndonePoints += storyPoint;
-              } else if (type === JiraIssueType.Test || type === JiraIssueType.SubTestExecution) {
+              } else if (type === JiraIssueType.Test || type === JiraSubtaskIssueType.SubTestExecution) {
                 qaTotalUndonePoints += storyPoint;
               } else {
                 otherTaskTotalUndonePoints += storyPoint;

@@ -1,5 +1,5 @@
 import { ISSUE_PREFIX_MAP } from '../../define/base';
-import { CustomIssueType, IssueType, JiraIssueType, SubtaskIssueType } from '../../define/issue-type';
+import { IssueType, JiraIssueType, JiraSubtaskIssueType } from '../../define/issue-type';
 import { ConfigService } from '../../services/config.service';
 import { JiraService } from '../../services/jira.service';
 import { Component, Input, OnInit } from '@angular/core';
@@ -15,7 +15,6 @@ export class BreakdownTaskInputComponent implements OnInit {
   @Input() parentSummary: string;
 
   JiraIssueType = JiraIssueType;
-  CustomIssueType = CustomIssueType;
 
   issueType: IssueType;
   summary = '';
@@ -71,7 +70,7 @@ export class BreakdownTaskInputComponent implements OnInit {
 
     // use subtask to breakdown, but not test type
     if (this.breakdownBySubtask) {
-      const subtaskIssueType = this.mapIssueTypeToSubtask(this.issueType);
+      const subtaskIssueType = this.mapIssueTypeToSubtaskType(this.issueType);
       this.jiraService
         .getIssue(this.parentIssueKey)
         .pipe(
@@ -99,7 +98,7 @@ export class BreakdownTaskInputComponent implements OnInit {
     }
   }
 
-  private mapIssueTypeToSubtask(issueType: IssueType): SubtaskIssueType {
-    return issueType === JiraIssueType.Test ? JiraIssueType.SubTestExecution : JiraIssueType.Subtask;
+  private mapIssueTypeToSubtaskType(issueType: IssueType): JiraSubtaskIssueType {
+    return issueType === JiraIssueType.Test ? JiraSubtaskIssueType.SubTestExecution : JiraSubtaskIssueType.Subtask;
   }
 }
