@@ -17,7 +17,7 @@
         <th>Assignee</th>
         <th>Planed Points</th>
         <th>Undone Points</th>
-        <th *ngIf="isShowRemainBudgetPoints()">Budget Points</th>
+        <th *ngIf="isShowBudgetPoints()">Budget Points</th>
       </tr>
     </thead>
     <tbody>
@@ -41,7 +41,7 @@
         </td>
         <td>{{planPointsMap[userId]}}</td>
         <td [class]="isOverBudgetPoints(undonePointsMap[userId], budgetPointsMap[userId]) ? 'red' : 'green'">{{undonePointsMap[userId]}}</td>
-        <td *ngIf="isShowRemainBudgetPoints()">{{budgetPointsMap[userId] ?? '-'}}</td>
+        <td *ngIf="isShowBudgetPoints()">{{getBudgetPoints(userId)}}</td>
       </tr>
       <tr class="b-top" *ngIf="totalPlanPoints">
         <td>
@@ -52,7 +52,51 @@
         </td>
         <td class="highlight">{{totalPlanPoints}}</td>
         <td class="highlight" [class]="isOverBudgetPoints(totalUndonePoints, totalBudget) ? 'red' : 'green'">{{totalUndonePoints}}</td>
-        <td class="highlight" *ngIf="isShowRemainBudgetPoints()">{{totalBudget}}</td>
+        <td class="highlight" *ngIf="isShowBudgetPoints()">{{totalBudget}}</td>
+      </tr>
+      <tr *ngIf="feTotalUndonePoints">
+        <td>
+            <div class="flex-v-center">
+              <div class="head"></div>
+              <div>FE Task</div>
+            </div>
+          </td>
+          <td>-</td>
+          <td>{{feTotalUndonePoints}}</td>
+          <td *ngIf="isShowBudgetPoints()">-</td>
+      </tr>
+      <tr *ngIf="beTotalUndonePoints">
+        <td>
+            <div class="flex-v-center">
+              <div class="head"></div>
+              <div>BE Task</div>
+            </div>
+          </td>
+          <td>-</td>
+          <td>{{beTotalUndonePoints}}</td>
+          <td *ngIf="isShowBudgetPoints()">-</td>
+      </tr>
+      <tr *ngIf="qaTotalUndonePoints">
+        <td>
+            <div class="flex-v-center">
+              <div class="head"></div>
+              <div>QA Task</div>
+            </div>
+          </td>
+          <td>-</td>
+          <td>{{qaTotalUndonePoints}}</td>
+          <td *ngIf="isShowBudgetPoints()">-</td>
+      </tr>
+      <tr *ngIf="otherTaskTotalUndonePoints">
+        <td>
+            <div class="flex-v-center">
+              <div class="head"></div>
+              <div>Other Task</div>
+            </div>
+          </td>
+          <td>-</td>
+          <td>{{otherTaskTotalUndonePoints}}</td>
+          <td *ngIf="isShowBudgetPoints()">-</td>
       </tr>
     </tbody>
   </table>

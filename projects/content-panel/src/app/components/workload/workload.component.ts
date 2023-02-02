@@ -1,5 +1,6 @@
-import { getAssetUrl } from '../../define/base';
+import { getAssetUrl, Issue, ISSUE_PREFIX_MAP } from '../../define/base';
 import { IssueStatus } from '../../define/issue-status';
+import { CustomIssueType, IssueType, JiraIssueType } from '../../define/issue-type';
 import { JiraUser } from '../../define/jira-type';
 import { DashboardGSheetService } from '../../services/dashboard-gsheet.service';
 import { JiraAppRequestWatchService } from '../../services/jira-app-request-watch.service';
@@ -7,7 +8,7 @@ import { JiraService } from '../../services/jira.service';
 import { UrlWatchService } from '../../services/url-watch-service';
 import { Component } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { filter, merge, Subject, switchMap, combineLatest, catchError, of } from 'rxjs';
+import { catchError, combineLatest, filter, merge, of, Subject, switchMap } from 'rxjs';
 
 enum TriggerBy {
   User,
@@ -34,6 +35,11 @@ export class WorkloadComponent {
   totalUndonePoints = 0;
   totalBudget = 0;
 
+  feTotalUndonePoints = 0;
+  beTotalUndonePoints = 0;
+  otherTaskTotalUndonePoints = 0;
+  qaTotalUndonePoints = 0;
+
   private isCalculating = false;
   private doCalculate$ = new Subject<TriggerBy>();
 
@@ -59,7 +65,7 @@ export class WorkloadComponent {
       .subscribe(() => this.doCalculate$.next(TriggerBy.Api));
   }
 
-  isShowRemainBudgetPoints(): boolean {
+  isShowBudgetPoints(): boolean {
     return this.dashboardGSheetSvc.isSetGSheetUrl();
   }
 
@@ -70,12 +76,29 @@ export class WorkloadComponent {
     return false;
   }
 
+  getBudgetPoints(userId: string): number | string {
+    return this.budgetPointsMap[userId] ?? '-';
+  }
+
   onClickCalculate(): void {
     this.doCalculate$.next(TriggerBy.User);
   }
 
   getImgUrl(filename: string): SafeUrl {
     return this.sanitizer.bypassSecurityTrustUrl(getAssetUrl(`img/${filename}`));
+  }
+
+  private getRealTaskIssueType(issue: Issue): IssueType {
+    if (issue.issueType === JiraIssueType.Subtask) {
+      if (issue.summary.startsWith(ISSUE_PREFIX_MAP[CustomIssueType.FETask])) {
+        return CustomIssueType.FETask;
+      } else if (issue.summary.startsWith(ISSUE_PREFIX_MAP[CustomIssueType.BETask])) {
+        return CustomIssueType.BETask;
+      }
+      return JiraIssueType.Task;
+    }
+
+    return issue.issueType as IssueType;
   }
 
   private initDoCalculateHandler(): void {
@@ -99,6 +122,10 @@ export class WorkloadComponent {
         const planPointsMap: { [id: string]: number } = {};
         const undonePointsMap: { [id: string]: number } = {};
         let unassignedPoints = 0;
+        let feTotalUndonePoints = 0;
+        let beTotalUndonePoints = 0;
+        let qaTotalUndonePoints = 0;
+        let otherTaskTotalUndonePoints = 0;
 
         const _ensureUserInMap = (user: JiraUser) => {
           if (!(user.accountId in userMap)) {
@@ -112,27 +139,46 @@ export class WorkloadComponent {
           }
         };
 
-        issues.forEach((issue) => {
-          if (issue.assignee && issue.storyPoint) {
-            const assignee = issue.assignee;
-            const storyPoint = issue.storyPoint;
+        issues
+          .filter((issue) => !!issue.storyPoint)
+          .forEach((issue) => {
+            const storyPoint = issue.storyPoint as number;
 
-            _ensureUserInMap(assignee);
+            if (issue.assignee) {
+              const assignee = issue.assignee;
+              _ensureUserInMap(assignee);
 
-            planPointsMap[assignee.accountId] += storyPoint;
-            if (issue.status !== IssueStatus.Closed) {
-              undonePointsMap[assignee.accountId] += storyPoint;
+              planPointsMap[assignee.accountId] += storyPoint;
+              if (issue.status !== IssueStatus.Closed) {
+                undonePointsMap[assignee.accountId] += storyPoint;
+              }
+            } else {
+              unassignedPoints += storyPoint;
             }
-          } else if (issue.storyPoint) {
-            unassignedPoints += issue.storyPoint;
-          }
-        });
+
+            if (issue.status !== IssueStatus.Closed) {
+              const type = this.getRealTaskIssueType(issue);
+              if (type === CustomIssueType.FETask) {
+                feTotalUndonePoints += storyPoint;
+              } else if (type === CustomIssueType.BETask) {
+                beTotalUndonePoints += storyPoint;
+              } else if (type === JiraIssueType.Test || type === JiraIssueType.SubTestExecution) {
+                qaTotalUndonePoints += storyPoint;
+              } else {
+                otherTaskTotalUndonePoints += storyPoint;
+              }
+            }
+          });
 
         this.userMap = userMap;
         this.planPointsMap = planPointsMap;
         this.undonePointsMap = undonePointsMap;
         this.budgetPointsMap = budgetPointsMap;
         this.unassignedPoints = unassignedPoints;
+        this.feTotalUndonePoints = feTotalUndonePoints;
+        this.beTotalUndonePoints = beTotalUndonePoints;
+        this.qaTotalUndonePoints = qaTotalUndonePoints;
+        this.otherTaskTotalUndonePoints = otherTaskTotalUndonePoints;
 
         this.totalPlanPoints = unassignedPoints + Object.values(planPointsMap).reduce((acc, pts) => acc + pts, 0);
         this.totalUndonePoints = unassignedPoints + Object.values(undonePointsMap).reduce((acc, pts) => acc + pts, 0);
