@@ -12,9 +12,6 @@ export class AppComponent {
   isShowRightPanel = false;
   isShowTopLeftPanel = false;
 
-  isShowPoker = true;
-  isShowNote = false;
-
   @ViewChild('topPanel') topPanel: ElementRef;
   @ViewChild('bottomPanel') bottomPanel: ElementRef;
   @ViewChild('leftPanel') leftPanel: ElementRef;
@@ -87,15 +84,5 @@ export class AppComponent {
 
   onClickRightSwitchBtn(): void {
     this.isShowRightPanel = !this.isShowRightPanel;
-  }
-
-  onClickLeftPanelTabBtn(tab: string): void {
-    if (tab === 'poker') {
-      this.isShowPoker = true;
-      this.isShowNote = false;
-    } else if (tab === 'note') {
-      this.isShowPoker = false;
-      this.isShowNote = true;
-    }
   }
 }

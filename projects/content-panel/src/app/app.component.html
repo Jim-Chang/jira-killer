@@ -1,32 +1,6 @@
 <div class="top-container container" [ngStyle]="topPanelPlace">
   <div class="card" #topPanel>
-    <div class="center">
-      <div>
-        <h3>Story Transition</h3>
-        <story-transit></story-transit>
-      </div>
-    </div>
-    <hr>
-    <div class="center">
-      <div>
-        <h3>Backlog Maintenance</h3>
-        <backlog-maintenance></backlog-maintenance>
-      </div>
-    </div>
-    <hr>
-    <div class="center">
-      <div>
-        <h3>Quick Browse Issue</h3>
-        <browse-issue></browse-issue>
-      </div>
-    </div>
-    <hr>
-    <div class="center">
-      <div>
-        <h3>Task Breakdown</h3>
-        <breakdown-task></breakdown-task>
-      </div>
-    </div>
+    <top-panel></top-panel>
   </div>
   <button class="switch-btn top-btn" (click)="onClickTopSwitchBtn()">{{getSwitchTopBtnText(isShowTopPanel)}}</button>
 </div>
@@ -41,12 +15,7 @@
 
 <div class="left-container side-container container" [ngStyle]="leftPanelPlace">
   <div class="card" #leftPanel>
-    <div>
-      <button (click)="onClickLeftPanelTabBtn('poker')">Poker</button>
-      <button (click)="onClickLeftPanelTabBtn('note')">Note</button>
-    </div>
-    <poker [style.display]="!isShowPoker?'none':'inherit'"></poker>
-    <meeting-note [style.display]="!isShowNote?'none':'inherit'" [shouldLazyLoad]="isShowNote" ></meeting-note>
+    <left-panel></left-panel>
   </div>
   <div>
     <button class="switch-btn side-btn" (click)="onClickLeftSwitchBtn()">{{getSwitchLeftBtnText(isShowLeftPanel)}}</button>
