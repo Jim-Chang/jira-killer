@@ -26,8 +26,13 @@
   </div>
 
   <div>
+    <h3>Meeting Note</h3>
+    <span>Google Doc ID</span><input [(ngModel)]="meetingNoteGDocId" (change)="onConfigChange()" type="text">
+  </div>
+
+  <div>
     <h3>Dashboard GSheet</h3>
-    <span>URL</span><input [(ngModel)]="dashboardGSheetUrl" (change)="onConfigChange()" type="text">
+    <span>Lambda API Url</span><input [(ngModel)]="dashboardGSheetUrl" (change)="onConfigChange()" type="text">
   </div>
 
   <div>

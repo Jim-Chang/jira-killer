@@ -41,7 +41,12 @@
 
 <div class="left-container side-container container" [ngStyle]="leftPanelPlace">
   <div class="card" #leftPanel>
-    <poker></poker>
+    <div>
+      <button (click)="onClickLeftPanelTabBtn('poker')">Poker</button>
+      <button (click)="onClickLeftPanelTabBtn('note')">Note</button>
+    </div>
+    <poker [style.display]="!isShowPoker?'none':'inherit'"></poker>
+    <meeting-note [style.display]="!isShowNote?'none':'inherit'" [shouldLazyLoad]="isShowNote" ></meeting-note>
   </div>
   <div>
     <button class="switch-btn side-btn" (click)="onClickLeftSwitchBtn()">{{getSwitchLeftBtnText(isShowLeftPanel)}}</button>

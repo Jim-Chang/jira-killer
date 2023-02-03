@@ -10,6 +10,7 @@ export type Config = {
   epicFieldId: string;
   storyPointFieldId: string;
   pokerGameId: string;
+  meetingNoteGDocId: string;
   dashboardGSheetUrl: string;
   jiraInBlack: boolean;
   breakdownBySubtask: boolean;
@@ -24,6 +25,7 @@ export const CONFIG_KEYS = [
   'epicFieldId',
   'storyPointFieldId',
   'pokerGameId',
+  'meetingNoteGDocId',
   'dashboardGSheetUrl',
   'jiraInBlack',
   'breakdownBySubtask',

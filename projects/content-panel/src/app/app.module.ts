@@ -4,6 +4,7 @@ import { BreakdownTaskInputComponent } from './components/breakdown-task-input/b
 import { BreakdownTaskComponent } from './components/breakdown-task/breakdown-task.component';
 import { BrowseIssueComponent } from './components/browse-issue/browse-issue.component';
 import { ChartComponent } from './components/chart/chart.component';
+import { MeetingNoteComponent } from './components/meeting-note/meeting-note.component';
 import { PokerComponent } from './components/poker/poker.component';
 import { SprintSelectorComponent } from './components/sprint-selector/sprint-selector.component';
 import { StoryTransitComponent } from './components/story-transit/story-transit.component';
@@ -31,6 +32,7 @@ import { BrowserModule } from '@angular/platform-browser';
     BrowseIssueComponent,
     SubtaskListComponent,
     MpTrackDirective,
+    MeetingNoteComponent,
   ],
   imports: [BrowserModule, FormsModule, HttpClientModule],
   providers: [],

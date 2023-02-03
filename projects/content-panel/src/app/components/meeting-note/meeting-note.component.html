@@ -1,0 +1,13 @@
+<p class="url"
+   *ngIf="!!docId"
+   (click)="onClickUrl()"
+   mpTrack
+   mpTriggerEvent="click"
+   mpEventName="Click Copy Meeting Note URL"
+>https://docs.google.../{{docId}}<span *ngIf="isCopied">Copied!</span></p>
+<iframe width="600px" height="800px" [src]="safeUrl" *ngIf="safeUrl"></iframe>
+<div *ngIf="!docId" class="info">
+  <div>
+    <p>Please set Google Doc ID of Meeting Note in configuration first.</p>
+  </div>
+</div>
