@@ -1,0 +1,6 @@
+<div>
+  <button (click)="onClickLeftPanelTabBtn('poker')">Poker</button>
+  <button (click)="onClickLeftPanelTabBtn('note')">Note</button>
+</div>
+<poker [ngClass]="{hidden: !isShowPoker}"></poker>
+<meeting-note [ngClass]="{hidden: !isShowNote}" [shouldLazyLoad]="isShowNote" ></meeting-note>

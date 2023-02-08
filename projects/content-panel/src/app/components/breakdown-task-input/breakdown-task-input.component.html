@@ -1,8 +1,8 @@
 <div>
   <select name="type" [(ngModel)]="issueType" (change)="onChangeIssueType()">
     <option disabled selected value>Select Ticket Type</option>
-    <option [value]="CustomIssueType.FETask">Frontend Task</option>
-    <option [value]="CustomIssueType.BETask">Backend Task</option>
+    <option [value]="JiraIssueType.FETask">Frontend Task</option>
+    <option [value]="JiraIssueType.BETask">Backend Task</option>
     <option [value]="JiraIssueType.Task">Task</option>
     <option [value]="JiraIssueType.Test">QA Test</option>
   </select>

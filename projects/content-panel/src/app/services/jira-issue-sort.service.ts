@@ -1,5 +1,5 @@
 import { Issue, LOG_PREFIX } from '../define/base';
-import { CustomIssueType, JiraIssueType } from '../define/issue-type';
+import { JiraIssueType } from '../define/issue-type';
 import { JiraService } from './jira.service';
 import { Injectable } from '@angular/core';
 import { combineLatest, map, Observable, of } from 'rxjs';
@@ -15,8 +15,8 @@ export class JiraIssueSortService {
       JiraIssueType.Task,
       JiraIssueType.Bug,
       JiraIssueType.Test,
-      CustomIssueType.BETask,
-      CustomIssueType.FETask,
+      JiraIssueType.BETask,
+      JiraIssueType.FETask,
     ];
     const storyTasksKeyMap: { [key: string]: string[] } = {};
 

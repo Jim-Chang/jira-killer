@@ -46,6 +46,11 @@ export class ChartService {
     return date >= startDate && date <= endDate;
   }
 
+  isDateBeforeSprint(date: moment.Moment, sprint: JiraSprint): boolean {
+    const startDate = getDateOfStart(sprint.startDate as string);
+    return date < startDate;
+  }
+
   private calculateBurnUpChartData(sprint: JiraSprint, issueStatusChangeLogs: IssueStatusChangeLog[]): BurnUpChartData {
     const dayDiff = this.getDayDiff(sprint.startDate as string, sprint.endDate as string);
     const chartData: BurnUpChartData = { totalPoints: 0 } as any;
@@ -62,10 +67,14 @@ export class ChartService {
           // only calculate status in IssueStatusAware
           .filter(([status, date]) => ISSUE_STATUS_AWARE.includes(status as any))
           .forEach(([status, date]) => {
-            // only calculate change date is in sprint
-            if (date && this.isDateInSprint(date, sprint)) {
-              const dayDiff = this.getDayDiff(date, sprint.startDate as string);
-              chartData[status as IssueStatusAware][dayDiff] += storyPoint;
+            // only calculate change date is in or before sprint
+            if (date) {
+              if (this.isDateInSprint(date, sprint)) {
+                const dayDiff = this.getDayDiff(date, sprint.startDate as string);
+                chartData[status as IssueStatusAware][dayDiff] += storyPoint;
+              } else if (this.isDateBeforeSprint(date, sprint)) {
+                chartData[status as IssueStatusAware][0] += storyPoint;
+              }
             }
           });
       });

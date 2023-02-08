@@ -1,6 +1,6 @@
 import { Issue, ISSUE_PREFIX_MAP, IssueLinkType } from '../define/base';
 import { IssueStatus } from '../define/issue-status';
-import { CustomIssueType, JiraIssueType } from '../define/issue-type';
+import { JiraIssueType } from '../define/issue-type';
 import { JiraIssue, JiraIssueLink, JiraLinkedIssue } from '../define/jira-type';
 import { JqlBuilder } from '../lib/jql-builder';
 import { ConfigService } from './config.service';
@@ -116,7 +116,12 @@ export class JiraStoryService {
 
   doTransitStoryStatus$(sprintId: number): Observable<TransitData> {
     const jqlBuilder = new JqlBuilder();
-    jqlBuilder.filterIssueTypes([JiraIssueType.Story, JiraIssueType.Improvement]);
+    jqlBuilder.filterIssueTypes([
+      JiraIssueType.Story,
+      JiraIssueType.Improvement,
+      JiraIssueType.Survey,
+      JiraIssueType.Bug,
+    ]);
     return this.jiraService.getIssuesBySprint(sprintId, jqlBuilder.build()).pipe(
       map((issues) => this.transitIssueToNewStatus(issues)),
       // switchMap((transitData) => {
@@ -201,8 +206,8 @@ function findTargetStatusByIssueLink(checkStatusList: IssueStatus[], links: Jira
 
 function isSubTaskSummary(summary: string): boolean {
   const prefix = [
-    ISSUE_PREFIX_MAP[CustomIssueType.FETask],
-    ISSUE_PREFIX_MAP[CustomIssueType.BETask],
+    ISSUE_PREFIX_MAP[JiraIssueType.FETask],
+    ISSUE_PREFIX_MAP[JiraIssueType.BETask],
     ISSUE_PREFIX_MAP[JiraIssueType.Task],
   ];
   return prefix.map((k) => summary.startsWith(k)).some((ret) => ret);

@@ -5,12 +5,14 @@ export enum JiraIssueType {
   Bug = 'Bug',
   Test = 'Test',
   Improvement = 'Improvement',
-  Subtask = 'Sub-task',
-}
-
-export enum CustomIssueType {
+  Survey = 'Survey',
   FETask = 'RD Frontend',
   BETask = 'RD Backend',
 }
 
-export type IssueType = JiraIssueType | CustomIssueType;
+export enum JiraSubtaskIssueType {
+  Subtask = 'Sub-task',
+  SubTestExecution = 'Sub Test Execution',
+}
+
+export type IssueType = JiraIssueType | JiraSubtaskIssueType;

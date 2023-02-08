@@ -1,14 +1,7 @@
 import { ISSUE_STATUS_LIST, IssueStatusChangeLog, Issue } from '../define/base';
 import { IssueStatus } from '../define/issue-status';
-import { IssueType, JiraIssueType } from '../define/issue-type';
-import {
-  JiraChangelogHistory,
-  JiraChangelogItem,
-  JiraFixVersion,
-  JiraIssue,
-  JiraIssueLink,
-  JiraSprint,
-} from '../define/jira-type';
+import { IssueType, JiraSubtaskIssueType } from '../define/issue-type';
+import { JiraChangelogHistory, JiraChangelogItem, JiraFixVersion, JiraIssue, JiraSprint } from '../define/jira-type';
 import { ConfigService } from './config.service';
 import { JiraFieldService } from './jira-field.service';
 import { HttpClient } from '@angular/common/http';
@@ -182,12 +175,18 @@ export class JiraService {
     );
   }
 
-  createSubtask(fieldSource: Issue, summary: string, storyPoint: number | null): Observable<string> {
+  createSubtask(
+    fieldSource: Issue,
+    summary: string,
+    subtaskIssueType: JiraSubtaskIssueType,
+    storyPoint: number | null,
+  ): Observable<string> {
     console.log('create subtask');
     const data = this.buildCreateSubtaskData(
       fieldSource.projKey,
       fieldSource.key,
       summary,
+      subtaskIssueType,
       storyPoint,
       fieldSource.teamId,
     );
@@ -299,6 +298,7 @@ export class JiraService {
     projKey: string,
     parentKey: string,
     summary: string,
+    subtaskIssueType: JiraSubtaskIssueType,
     storyPoint: number | null,
     teamId: string | null,
   ): any {
@@ -314,7 +314,7 @@ export class JiraService {
         summary: summary,
         description: '',
         issuetype: {
-          name: JiraIssueType.Subtask,
+          name: subtaskIssueType,
         },
       },
     };

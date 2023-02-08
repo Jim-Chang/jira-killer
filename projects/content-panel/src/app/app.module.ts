@@ -4,10 +4,13 @@ import { BreakdownTaskInputComponent } from './components/breakdown-task-input/b
 import { BreakdownTaskComponent } from './components/breakdown-task/breakdown-task.component';
 import { BrowseIssueComponent } from './components/browse-issue/browse-issue.component';
 import { ChartComponent } from './components/chart/chart.component';
+import { LeftPanelComponent } from './components/left-panel/left-panel.component';
+import { MeetingNoteComponent } from './components/meeting-note/meeting-note.component';
 import { PokerComponent } from './components/poker/poker.component';
 import { SprintSelectorComponent } from './components/sprint-selector/sprint-selector.component';
 import { StoryTransitComponent } from './components/story-transit/story-transit.component';
 import { SubtaskListComponent } from './components/subtask-list/subtask-list.component';
+import { TopPanelComponent } from './components/top-panel/top-panel.component';
 import { WorkloadComponent } from './components/workload/workload.component';
 import { setAssetRootUrl, setExtensionId } from './define/base';
 import { MpTrackDirective } from './directives/mp-track/mp-track.directive';
@@ -31,6 +34,9 @@ import { BrowserModule } from '@angular/platform-browser';
     BrowseIssueComponent,
     SubtaskListComponent,
     MpTrackDirective,
+    MeetingNoteComponent,
+    LeftPanelComponent,
+    TopPanelComponent,
   ],
   imports: [BrowserModule, FormsModule, HttpClientModule],
   providers: [],

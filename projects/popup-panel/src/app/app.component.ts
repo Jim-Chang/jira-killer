@@ -19,6 +19,7 @@ export class AppComponent {
 
   pokerGameId: string;
   dashboardGSheetUrl: string;
+  meetingNoteGDocId: string;
   jiraInBlack: boolean;
   breakdownBySubtask: boolean;
 
@@ -37,6 +38,7 @@ export class AppComponent {
       this.epicFieldId = config.epicFieldId;
       this.storyPointFieldId = config.storyPointFieldId;
       this.pokerGameId = config.pokerGameId;
+      this.meetingNoteGDocId = config.meetingNoteGDocId;
       this.dashboardGSheetUrl = config.dashboardGSheetUrl;
       this.jiraInBlack = config.jiraInBlack;
       this.breakdownBySubtask = config.breakdownBySubtask;
@@ -53,6 +55,7 @@ export class AppComponent {
       epicFieldId: this.epicFieldId,
       storyPointFieldId: this.storyPointFieldId,
       pokerGameId: this.pokerGameId,
+      meetingNoteGDocId: this.meetingNoteGDocId,
       dashboardGSheetUrl: this.dashboardGSheetUrl,
       jiraInBlack: this.jiraInBlack,
       breakdownBySubtask: this.breakdownBySubtask,
