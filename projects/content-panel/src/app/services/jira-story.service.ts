@@ -116,7 +116,12 @@ export class JiraStoryService {
 
   doTransitStoryStatus$(sprintId: number): Observable<TransitData> {
     const jqlBuilder = new JqlBuilder();
-    jqlBuilder.filterIssueTypes([JiraIssueType.Story, JiraIssueType.Improvement]);
+    jqlBuilder.filterIssueTypes([
+      JiraIssueType.Story,
+      JiraIssueType.Improvement,
+      JiraIssueType.Survey,
+      JiraIssueType.Bug,
+    ]);
     return this.jiraService.getIssuesBySprint(sprintId, jqlBuilder.build()).pipe(
       map((issues) => this.transitIssueToNewStatus(issues)),
       // switchMap((transitData) => {
