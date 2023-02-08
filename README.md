@@ -1,31 +1,31 @@
 # JiraKiller
 
-Let the Scrum Master be more happy when using Jira, and reduce the time.
-This extension provides the following features:
-1. HUD-like, after installing it, it seems to be wearing a steel suit, and the combat effectiveness is doubled
-2. With one click, you can create a sub task and fill in the necessary information
-3. Optimize workload calculation, can calculate story or sub task
-4. Play poker while planning, saving the life of the mouse button when switching browser tabs
+With Jira, you can make the Scrum Master even happier and save time! This extension provides some great features to help you out:
 
-You can install from [Chrome Extension Store](https://chrome.google.com/webstore/detail/jira-killer/geaokmikfnlagcafdoncanagegopiphp).
+1. HUD-like – just like wearing a steel suit, it will double your combat effectiveness!
+2. With one click, you can create a sub task and fill in all the necessary information.
+3. Optimize workload calculation – it can calculate stories or sub tasks.
+4. Play poker while planning – it will save your mouse button life  without switching browser tabs.
+
+You can get it from the [Chrome Extension Store](https://chrome.google.com/webstore/detail/jira-killer/geaokmikfnlagcafdoncanagegopiphp).
 
 ## How to develop
 
-Switch to project root directory and enter following commands in console:
+Go to the project root directory and enter the following commands in the terminal:
 
 ```bash
 npm install
 npm run watch
 ```
 
-After the library is installed and built, go to Chrome extension settings page and click `Load unpacked` in top left corner. In dialog box, select `dist` folder in project root directory.
+Once the library is installed and built, go to the Chrome extension settings page and click `Load unpacked` in the top left corner. In the dialog box, select the `dist` folder in the project root directory.
 
 ## How to compile for production
 
-In project root directory, run following command:
+In the project root directory, run the following command:
 
 ```bash
 npm run build
 ```
 
-The compiled result for production environment can be found in `dist` folder.
+You'll find the compiled version for the production environment in the `dist` folder. Have fun!
