@@ -1,6 +1,7 @@
-import { ISSUE_STATUS_LIST, IssueStatusChangeLog, Issue } from '../define/base';
+import { Issue, ISSUE_STATUS_LIST, IssueStatusChangeLog } from '../define/base';
 import { IssueStatus } from '../define/issue-status';
 import { IssueType, JiraSubtaskIssueType } from '../define/issue-type';
+import { JiraSprintState } from '../define/jira-status';
 import { JiraChangelogHistory, JiraChangelogItem, JiraFixVersion, JiraIssue, JiraSprint } from '../define/jira-type';
 import { ConfigService } from './config.service';
 import { JiraFieldService } from './jira-field.service';
@@ -43,8 +44,12 @@ export class JiraService {
     return `https://${this.config.jiraDomain}.atlassian.net`;
   }
 
-  getAllSprint(boardId: number, withClosed = false, maxResults = this.MAX_RESULTS): Observable<JiraSprint[]> {
-    const state = withClosed ? 'active,future,close' : 'active,future';
+  getAllSprint(
+    boardId: number,
+    states: JiraSprintState[] = [JiraSprintState.Active, JiraSprintState.Future],
+    maxResults = this.MAX_RESULTS,
+  ): Observable<JiraSprint[]> {
+    const state = states.join(',');
     return this.ready.pipe(
       switchMap(() =>
         this.http.get<any>(`${this.baseURL}/rest/agile/1.0/board/${boardId}/sprint`, {
