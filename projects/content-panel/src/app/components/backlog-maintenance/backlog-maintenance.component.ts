@@ -1,3 +1,4 @@
+import { NEED_BUG_REVIEW } from '../../define/label';
 import { JqlBuilder } from '../../lib/jql-builder';
 import { JiraIssueSortService } from '../../services/jira-issue-sort.service';
 import { JiraService } from '../../services/jira.service';
@@ -61,16 +62,15 @@ export class BacklogMaintenanceComponent {
   onClickSetAllBugReviewedBtn(): void {
     this.isSetAllBugReviewed = true;
 
-    const targetLabel = 'NeedBugReview';
     const jqlBuilder = new JqlBuilder();
-    jqlBuilder.filterLabels([targetLabel]);
+    jqlBuilder.filterLabels([NEED_BUG_REVIEW]);
 
     this.jiraService
       .getIssuesBySprint(this.sprintId, jqlBuilder.build())
       .pipe(
         switchMap((issues) => {
           if (issues.length > 0) {
-            const reqs$ = issues.map((issue) => this.jiraService.removeLabelOfIssue(issue.key, targetLabel));
+            const reqs$ = issues.map((issue) => this.jiraService.removeLabelOfIssue(issue.key, NEED_BUG_REVIEW));
             return combineLatest(reqs$);
           }
           return of(null);
