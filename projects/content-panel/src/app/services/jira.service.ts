@@ -8,7 +8,7 @@ import { JiraFieldService } from './jira-field.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
-import { EMPTY, expand, map, Observable, ReplaySubject, switchMap } from 'rxjs';
+import { expand, map, Observable, reduce, ReplaySubject, switchMap, takeWhile } from 'rxjs';
 
 type Config = { jiraDomain: string; email: string; apiToken: string };
 
@@ -50,16 +50,26 @@ export class JiraService {
     maxResults = this.MAX_RESULTS,
   ): Observable<JiraSprint[]> {
     const state = states.join(',');
+    let startAt = 0;
+
     return this.ready.pipe(
       switchMap(() =>
         this.http.get<any>(`${this.baseURL}/rest/agile/1.0/board/${boardId}/sprint`, {
           headers: this.headers,
-          params: { state, maxResults },
+          params: { state, maxResults, startAt },
         }),
       ),
-      map((ret) =>
-        (ret.values as JiraSprint[]).filter((sp) => (!!sp.originBoardId ? sp.originBoardId === boardId : true)),
+      expand((ret) =>
+        this.http.get<any>(`${this.baseURL}/rest/agile/1.0/board/${boardId}/sprint`, {
+          headers: this.headers,
+          params: { state, maxResults, startAt },
+        }),
       ),
+      takeWhile((ret) => ret.values.length > 0),
+      reduce((sprints, ret) => {
+        startAt += ret.values.length;
+        return (ret.values as JiraSprint[]).filter((sp) => (!!sp.originBoardId ? sp.originBoardId === boardId : true));
+      }, [] as JiraSprint[]),
     );
   }
 
@@ -70,10 +80,7 @@ export class JiraService {
   getIssue(key: string): Observable<Issue> {
     return this.ready.pipe(
       switchMap(() => this.http.get<JiraIssue>(`${this.baseURL}/rest/api/2/issue/${key}`, { headers: this.headers })),
-      map((ret: JiraIssue) => {
-        const issue = this.bulidIssueFromJiraIssue(ret);
-        return issue;
-      }),
+      map((ret: JiraIssue) => this.bulidIssueFromJiraIssue(ret)),
     );
   }
 
@@ -85,21 +92,17 @@ export class JiraService {
     }
 
     const url = `${this.baseURL}/rest/agile/1.0/sprint/${sprintId}/issue`;
-    let allIssues: Issue[] = [];
+    let issueCount = 0;
 
     return this.ready.pipe(
       switchMap(() => this.http.get<any>(url, { headers: this.headers, params })),
-      expand((issues) => {
-        if (issues.length > 0) {
-          allIssues = [...allIssues, ...issues];
-          params.startAt = allIssues.length;
-          return this.http.get<any>(url, { headers: this.headers, params });
-        }
-        return EMPTY;
-      }),
-      map((ret) => {
-        return ret.issues.map((issue: any) => this.bulidIssueFromJiraIssue(issue));
-      }),
+      expand((ret) => this.http.get<any>(url, { headers: this.headers, params: { ...params, startAt: issueCount } })),
+      takeWhile((ret) => ret.issues.length > 0),
+      reduce((allIssues, ret) => {
+        issueCount += ret.issues.length;
+        const issues = ret.issues.map((issue: any) => this.bulidIssueFromJiraIssue(issue));
+        return [...allIssues, ...issues];
+      }, [] as Issue[]),
     );
   }
 
@@ -111,7 +114,7 @@ export class JiraService {
     }
 
     const url = `${this.baseURL}/rest/agile/1.0/sprint/${sprintId}/issue`;
-    let allIssues: Issue[] = [];
+    let issueCount = 0;
 
     const _isStatusChangelog = (item: JiraChangelogItem) => item.field === 'status';
 
@@ -135,16 +138,11 @@ export class JiraService {
 
     return this.ready.pipe(
       switchMap(() => this.http.get<any>(url, { headers: this.headers, params })),
-      expand((issues) => {
-        if (issues.length > 0) {
-          allIssues = [...allIssues, ...issues];
-          params.startAt = allIssues.length;
-          return this.http.get<any>(url, { headers: this.headers, params });
-        }
-        return EMPTY;
-      }),
-      map((ret) => {
-        return ret.issues.map((_issue: any) => {
+      expand((ret) => this.http.get<any>(url, { headers: this.headers, params: { ...params, startAt: issueCount } })),
+      takeWhile((ret) => ret.issues.length > 0),
+      reduce((allIssueLogs, ret) => {
+        issueCount += ret.issues.length;
+        const issuesChangeLog = ret.issues.map((_issue: any) => {
           let issue = _issue as JiraIssue;
           // let histories sort asc of create date
           const changeHistories = issue.changelog!.histories.reverse();
@@ -154,7 +152,8 @@ export class JiraService {
             statusLogMap: _genStatusLogMap(changeHistories),
           };
         });
-      }),
+        return [...allIssueLogs, ...issuesChangeLog];
+      }, [] as IssueStatusChangeLog[]),
     );
   }
 
