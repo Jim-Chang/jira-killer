@@ -69,3 +69,8 @@ export type BurnUpChartData = {
   [IssueStatus.ReadyForVerification]: number[];
   [IssueStatus.Closed]: number[];
 };
+
+export type VelocityChartData = {
+  sprintNames: string[];
+  velocities: number[];
+};

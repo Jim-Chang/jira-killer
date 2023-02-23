@@ -1,17 +1,34 @@
 <div class="container">
-  <div class="selector">
-    Sprint:
-    <sprint-selector [(sprint)]="sprint" [disabled]="!enableSelector"></sprint-selector>
-    <button
-      (click)="onClickCalculate()"
-      [disabled]="!enableCalBtn"
-      mpTrack
-      mpTriggerEvent="click"
-      mpEventName="Click Calculate BurnUpChart"
-      [mpEventData]="{springName: sprint?.name, sprintId: sprint?.id}"
-    >Calculate</button>
+  <div>
+    <div class="selector">
+      Sprint:
+      <sprint-selector [(sprint)]="sprint" [disabled]="!enableSelector"></sprint-selector>
+      <button
+        (click)="onClickCalBurnUpChart()"
+        [disabled]="!enableCalBurnUpBtn"
+        mpTrack
+        mpTriggerEvent="click"
+        mpEventName="Click Calculate BurnUpChart"
+        [mpEventData]="{springName: sprint?.name, sprintId: sprint?.id}"
+      >Calculate</button>
+    </div>
+    <div class="chart">
+      <canvas #burnUpChart></canvas>
+    </div>
   </div>
-  <div class="chart">
-    <canvas #burnUpChart></canvas>
+  <div>
+    <div class="selector">
+      <button
+        (click)="onClickCalVelocityChart()"
+        [disabled]="!enableCalVelocityBtn"
+        mpTrack
+        mpTriggerEvent="click"
+        mpEventName="Click Calculate VelocityChart"
+        [mpEventData]="{boardId}"
+      >Calculate</button>
+    </div>
+    <div class="chart">
+      <canvas #velocityChart></canvas>
+    </div>
   </div>
 </div>

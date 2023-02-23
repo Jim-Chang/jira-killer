@@ -1,7 +1,8 @@
-import { BurnUpChartData } from '../../define/base';
+import { BurnUpChartData, VelocityChartData } from '../../define/base';
 import { IssueStatus } from '../../define/issue-status';
 import { JiraSprint } from '../../define/jira-type';
 import { registerPluginToChart } from '../../lib/chart-register';
+import { getUrlBoardId } from '../../lib/url-utils';
 import { ChartService } from '../../services/chart-service';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Chart } from 'chart.js';
@@ -13,26 +14,41 @@ import * as moment from 'moment';
   styleUrls: ['./chart.component.sass'],
 })
 export class ChartComponent {
-  @ViewChild('burnUpChart') burnUpChart: ElementRef;
+  @ViewChild('burnUpChart') burnUpChartEle: ElementRef;
+  @ViewChild('velocityChart') velocityChartEle: ElementRef;
 
   sprint: JiraSprint | null;
 
   private isCalculating = false;
-  private chart: Chart;
+  private burnUpChart: Chart;
+  private velocityChart: Chart;
 
-  get enableCalBtn(): boolean {
+  get enableCalBurnUpBtn(): boolean {
     return !this.isCalculating && !!this.sprint;
+  }
+
+  get enableCalVelocityBtn(): boolean {
+    return !this.isCalculating && !!this.boardId;
   }
 
   get enableSelector(): boolean {
     return !this.isCalculating;
   }
 
+  get boardId(): number | null {
+    return getUrlBoardId();
+  }
+
   constructor(private chartService: ChartService) {
     registerPluginToChart();
   }
 
-  onClickCalculate(): void {
+  ngAfterViewInit(): void {
+    this.drawEmptyBurnUpChart();
+    this.drawEmptyVelocityChart();
+  }
+
+  onClickCalBurnUpChart(): void {
     if (this.sprint && this.sprint.startDate && this.sprint.endDate) {
       this.isCalculating = true;
       this.chartService.getBurnUpChartData(this.sprint).subscribe((data) => {
@@ -42,6 +58,39 @@ export class ChartComponent {
     } else {
       console.log("This sprint didn't set startDate or endDate.");
     }
+  }
+
+  onClickCalVelocityChart(): void {
+    if (this.boardId) {
+      this.isCalculating = true;
+      this.chartService.getVelocityChartData(this.boardId, 6).subscribe((ret) => {
+        this.drawVelocityChart(ret);
+        this.isCalculating = false;
+      });
+    } else {
+      console.log('Can not get board id from url.');
+    }
+  }
+
+  private drawEmptyBurnUpChart(): void {
+    const config = {
+      type: 'line',
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Burn Up Chart',
+          },
+          annotation: {},
+        },
+      },
+    };
+    if (this.burnUpChart) {
+      this.burnUpChart.destroy();
+    }
+    this.burnUpChart = new Chart(this.burnUpChartEle.nativeElement, config as any);
   }
 
   private drawBurnUpChart(burnUpChartData: BurnUpChartData): void {
@@ -126,9 +175,71 @@ export class ChartComponent {
       };
     }
 
-    if (this.chart) {
-      this.chart.destroy();
+    if (this.burnUpChart) {
+      this.burnUpChart.destroy();
     }
-    this.chart = new Chart(this.burnUpChart.nativeElement, config as any);
+    this.burnUpChart = new Chart(this.burnUpChartEle.nativeElement, config as any);
+  }
+
+  private drawEmptyVelocityChart(): void {
+    const config = {
+      type: 'bar',
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Velocity Chart',
+          },
+          annotation: {},
+        },
+      },
+    };
+    if (this.velocityChart) {
+      this.velocityChart.destroy();
+    }
+    this.velocityChart = new Chart(this.velocityChartEle.nativeElement, config as any);
+  }
+
+  private drawVelocityChart(velocityChartData: VelocityChartData): void {
+    const data = {
+      labels: velocityChartData.sprintNames,
+      datasets: [
+        {
+          label: 'Total Points',
+          data: velocityChartData.velocities,
+          backgroundColor: ['rgba(75, 192, 192, 0.2)'],
+          borderColor: ['rgb(75, 192, 192)'],
+          borderWidth: 1,
+        },
+      ],
+    };
+
+    const config = {
+      type: 'bar',
+      data: data,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Velocity Chart',
+          },
+          annotation: {},
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    };
+
+    if (this.velocityChart) {
+      this.velocityChart.destroy();
+    }
+    this.velocityChart = new Chart(this.velocityChartEle.nativeElement, config as any);
   }
 }

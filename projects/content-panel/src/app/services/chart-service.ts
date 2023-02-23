@@ -1,10 +1,13 @@
-import { BurnUpChartData, IssueStatusChangeLog } from '../define/base';
+import { BurnUpChartData, IssueStatusChangeLog, VelocityChartData } from '../define/base';
 import { IssueStatus } from '../define/issue-status';
+import { JiraSprintState } from '../define/jira-status';
 import { JiraSprint } from '../define/jira-type';
+import { KANBAN } from '../define/label';
+import { JqlBuilder } from '../lib/jql-builder';
 import { JiraService } from './jira.service';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
-import { map, Observable } from 'rxjs';
+import { combineLatest, map, Observable, switchMap, tap } from 'rxjs';
 
 type IssueStatusAware = IssueStatus.InReview | IssueStatus.ReadyForVerification | IssueStatus.Closed;
 const ISSUE_STATUS_AWARE: IssueStatusAware[] = [
@@ -28,6 +31,35 @@ export class ChartService {
       map((ret) => {
         return this.calculateBurnUpChartData(sprint, ret);
       }),
+    );
+  }
+
+  getVelocityChartData(boardId: number, sprintCount: number): Observable<VelocityChartData> {
+    const calSprintTotalPoint = (sprintId: number) => {
+      const jqlBuilder = new JqlBuilder();
+      jqlBuilder.filterNotInLabels([KANBAN]);
+      return this.jiraService
+        .getIssuesBySprint(sprintId, jqlBuilder.build())
+        .pipe(
+          map((issues) =>
+            issues
+              .filter((issue) => !!issue.storyPoint)
+              .reduce((points, issue) => points + (issue.storyPoint as number), 0),
+          ),
+        );
+    };
+
+    let targetSps: JiraSprint[] = [];
+
+    return this.jiraService.getAllSprint(boardId, [JiraSprintState.Closed]).pipe(
+      switchMap((sprints) => {
+        targetSps = sprints.slice(-sprintCount);
+        return combineLatest(targetSps.map((sp) => calSprintTotalPoint(sp.id)));
+      }),
+      map((totalPoints) => ({
+        sprintNames: targetSps.map((r) => r.name),
+        velocities: totalPoints,
+      })),
     );
   }
 
